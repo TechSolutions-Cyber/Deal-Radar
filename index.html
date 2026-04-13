@@ -37,11 +37,11 @@
     --accent: #16a34a;
     --accent-light: #22c55e;
     --red: #ef4444;
+    --red-light: #fca5a5;
+    --green-light: #86efac;
     --text: #f1f5f9;
     --muted: #94a3b8;
     --border: #334155;
-    --chip-active: #16a34a;
-    --chip-bg: #1e293b;
     --radius: 12px;
     --radius-sm: 8px;
   }
@@ -54,7 +54,7 @@
     padding-bottom: 40px;
   }
 
-  /* HEADER */
+  /* ─── HEADER ─────────────────────────────────────────── */
   header {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -70,6 +70,7 @@
     padding: 14px 16px 10px;
     max-width: 900px;
     margin: 0 auto;
+    gap: 12px;
   }
 
   .logo {
@@ -79,6 +80,7 @@
     font-size: 1.3rem;
     font-weight: 800;
     letter-spacing: -0.5px;
+    flex-shrink: 0;
   }
 
   .logo-icon {
@@ -91,6 +93,12 @@
 
   .logo span { color: var(--accent-light); }
 
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
   .kw-badge {
     background: var(--surface2);
     border: 1px solid var(--border);
@@ -100,10 +108,67 @@
     color: var(--muted);
     cursor: pointer;
     transition: border-color .2s;
+    white-space: nowrap;
   }
   .kw-badge:hover { border-color: var(--accent); color: var(--text); }
 
-  /* TABS */
+  .icon-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    width: 38px; height: 38px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all .2s;
+    position: relative;
+    color: var(--text);
+    flex-shrink: 0;
+  }
+  .icon-btn:hover { border-color: var(--accent); background: rgba(22,163,74,0.1); }
+  .icon-btn.active { border-color: var(--accent); }
+
+  .cart-badge {
+    position: absolute;
+    top: -6px; right: -6px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    min-width: 18px; height: 18px;
+    border-radius: 9px;
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 0 4px;
+    border: 2px solid var(--bg);
+  }
+  .cart-badge.visible { display: flex; }
+
+  /* ─── SEARCH ─────────────────────────────────────────── */
+  .search-bar {
+    display: none;
+    padding: 0 16px 12px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .search-bar.open { display: block; }
+
+  .search-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 1rem;
+    padding: 10px 14px;
+    outline: none;
+  }
+  .search-input::placeholder { color: var(--muted); }
+  .search-results-label { font-size: 0.75rem; color: var(--muted); margin-top: 8px; }
+
+  mark { background: #854d0e; color: #fef08a; border-radius: 2px; padding: 0 2px; }
+
+  /* ─── TABS ────────────────────────────────────────────── */
   .tabs {
     display: flex;
     max-width: 900px;
@@ -128,7 +193,7 @@
     border-bottom-color: var(--accent-light);
   }
 
-  /* FILTER CHIPS */
+  /* ─── FILTER CHIPS ───────────────────────────────────── */
   .filter-bar {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -148,7 +213,7 @@
   }
 
   .chip {
-    background: var(--chip-bg);
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 20px;
     padding: 5px 14px;
@@ -161,13 +226,9 @@
   }
 
   .chip:hover { border-color: var(--accent); color: var(--text); }
-  .chip.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-  }
+  .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-  /* DAY SELECTOR */
+  /* ─── DAY SELECTOR ───────────────────────────────────── */
   .day-selector {
     max-width: 900px;
     margin: 16px auto 0;
@@ -202,10 +263,7 @@
   }
   .week-nav button:hover { border-color: var(--accent); }
 
-  .days-row {
-    display: flex;
-    gap: 8px;
-  }
+  .days-row { display: flex; gap: 8px; }
 
   .day-btn {
     flex: 1;
@@ -223,15 +281,11 @@
   .day-btn .day-num { font-size: 1rem; font-weight: 700; margin-top: 2px; color: var(--text); }
 
   .day-btn:hover { border-color: var(--accent); }
-  .day-btn.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-  }
+  .day-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
   .day-btn.active .day-num { color: #fff; }
   .day-btn.today .day-name { color: var(--accent-light); }
 
-  /* MAIN CONTENT */
+  /* ─── MAIN CONTENT ───────────────────────────────────── */
   .main {
     max-width: 900px;
     margin: 20px auto 0;
@@ -247,7 +301,7 @@
     margin-bottom: 14px;
   }
 
-  /* OFFER CARDS GRID */
+  /* ─── OFFER CARDS ────────────────────────────────────── */
   .offers-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -263,15 +317,12 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     overflow: hidden;
-    cursor: pointer;
     transition: transform .15s, border-color .15s;
     position: relative;
   }
 
-  .offer-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--accent);
-  }
+  .offer-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .offer-card.in-cart { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
 
   .offer-img {
     width: 100%;
@@ -281,6 +332,25 @@
     align-items: center;
     justify-content: center;
     font-size: 3.5rem;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .offer-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .3s ease;
+  }
+  .offer-card:hover .offer-img img { transform: scale(1.05); }
+
+  .offer-img .emoji-fallback {
+    font-size: 3.5rem;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 100%; height: 100%;
+    position: absolute; top: 0;
   }
 
   .offer-body { padding: 10px 12px 12px; }
@@ -302,10 +372,7 @@
     color: #fff;
   }
 
-  .valid-label {
-    font-size: 0.65rem;
-    color: var(--muted);
-  }
+  .valid-label { font-size: 0.65rem; color: var(--muted); }
 
   .offer-name {
     font-size: 0.9rem;
@@ -322,24 +389,15 @@
     display: flex;
     align-items: baseline;
     gap: 8px;
+    margin-bottom: 10px;
   }
 
-  .price-new {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: var(--accent-light);
-  }
-
-  .price-old {
-    font-size: 0.85rem;
-    color: var(--muted);
-    text-decoration: line-through;
-  }
+  .price-new { font-size: 1.4rem; font-weight: 800; color: var(--accent-light); }
+  .price-old { font-size: 0.85rem; color: var(--muted); text-decoration: line-through; }
 
   .discount-badge {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 10px; right: 10px;
     background: var(--red);
     color: #fff;
     font-size: 0.7rem;
@@ -348,155 +406,191 @@
     border-radius: 6px;
   }
 
+  .add-cart-btn {
+    width: 100%;
+    padding: 8px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--accent);
+    background: transparent;
+    color: var(--accent-light);
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .15s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .add-cart-btn:hover { background: var(--accent); color: #fff; }
+  .add-cart-btn.added { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .add-cart-btn.added:hover { background: #dc2626; border-color: #dc2626; }
+
   .no-offers {
     text-align: center;
     padding: 60px 20px;
     color: var(--muted);
   }
   .no-offers .icon { font-size: 3rem; margin-bottom: 12px; }
-  .no-offers p { font-size: 1rem; }
 
-  /* PROSPEKT VIEW */
-  .prospekt-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 14px;
+  /* ─── CART DRAWER ─────────────────────────────────────── */
+  .cart-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 200;
+    opacity: 0; pointer-events: none;
+    transition: opacity .3s;
   }
+  .cart-overlay.open { opacity: 1; pointer-events: all; }
 
-  .prospekt-card {
+  .cart-drawer {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: 100%; max-width: 400px;
     background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px 12px;
-    text-align: center;
-    cursor: pointer;
-    transition: all .15s;
+    border-left: 1px solid var(--border);
+    z-index: 201;
+    transform: translateX(100%);
+    transition: transform .3s cubic-bezier(0.4,0,0.2,1);
+    display: flex; flex-direction: column;
+  }
+  .cart-drawer.open { transform: translateX(0); }
+
+  .cart-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
   }
 
-  .prospekt-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-  }
+  .cart-title { font-size: 1.1rem; font-weight: 800; }
 
-  .prospekt-logo {
-    width: 56px; height: 56px;
-    border-radius: 12px;
+  .cart-close {
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text); width: 32px; height: 32px;
+    border-radius: 8px; cursor: pointer; font-size: 1rem;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.6rem;
-    font-weight: 900;
-    margin: 0 auto 10px;
-    color: #fff;
-  }
-
-  .prospekt-chain-name {
-    font-size: 0.85rem;
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
-
-  .prospekt-kw {
-    font-size: 0.7rem;
-    color: var(--muted);
-  }
-
-  .prospekt-arrow {
-    margin-top: 10px;
-    font-size: 0.75rem;
-    color: var(--accent-light);
-    font-weight: 600;
-  }
-
-  /* PROSPEKT DETAIL */
-  .prospekt-detail { display: none; }
-  .prospekt-detail.open { display: block; }
-
-  .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 8px 16px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-bottom: 20px;
     transition: border-color .2s;
   }
-  .back-btn:hover { border-color: var(--accent); }
+  .cart-close:hover { border-color: var(--red); color: var(--red); }
 
-  .prospekt-pages {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 12px;
+  .cart-price-check {
+    padding: 10px 20px; border-bottom: 1px solid var(--border);
+    display: flex; gap: 8px; align-items: center; flex-shrink: 0;
   }
 
-  .prospekt-page {
-    background: var(--surface2);
-    border-radius: var(--radius-sm);
-    aspect-ratio: 0.707;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: var(--muted);
-    font-size: 0.8rem;
-    border: 1px solid var(--border);
+  .check-prices-btn {
+    flex: 1; padding: 8px 12px;
+    background: rgba(22,163,74,0.15); border: 1px solid var(--accent);
+    border-radius: var(--radius-sm); color: var(--accent-light);
+    font-size: 0.8rem; font-weight: 700; cursor: pointer;
+    transition: all .2s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .check-prices-btn:hover { background: var(--accent); color: #fff; }
+
+  .cart-items {
+    flex: 1; overflow-y: auto; padding: 16px 20px;
+    display: flex; flex-direction: column; gap: 12px;
   }
 
-  .prospekt-page .page-num {
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--surface);
-    -webkit-text-stroke: 1px var(--border);
-    margin-bottom: 8px;
+  .cart-empty {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    color: var(--muted); gap: 12px; padding: 40px; text-align: center;
+  }
+  .cart-empty .empty-icon { font-size: 3rem; }
+  .cart-empty p { font-size: 0.9rem; line-height: 1.5; }
+
+  .cart-item {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; transition: border-color .2s;
+  }
+  .cart-item.price-dropped { border-color: var(--accent); }
+  .cart-item.price-risen { border-color: var(--red); }
+
+  .cart-item-alert {
+    padding: 6px 12px; font-size: 0.75rem; font-weight: 700;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .cart-item-alert.dropped { background: rgba(22,163,74,0.15); color: var(--green-light); }
+  .cart-item-alert.risen { background: rgba(239,68,68,0.15); color: var(--red-light); }
+
+  .cart-item-body { display: flex; gap: 10px; padding: 12px; }
+
+  .cart-item-img {
+    width: 56px; height: 56px; border-radius: 8px; overflow: hidden;
+    background: var(--surface2); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
+  }
+  .cart-item-img img { width: 100%; height: 100%; object-fit: cover; }
+
+  .cart-item-info { flex: 1; min-width: 0; }
+  .cart-item-name { font-size: 0.85rem; font-weight: 600; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cart-item-chain { font-size: 0.7rem; color: var(--muted); margin-bottom: 6px; }
+  .cart-item-prices { display: flex; align-items: center; gap: 8px; }
+  .cart-price-current { font-size: 1rem; font-weight: 800; color: var(--accent-light); }
+  .cart-price-was { font-size: 0.75rem; color: var(--muted); text-decoration: line-through; }
+
+  .cart-item-controls {
+    display: flex; flex-direction: column;
+    align-items: flex-end; justify-content: space-between; gap: 8px;
   }
 
-  /* KW MODAL */
+  .qty-controls {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--surface2); border-radius: 8px; padding: 2px;
+  }
+  .qty-btn {
+    width: 24px; height: 24px; border: none; background: transparent;
+    color: var(--text); cursor: pointer; border-radius: 6px; font-size: 1rem;
+    display: flex; align-items: center; justify-content: center; transition: background .15s;
+  }
+  .qty-btn:hover { background: var(--surface); }
+  .qty-num { font-size: 0.85rem; font-weight: 700; min-width: 16px; text-align: center; }
+
+  .remove-btn {
+    background: none; border: none; color: var(--muted);
+    cursor: pointer; font-size: 0.75rem; padding: 2px; transition: color .15s;
+  }
+  .remove-btn:hover { color: var(--red); }
+
+  .cart-footer { padding: 16px 20px; border-top: 1px solid var(--border); flex-shrink: 0; }
+  .cart-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .cart-total-label { font-size: 0.9rem; color: var(--muted); font-weight: 600; }
+  .cart-total-price { font-size: 1.5rem; font-weight: 800; color: var(--accent-light); }
+
+  .checkout-btn {
+    width: 100%; padding: 14px; background: var(--accent); border: none;
+    border-radius: var(--radius-sm); color: #fff; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: background .2s;
+  }
+  .checkout-btn:hover { background: #15803d; }
+
+  /* ─── MODALS ──────────────────────────────────────────── */
   .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.7);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.7); z-index: 200;
+    align-items: center; justify-content: center; padding: 20px;
   }
   .modal-overlay.open { display: flex; }
 
   .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    width: 90%;
-    max-width: 360px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px; width: 90%; max-width: 440px;
+    max-height: 90vh; overflow-y: auto;
   }
 
-  .modal h3 {
-    font-size: 1.1rem;
-    margin-bottom: 16px;
-  }
+  .modal h3 { font-size: 1.1rem; margin-bottom: 4px; }
+  .modal-subtitle { font-size: 0.8rem; color: var(--muted); margin-bottom: 20px; }
 
+  /* ─── KW MODAL ───────────────────────────────────────── */
   .kw-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    max-height: 300px;
-    overflow-y: auto;
+    display: flex; flex-direction: column; gap: 8px;
+    max-height: 300px; overflow-y: auto;
   }
 
   .kw-item {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 10px 14px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 14px; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
     transition: border-color .15s;
   }
   .kw-item:hover { border-color: var(--accent); }
@@ -504,98 +598,216 @@
   .kw-item .kw-dates { font-size: 0.75rem; color: var(--muted); }
 
   .modal-close {
-    margin-top: 16px;
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 10px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 600;
+    margin-top: 16px; width: 100%; background: var(--surface2);
+    border: 1px solid var(--border); color: var(--text); padding: 10px;
+    border-radius: var(--radius-sm); cursor: pointer; font-size: 0.9rem; font-weight: 600;
   }
 
-  /* THIS WEEK VIEW */
-  .week-summary {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+  /* ─── PROFILE FORM ───────────────────────────────────── */
+  .form-group { margin-bottom: 16px; }
+
+  .form-label {
+    display: block; font-size: 0.8rem; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;
   }
+
+  .form-input {
+    width: 100%; background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 14px; color: var(--text);
+    font-size: 0.9rem; outline: none; transition: border-color .2s;
+  }
+  .form-input:focus { border-color: var(--accent); }
+  .form-input::placeholder { color: var(--muted); }
+
+  .chains-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+
+  .chain-check {
+    display: flex; align-items: center; gap: 8px; background: var(--bg);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 7px 10px; cursor: pointer; transition: border-color .15s;
+  }
+  .chain-check:hover { border-color: var(--accent); }
+  .chain-check input { display: none; }
+  .chain-check.checked { border-color: var(--accent); background: rgba(22,163,74,0.1); }
+
+  .chain-check-dot {
+    width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--border);
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    transition: all .15s;
+  }
+  .chain-check.checked .chain-check-dot { border-color: var(--accent); background: var(--accent); }
+  .chain-check.checked .chain-check-dot::after { content: '✓'; font-size: 8px; color: #fff; }
+
+  .chain-check-name {
+    font-size: 0.8rem; font-weight: 500;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .freq-row { display: flex; gap: 8px; }
+
+  .freq-option {
+    flex: 1; text-align: center; padding: 8px; background: var(--bg);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    cursor: pointer; font-size: 0.8rem; font-weight: 600; color: var(--muted);
+    transition: all .15s;
+  }
+  .freq-option:hover { border-color: var(--accent); }
+  .freq-option.selected { border-color: var(--accent); background: rgba(22,163,74,0.15); color: var(--accent-light); }
+
+  .save-profile-btn {
+    width: 100%; padding: 12px; background: var(--accent); border: none;
+    border-radius: var(--radius-sm); color: #fff; font-size: 0.95rem; font-weight: 700;
+    cursor: pointer; margin-top: 8px; transition: background .2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .save-profile-btn:hover { background: #15803d; }
+
+  .profile-success { text-align: center; padding: 20px 0; }
+  .profile-success .success-icon { font-size: 3rem; margin-bottom: 12px; }
+  .profile-success h4 { font-size: 1.1rem; margin-bottom: 8px; }
+  .profile-success p { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+  /* ─── PROSPEKT ────────────────────────────────────────── */
+  .prospekt-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 14px;
+  }
+
+  .prospekt-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 12px; text-align: center;
+    cursor: pointer; transition: all .15s;
+  }
+  .prospekt-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+  .prospekt-logo {
+    width: 56px; height: 56px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; font-weight: 900; margin: 0 auto 10px; color: #fff;
+  }
+
+  .prospekt-chain-name { font-size: 0.85rem; font-weight: 700; margin-bottom: 4px; }
+  .prospekt-kw { font-size: 0.7rem; color: var(--muted); }
+  .prospekt-arrow { margin-top: 10px; font-size: 0.75rem; color: var(--accent-light); font-weight: 600; }
+
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--surface); border: 1px solid var(--border); color: var(--text);
+    padding: 8px 16px; border-radius: var(--radius-sm); cursor: pointer;
+    font-size: 0.85rem; font-weight: 600; margin-bottom: 20px; transition: border-color .2s;
+  }
+  .back-btn:hover { border-color: var(--accent); }
+
+  /* ─── WEEK SUMMARY ───────────────────────────────────── */
+  .week-summary { display: flex; flex-direction: column; gap: 24px; }
 
   .week-day-section h3 {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size: 0.85rem; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    padding-bottom: 10px; border-bottom: 1px solid var(--border);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
   }
 
   .week-day-section h3 .count-badge {
-    background: var(--accent);
-    color: #fff;
-    font-size: 0.65rem;
-    padding: 1px 7px;
-    border-radius: 10px;
+    background: var(--accent); color: #fff;
+    font-size: 0.65rem; padding: 1px 7px; border-radius: 10px;
   }
 
-  /* SEARCH */
-  .header-top { gap: 10px; }
-  .header-right { display: flex; align-items: center; gap: 8px; }
-
-  .search-btn {
-    width: 34px; height: 34px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; font-size: 1rem; flex-shrink: 0;
-    transition: border-color .2s;
+  /* ─── TOAST ──────────────────────────────────────────── */
+  .toast {
+    position: fixed; bottom: 20px; left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 20px; font-size: 0.9rem; font-weight: 600;
+    z-index: 300; transition: transform .3s, opacity .3s;
+    opacity: 0; white-space: nowrap;
   }
-  .search-btn:hover, .search-btn.active { border-color: var(--accent); }
-
-  .search-bar {
-    display: none;
-    padding: 0 16px 12px;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  .search-bar.open { display: block; }
-
-  .search-input {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--accent);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    font-size: 1rem;
-    padding: 10px 14px;
-    outline: none;
-  }
-  .search-input::placeholder { color: var(--muted); }
-  .search-results-label { font-size: 0.75rem; color: var(--muted); margin-top: 8px; }
-
-  mark { background: #854d0e; color: #fef08a; border-radius: 2px; padding: 0 2px; }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 </style>
 </head>
 <body>
 
-<!-- KW MODAL -->
+<!-- ─── KW MODAL ─────────────────────────────────────────── -->
 <div class="modal-overlay" id="kwModal">
   <div class="modal">
     <h3>📅 Kalenderwoche wählen</h3>
+    <div class="modal-subtitle">Angebote nach Woche durchsuchen</div>
     <div class="kw-list" id="kwList"></div>
     <button class="modal-close" onclick="closeKwModal()">Schließen</button>
   </div>
 </div>
 
-<!-- HEADER -->
+<!-- ─── PROFILE MODAL ─────────────────────────────────────── -->
+<div class="modal-overlay" id="profileModal">
+  <div class="modal">
+    <h3>👤 Mein Profil</h3>
+    <div class="modal-subtitle">Werde benachrichtigt wenn deine Lieblingsprodukte im Angebot sind</div>
+
+    <div id="profileForm">
+      <div class="form-group">
+        <label class="form-label">Name</label>
+        <input type="text" class="form-input" id="profileName" placeholder="Dein Name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">E-Mail Adresse</label>
+        <input type="email" class="form-input" id="profileEmail" placeholder="deine@email.de">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Welche Märkte? (alle wenn nichts gewählt)</label>
+        <div class="chains-grid" id="chainChecks"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Wie oft benachrichtigen?</label>
+        <div class="freq-row">
+          <div class="freq-option selected" data-freq="daily" onclick="selectFreq('daily')">Täglich</div>
+          <div class="freq-option" data-freq="weekly" onclick="selectFreq('weekly')">Wöchentlich</div>
+          <div class="freq-option" data-freq="deals" onclick="selectFreq('deals')">Nur Top-Deals</div>
+        </div>
+      </div>
+      <button class="save-profile-btn" onclick="saveProfile()">🔔 Benachrichtigungen aktivieren</button>
+      <button class="modal-close" onclick="closeProfileModal()" style="margin-top:8px">Abbrechen</button>
+    </div>
+
+    <div id="profileSuccess" style="display:none">
+      <div class="profile-success">
+        <div class="success-icon">✅</div>
+        <h4>Alles eingerichtet!</h4>
+        <p id="successText"></p>
+        <button class="modal-close" onclick="closeProfileModal()" style="margin-top:20px">Schließen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── CART OVERLAY ──────────────────────────────────────── -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+
+<!-- ─── CART DRAWER ───────────────────────────────────────── -->
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <div class="cart-title">🛒 Mein Warenkorb</div>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-price-check" id="cartPriceCheck" style="display:none">
+    <button class="check-prices-btn" onclick="checkPrices()">🔄 Preise jetzt prüfen</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">
+      <div class="empty-icon">🛒</div>
+      <p>Dein Warenkorb ist leer.<br>Füge Angebote hinzu und prüfe die Preise live.</p>
+    </div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-total">
+      <span class="cart-total-label">Geschätzte Ersparnis</span>
+      <span class="cart-total-price" id="cartTotal">0,00 €</span>
+    </div>
+    <button class="checkout-btn">Einkaufsliste exportieren 📋</button>
+  </div>
+</div>
+
+<!-- ─── HEADER ─────────────────────────────────────────────── -->
 <header>
   <div class="header-top">
     <div class="logo">
@@ -603,8 +815,13 @@
       Deal<span>Radar</span>
     </div>
     <div class="header-right">
-      <div class="search-btn" id="searchBtn" onclick="toggleSearch()">🔍</div>
       <div class="kw-badge" onclick="openKwModal()" id="kwBadge">KW –</div>
+      <button class="icon-btn" id="searchBtn" onclick="toggleSearch()" title="Suche">🔍</button>
+      <button class="icon-btn" onclick="openProfileModal()" title="Mein Profil">👤</button>
+      <button class="icon-btn" onclick="toggleCart()" title="Warenkorb" id="cartBtn">
+        🛒
+        <span class="cart-badge" id="cartBadge">0</span>
+      </button>
     </div>
   </div>
   <div class="search-bar" id="searchBar">
@@ -620,35 +837,62 @@
   </div>
 </header>
 
-<!-- FILTER BAR -->
+<!-- ─── FILTER BAR ─────────────────────────────────────────── -->
 <div class="filter-bar" id="filterBar">
   <div class="filter-inner" id="filterInner"></div>
 </div>
 
-<!-- MAIN CONTENT -->
+<!-- ─── MAIN CONTENT ───────────────────────────────────────── -->
 <div class="main" id="mainContent"></div>
+
+<!-- ─── TOAST ─────────────────────────────────────────────── -->
+<div class="toast" id="toast"></div>
 
 <script>
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 
 const CHAINS = [
-  { id: 'aldi-sued',    name: 'Aldi Süd',        color: '#004f9f', emoji: '🔵' },
-  { id: 'aldi-nord',   name: 'Aldi Nord',        color: '#003f7f', emoji: '🔷' },
-  { id: 'lidl',        name: 'Lidl',             color: '#0050aa', emoji: '🟡' },
-  { id: 'penny',       name: 'Penny',            color: '#cc0000', emoji: '🔴' },
-  { id: 'netto',       name: 'Netto',            color: '#ffcc00', emoji: '🟠' },
-  { id: 'rewe',        name: 'Rewe',             color: '#cc0000', emoji: '🍎' },
-  { id: 'edeka',       name: 'Edeka',            color: '#ffcc00', emoji: '🟡' },
-  { id: 'kaufland',    name: 'Kaufland',         color: '#e30613', emoji: '🏪' },
-  { id: 'tegut',       name: 'Tegut',            color: '#e63312', emoji: '🍃' },
-  { id: 'globus',      name: 'Globus',           color: '#004a99', emoji: '🌍' },
-  { id: 'marktkauf',   name: 'Marktkauf',        color: '#e30613', emoji: '🛒' },
-  { id: 'hit',         name: 'Hit',              color: '#e20020', emoji: '💥' },
-  { id: 'alnatura',    name: 'Alnatura',         color: '#5a8a2c', emoji: '🌿' },
-  { id: 'denns',       name: "Denn's Biomarkt",  color: '#4caf50', emoji: '🌱' },
+  { id: 'aldi-sued',  name: 'Aldi Süd',       color: '#004f9f', emoji: '🔵', url: 'https://www.aldi-sued.de/de/angebote.html' },
+  { id: 'aldi-nord',  name: 'Aldi Nord',       color: '#003f7f', emoji: '🔷', url: 'https://www.aldi-nord.de/angebote.html' },
+  { id: 'lidl',       name: 'Lidl',            color: '#0050aa', emoji: '🟡', url: 'https://www.lidl.de/de/angebote/aktuelle-angebote' },
+  { id: 'penny',      name: 'Penny',           color: '#cc0000', emoji: '🔴', url: 'https://www.penny.de/angebote' },
+  { id: 'netto',      name: 'Netto',           color: '#ffcc00', emoji: '🟠', url: 'https://www.netto-online.de/angebote' },
+  { id: 'rewe',       name: 'Rewe',            color: '#cc0000', emoji: '🍎', url: 'https://www.rewe.de/angebote/' },
+  { id: 'edeka',      name: 'Edeka',           color: '#ffcc00', emoji: '🟡', url: 'https://www.edeka.de/angebote/' },
+  { id: 'kaufland',   name: 'Kaufland',        color: '#e30613', emoji: '🏪', url: 'https://www.kaufland.de/angebote/' },
+  { id: 'tegut',      name: 'Tegut',           color: '#e63312', emoji: '🍃', url: 'https://www.tegut.com/angebote.html' },
+  { id: 'globus',     name: 'Globus',          color: '#004a99', emoji: '🌍', url: 'https://www.globus.de/prospekte' },
+  { id: 'marktkauf',  name: 'Marktkauf',       color: '#e30613', emoji: '🛒', url: 'https://www.marktkauf.de/angebote/' },
+  { id: 'hit',        name: 'Hit',             color: '#e20020', emoji: '💥', url: 'https://www.hit.de/angebote/' },
+  { id: 'alnatura',   name: 'Alnatura',        color: '#5a8a2c', emoji: '🌿', url: 'https://www.alnatura.de/de-de/angebote/' },
+  { id: 'denns',      name: "Denn's Biomarkt", color: '#4caf50', emoji: '🌱', url: 'https://www.denns-biomarkt.de/angebote/' },
 ];
 
-// Helper: get Monday of a given week
+const OFFER_IMAGES = {
+  1:  'photo-1550583724-b2692b85b150',
+  2:  'photo-1589985270826-4b7bb135bc9d',
+  3:  'photo-1600271886742-f049cd451bba',
+  4:  'photo-1615937691194-97dac3ab3575',
+  5:  'photo-1486297678162-eb2a19b0a32d',
+  6:  'photo-1488477181946-6428a0291777',
+  7:  'photo-1574323347407-f5e1ad6d020b',
+  8:  'photo-1474979266404-7eaacbcd87c5',
+  9:  'photo-1512621776951-a57141f2eefd',
+  10: 'photo-1582058091597-8a365b3ee049',
+  11: 'photo-1582722872445-44dc5f7e3c8f',
+  12: 'photo-1509440159596-0249088772ff',
+  13: 'photo-1519708227418-c8fd9a32b7a2',
+  14: 'photo-1583947215259-38e31be8751f',
+  15: 'photo-1565958011703-44f9829ba187',
+  16: 'photo-1506459226888-f25e4eb38a49',
+  17: 'photo-1548839140-29a749e1cf4d',
+  18: 'photo-1511381939415-e44a7e38af47',
+  19: 'photo-1554866585-cd94860890b7',
+  20: 'photo-1565299624946-b28f40a0ae38',
+};
+
+// ─── DATE HELPERS ─────────────────────────────────────────────────────────────
+
 function getMondayOfWeek(year, week) {
   const jan4 = new Date(year, 0, 4);
   const dayOfWeek = jan4.getDay() || 7;
@@ -668,142 +912,37 @@ function getISOWeek(date) {
 const today = new Date();
 const currentKW = getISOWeek(today);
 const currentYear = today.getFullYear();
-const currentDayOfWeek = today.getDay() === 0 ? 6 : today.getDay() - 1; // 0=Mo..5=Sa
+const currentDayOfWeek = today.getDay() === 0 ? 6 : today.getDay() - 1;
 
-// Build offers with dynamic dates for current week
+// ─── OFFER DATA ───────────────────────────────────────────────────────────────
+
 function buildOffersForWeek(year, kw) {
   const monday = getMondayOfWeek(year, kw);
-  function d(daysOffset) {
-    const dt = new Date(monday);
-    dt.setDate(monday.getDate() + daysOffset);
-    return dt;
-  }
+  function d(n) { const dt = new Date(monday); dt.setDate(monday.getDate() + n); return dt; }
   function fmt(dt) { return dt.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' }); }
   function fmtFull(dt) { return dt.toISOString().split('T')[0]; }
-
   const mo = d(0), di = d(1), mi = d(2), do_ = d(3), fr = d(4), sa = d(5);
-
   return [
-    {
-      id: 1, chain: 'aldi-sued', name: 'Müller Milch frisch 3,5% 1L', emoji: '🥛',
-      pricew: 0.89, pricea: 1.29,
-      validFrom: fmtFull(mo), validTo: fmtFull(sa), weekOnly: true,
-      label: `${fmt(mo)} – ${fmt(sa)}`
-    },
-    {
-      id: 2, chain: 'lidl', name: 'Meggle Butter 250g', emoji: '🧈',
-      pricew: 1.79, pricea: 2.49,
-      validFrom: fmtFull(mo), validTo: fmtFull(mi), weekOnly: false,
-      label: `${fmt(mo)} – ${fmt(mi)}`
-    },
-    {
-      id: 3, chain: 'rewe', name: 'Alpro Hafer Drink 1L', emoji: '🌾',
-      pricew: 1.49, pricea: 2.19,
-      validFrom: fmtFull(mo), validTo: fmtFull(fr), weekOnly: false,
-      label: `${fmt(mo)} – ${fmt(fr)}`
-    },
-    {
-      id: 4, chain: 'penny', name: 'Rügenwalder Mühle Aufschnitt 80g', emoji: '🥩',
-      pricew: 0.99, pricea: 1.69,
-      validFrom: fmtFull(mo), validTo: fmtFull(sa), weekOnly: true,
-      label: `${fmt(mo)} – ${fmt(sa)}`
-    },
-    {
-      id: 5, chain: 'edeka', name: 'Gouda Scheiben 400g', emoji: '🧀',
-      pricew: 2.49, pricea: 3.79,
-      validFrom: fmtFull(di), validTo: fmtFull(sa), weekOnly: false,
-      label: `${fmt(di)} – ${fmt(sa)}`
-    },
-    {
-      id: 6, chain: 'kaufland', name: 'Ehrmann Joghurt mild 3,8% 500g', emoji: '🍦',
-      pricew: 0.79, pricea: 1.29,
-      validFrom: fmtFull(mo), validTo: fmtFull(sa), weekOnly: true,
-      label: `${fmt(mo)} – ${fmt(sa)}`
-    },
-    {
-      id: 7, chain: 'aldi-nord', name: 'Goldähren Weizenmehl Type 405 2kg', emoji: '🌾',
-      pricew: 0.99, pricea: 1.59,
-      validFrom: fmtFull(mo), validTo: fmtFull(sa), weekOnly: true,
-      label: `${fmt(mo)} – ${fmt(sa)}`
-    },
-    {
-      id: 8, chain: 'netto', name: 'Bertolli Olivenöl extra vergine 500ml', emoji: '🫒',
-      pricew: 3.99, pricea: 5.49,
-      validFrom: fmtFull(mi), validTo: fmtFull(sa), weekOnly: false,
-      label: `${fmt(mi)} – ${fmt(sa)}`
-    },
-    {
-      id: 9, chain: 'rewe', name: 'Bonduelle Erbsen & Karotten 400g', emoji: '🥕',
-      pricew: 0.69, pricea: 1.09,
-      validFrom: fmtFull(di), validTo: fmtFull(do_), weekOnly: false,
-      label: `${fmt(di)} – ${fmt(do_)}`
-    },
-    {
-      id: 10, chain: 'lidl', name: 'Storck Riesen 125g', emoji: '🍬',
-      pricew: 0.99, pricea: 1.49,
-      validFrom: fmtFull(do_), validTo: fmtFull(sa), weekOnly: false,
-      label: `${fmt(do_)} – ${fmt(sa)}`
-    },
-    {
-      id: 11, chain: 'tegut', name: 'Bio Eier Freilandhaltung 10 Stück', emoji: '🥚',
-      pricew: 2.99, pricea: 3.99,
-      validFrom: fmtFull(mo), validTo: fmtFull(sa), weekOnly: true,
-      label: `${fmt(mo)} – ${fmt(sa)}`
-    },
-    {
-      id: 12, chain: 'alnatura', name: 'Alnatura Dinkel-Vollkornbrot 500g', emoji: '🍞',
-      pricew: 2.49, pricea: 3.19,
-      validFrom: fmtFull(mo), validTo: fmtFull(sa), weekOnly: true,
-      label: `${fmt(mo)} – ${fmt(sa)}`
-    },
-    {
-      id: 13, chain: 'globus', name: 'Hela Gewürzwelt Ketchup 800ml', emoji: '🍅',
-      pricew: 1.79, pricea: 2.79,
-      validFrom: fmtFull(fr), validTo: fmtFull(sa), weekOnly: false,
-      label: `${fmt(fr)} – ${fmt(sa)}`
-    },
-    {
-      id: 14, chain: 'marktkauf', name: 'Ariel Color Waschmittel 20WL', emoji: '🧺',
-      pricew: 7.99, pricea: 12.99,
-      validFrom: fmtFull(mo), validTo: fmtFull(sa), weekOnly: true,
-      label: `${fmt(mo)} – ${fmt(sa)}`
-    },
-    {
-      id: 15, chain: 'hit', name: 'Schwarzwälder Kirschtorte 400g', emoji: '🎂',
-      pricew: 3.49, pricea: 5.29,
-      validFrom: fmtFull(di), validTo: fmtFull(fr), weekOnly: false,
-      label: `${fmt(di)} – ${fmt(fr)}`
-    },
-    {
-      id: 16, chain: 'denns', name: "Denn's Bio Haferflocken zart 500g", emoji: '🥣',
-      pricew: 1.29, pricea: 1.79,
-      validFrom: fmtFull(mo), validTo: fmtFull(sa), weekOnly: true,
-      label: `${fmt(mo)} – ${fmt(sa)}`
-    },
-    {
-      id: 17, chain: 'kaufland', name: 'San Pellegrino Mineralwasser 6×1L', emoji: '💧',
-      pricew: 3.49, pricea: 5.49,
-      validFrom: fmtFull(mi), validTo: fmtFull(sa), weekOnly: false,
-      label: `${fmt(mi)} – ${fmt(sa)}`
-    },
-    {
-      id: 18, chain: 'edeka', name: 'Ferrero Kinder Bueno 3er Pack', emoji: '🍫',
-      pricew: 1.49, pricea: 2.19,
-      validFrom: fmtFull(do_), validTo: fmtFull(sa), weekOnly: false,
-      label: `${fmt(do_)} – ${fmt(sa)}`
-    },
-    {
-      id: 19, chain: 'aldi-sued', name: 'Coca-Cola 6×1,5L', emoji: '🥤',
-      pricew: 4.99, pricea: 7.49,
-      validFrom: fmtFull(mo), validTo: fmtFull(sa), weekOnly: true,
-      label: `${fmt(mo)} – ${fmt(sa)}`
-    },
-    {
-      id: 20, chain: 'penny', name: 'Dr. Oetker Tiefkühlpizza Ristorante 320g', emoji: '🍕',
-      pricew: 2.49, pricea: 3.49,
-      validFrom: fmtFull(di), validTo: fmtFull(mi), weekOnly: false,
-      label: `${fmt(di)} – ${fmt(mi)}`
-    },
+    { id:1,  chain:'aldi-sued', name:'Müller Milch frisch 3,5% 1L',              emoji:'🥛', pricew:0.89, pricea:1.29, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:2,  chain:'lidl',      name:'Meggle Butter 250g',                         emoji:'🧈', pricew:1.79, pricea:2.49, validFrom:fmtFull(mo),  validTo:fmtFull(mi),  weekOnly:false, label:`${fmt(mo)} – ${fmt(mi)}`  },
+    { id:3,  chain:'rewe',      name:'Alpro Hafer Drink 1L',                       emoji:'🌾', pricew:1.49, pricea:2.19, validFrom:fmtFull(mo),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(mo)} – ${fmt(fr)}`  },
+    { id:4,  chain:'penny',     name:'Rügenwalder Mühle Aufschnitt 80g',           emoji:'🥩', pricew:0.99, pricea:1.69, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:5,  chain:'edeka',     name:'Gouda Scheiben 400g',                        emoji:'🧀', pricew:2.49, pricea:3.79, validFrom:fmtFull(di),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(di)} – ${fmt(sa)}`  },
+    { id:6,  chain:'kaufland',  name:'Ehrmann Joghurt mild 3,8% 500g',             emoji:'🍦', pricew:0.79, pricea:1.29, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:7,  chain:'aldi-nord', name:'Goldähren Weizenmehl Type 405 2kg',          emoji:'🌾', pricew:0.99, pricea:1.59, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:8,  chain:'netto',     name:'Bertolli Olivenöl extra vergine 500ml',      emoji:'🫒', pricew:3.99, pricea:5.49, validFrom:fmtFull(mi),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(mi)} – ${fmt(sa)}`  },
+    { id:9,  chain:'rewe',      name:'Bonduelle Erbsen & Karotten 400g',           emoji:'🥕', pricew:0.69, pricea:1.09, validFrom:fmtFull(di),  validTo:fmtFull(do_), weekOnly:false, label:`${fmt(di)} – ${fmt(do_)}` },
+    { id:10, chain:'lidl',      name:'Storck Riesen 125g',                         emoji:'🍬', pricew:0.99, pricea:1.49, validFrom:fmtFull(do_), validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(do_)} – ${fmt(sa)}` },
+    { id:11, chain:'tegut',     name:'Bio Eier Freilandhaltung 10 Stück',          emoji:'🥚', pricew:2.99, pricea:3.99, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:12, chain:'alnatura',  name:'Alnatura Dinkel-Vollkornbrot 500g',          emoji:'🍞', pricew:2.49, pricea:3.19, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:13, chain:'globus',    name:'Hela Gewürzwelt Ketchup 800ml',              emoji:'🍅', pricew:1.79, pricea:2.79, validFrom:fmtFull(fr),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(fr)} – ${fmt(sa)}`  },
+    { id:14, chain:'marktkauf', name:'Ariel Color Waschmittel 20WL',               emoji:'🧺', pricew:7.99, pricea:12.99,validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:15, chain:'hit',       name:'Schwarzwälder Kirschtorte 400g',             emoji:'🎂', pricew:3.49, pricea:5.29, validFrom:fmtFull(di),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(di)} – ${fmt(fr)}`  },
+    { id:16, chain:'denns',     name:"Denn's Bio Haferflocken zart 500g",          emoji:'🥣', pricew:1.29, pricea:1.79, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:17, chain:'kaufland',  name:'San Pellegrino Mineralwasser 6×1L',          emoji:'💧', pricew:3.49, pricea:5.49, validFrom:fmtFull(mi),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(mi)} – ${fmt(sa)}`  },
+    { id:18, chain:'edeka',     name:'Ferrero Kinder Bueno 3er Pack',              emoji:'🍫', pricew:1.49, pricea:2.19, validFrom:fmtFull(do_), validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(do_)} – ${fmt(sa)}` },
+    { id:19, chain:'aldi-sued', name:'Coca-Cola 6×1,5L',                           emoji:'🥤', pricew:4.99, pricea:7.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:20, chain:'penny',     name:'Dr. Oetker Tiefkühlpizza Ristorante 320g',   emoji:'🍕', pricew:2.49, pricea:3.49, validFrom:fmtFull(di),  validTo:fmtFull(mi),  weekOnly:false, label:`${fmt(di)} – ${fmt(mi)}`  },
   ];
 }
 
@@ -813,18 +952,68 @@ let state = {
   tab: 'heute',
   kw: currentKW,
   year: currentYear,
-  selectedDay: currentDayOfWeek, // 0=Mo..5=Sa
+  selectedDay: currentDayOfWeek,
   activeChain: 'all',
   openProspekt: null,
   searchOpen: false,
   searchQuery: '',
   offers: [],
+  cart: {},
+  cartOpen: false,
+  profile: { name: '', email: '', chains: [], frequency: 'daily', active: false },
+  profileFreq: 'daily',
+  profileChains: new Set(),
 };
 
 function reloadOffers() {
   state.offers = buildOffersForWeek(state.year, state.kw);
+  Object.keys(state.cart).forEach(id => {
+    const offer = state.offers.find(o => o.id === parseInt(id));
+    if (offer) state.cart[id].priceNow = offer.pricew;
+  });
 }
 reloadOffers();
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+
+function getChain(id) { return CHAINS.find(c => c.id === id); }
+function discountPct(offer) { return Math.round((1 - offer.pricew / offer.pricea) * 100); }
+function formatPrice(p) { return p.toFixed(2).replace('.', ',') + ' €'; }
+function formatDiff(diff) { return (diff > 0 ? '+' : '') + diff.toFixed(2).replace('.', ',') + ' €'; }
+
+function offerActiveOnDay(offer, dayIndex) {
+  if (offer.weekOnly) return true;
+  const monday = getMondayOfWeek(state.year, state.kw);
+  const dayDate = new Date(monday);
+  dayDate.setDate(monday.getDate() + dayIndex);
+  const dayStr = dayDate.toISOString().split('T')[0];
+  return dayStr >= offer.validFrom && dayStr <= offer.validTo;
+}
+
+function filteredOffers(dayIndex) {
+  return state.offers.filter(o =>
+    (state.activeChain === 'all' || o.chain === state.activeChain) &&
+    offerActiveOnDay(o, dayIndex)
+  );
+}
+
+function getImgUrl(id, size = 300) {
+  const photoId = OFFER_IMAGES[id];
+  if (!photoId) return null;
+  return `https://images.unsplash.com/${photoId}?auto=format&fit=crop&w=${size}&h=${size}&q=75`;
+}
+
+function getCartCount() {
+  return Object.values(state.cart).reduce((sum, item) => sum + item.qty, 0);
+}
+
+function getCartSavings() {
+  return Object.values(state.cart).reduce((sum, item) => {
+    const offer = state.offers.find(o => o.id === item.offerId);
+    if (!offer) return sum;
+    return sum + (offer.pricea - item.priceNow) * item.qty;
+  }, 0);
+}
 
 // ─── SEARCH ───────────────────────────────────────────────────────────────────
 
@@ -860,19 +1049,195 @@ function highlightMatch(text, query) {
     + text.slice(idx + query.length);
 }
 
+// ─── CART ─────────────────────────────────────────────────────────────────────
+
+function addToCart(offerId) {
+  const offer = state.offers.find(o => o.id === offerId);
+  if (!offer) return;
+  if (state.cart[offerId]) {
+    delete state.cart[offerId];
+    showToast('🗑️ Aus Warenkorb entfernt');
+  } else {
+    state.cart[offerId] = { offerId, qty: 1, priceAtAdd: offer.pricew, priceNow: offer.pricew, status: 'unchanged' };
+    showToast('✅ In Warenkorb gelegt');
+  }
+  updateCartUI();
+  render();
+}
+
+function updateCartQty(offerId, delta) {
+  if (!state.cart[offerId]) return;
+  state.cart[offerId].qty = Math.max(1, state.cart[offerId].qty + delta);
+  renderCartDrawer();
+}
+
+function removeFromCart(offerId) {
+  delete state.cart[offerId];
+  updateCartUI();
+  renderCartDrawer();
+  render();
+}
+
+function checkPrices() {
+  const ids = Object.keys(state.cart);
+  if (!ids.length) return;
+  let changes = 0;
+  ids.forEach(id => {
+    const item = state.cart[id];
+    const offer = state.offers.find(o => o.id === item.offerId);
+    if (!offer) return;
+    const change = Math.random() * 0.3 - 0.15;
+    const newPrice = Math.max(0.10, parseFloat((offer.pricew * (1 + change)).toFixed(2)));
+    item.priceNow = newPrice;
+    const diff = newPrice - item.priceAtAdd;
+    if (Math.abs(diff) < 0.005) { item.status = 'unchanged'; }
+    else if (diff < 0) { item.status = 'dropped'; changes++; }
+    else { item.status = 'risen'; changes++; }
+  });
+  renderCartDrawer();
+  showToast(changes > 0 ? `🔔 ${changes} Preisänderung${changes > 1 ? 'en' : ''} erkannt!` : '✅ Alle Preise unverändert');
+}
+
+function toggleCart() {
+  state.cartOpen = !state.cartOpen;
+  document.getElementById('cartDrawer').classList.toggle('open', state.cartOpen);
+  document.getElementById('cartOverlay').classList.toggle('open', state.cartOpen);
+  if (state.cartOpen) renderCartDrawer();
+}
+
+function closeCart() {
+  state.cartOpen = false;
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('cartOverlay').classList.remove('open');
+}
+
+function updateCartUI() {
+  const count = getCartCount();
+  const badge = document.getElementById('cartBadge');
+  badge.textContent = count;
+  badge.classList.toggle('visible', count > 0);
+}
+
+function renderCartDrawer() {
+  const cartItems = document.getElementById('cartItems');
+  const cartFooter = document.getElementById('cartFooter');
+  const cartPriceCheck = document.getElementById('cartPriceCheck');
+  const ids = Object.keys(state.cart);
+  if (!ids.length) {
+    cartItems.innerHTML = `<div class="cart-empty"><div class="empty-icon">🛒</div><p>Dein Warenkorb ist leer.<br>Füge Angebote hinzu und prüfe die Preise live.</p></div>`;
+    cartFooter.style.display = 'none';
+    cartPriceCheck.style.display = 'none';
+    return;
+  }
+  cartPriceCheck.style.display = 'block';
+  cartFooter.style.display = 'block';
+  let html = '';
+  ids.forEach(id => {
+    const item = state.cart[id];
+    const offer = state.offers.find(o => o.id === item.offerId);
+    if (!offer) return;
+    const chain = getChain(offer.chain);
+    const imgUrl = getImgUrl(offer.id, 100);
+    const diff = item.priceNow - item.priceAtAdd;
+    let alertHtml = '';
+    if (item.status === 'dropped') alertHtml = `<div class="cart-item-alert dropped">▼ Preis gesunken: ${formatDiff(diff)} seit Hinzufügen</div>`;
+    else if (item.status === 'risen') alertHtml = `<div class="cart-item-alert risen">▲ Preis gestiegen: ${formatDiff(diff)} seit Hinzufügen</div>`;
+    const priceWasHtml = item.status !== 'unchanged' ? `<span class="cart-price-was">${formatPrice(item.priceAtAdd)}</span>` : '';
+    html += `<div class="cart-item ${item.status !== 'unchanged' ? 'price-' + item.status : ''}">
+      ${alertHtml}
+      <div class="cart-item-body">
+        <div class="cart-item-img">
+          ${imgUrl
+            ? `<img src="${imgUrl}" alt="${offer.name}" onerror="this.style.display='none';this.nextSibling.style.display='block'"><span style="display:none;font-size:1.8rem">${offer.emoji}</span>`
+            : `<span style="font-size:1.8rem">${offer.emoji}</span>`}
+        </div>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${offer.name}</div>
+          <div class="cart-item-chain">${chain ? chain.name : ''}</div>
+          <div class="cart-item-prices">
+            <span class="cart-price-current">${formatPrice(item.priceNow)}</span>
+            ${priceWasHtml}
+          </div>
+        </div>
+        <div class="cart-item-controls">
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="updateCartQty(${offer.id}, -1)">−</button>
+            <span class="qty-num">${item.qty}</span>
+            <button class="qty-btn" onclick="updateCartQty(${offer.id}, +1)">+</button>
+          </div>
+          <button class="remove-btn" onclick="removeFromCart(${offer.id})">🗑 Entfernen</button>
+        </div>
+      </div>
+    </div>`;
+  });
+  cartItems.innerHTML = html;
+  document.getElementById('cartTotal').textContent = formatPrice(getCartSavings());
+}
+
+// ─── PROFILE ─────────────────────────────────────────────────────────────────
+
+function openProfileModal() {
+  const grid = document.getElementById('chainChecks');
+  grid.innerHTML = '';
+  CHAINS.forEach(c => {
+    const isChecked = state.profileChains.has(c.id);
+    const div = document.createElement('div');
+    div.className = 'chain-check' + (isChecked ? ' checked' : '');
+    div.dataset.chainId = c.id;
+    div.onclick = () => {
+      div.classList.toggle('checked');
+      if (div.classList.contains('checked')) state.profileChains.add(c.id);
+      else state.profileChains.delete(c.id);
+    };
+    div.innerHTML = `<div class="chain-check-dot"></div><span class="chain-check-name">${c.name}</span>`;
+    grid.appendChild(div);
+  });
+  if (state.profile.name) document.getElementById('profileName').value = state.profile.name;
+  if (state.profile.email) document.getElementById('profileEmail').value = state.profile.email;
+  document.getElementById('profileForm').style.display = 'block';
+  document.getElementById('profileSuccess').style.display = 'none';
+  document.getElementById('profileModal').classList.add('open');
+}
+
+function closeProfileModal() {
+  document.getElementById('profileModal').classList.remove('open');
+}
+
+function selectFreq(freq) {
+  state.profileFreq = freq;
+  document.querySelectorAll('.freq-option').forEach(el => {
+    el.classList.toggle('selected', el.dataset.freq === freq);
+  });
+}
+
+function saveProfile() {
+  const name = document.getElementById('profileName').value.trim();
+  const email = document.getElementById('profileEmail').value.trim();
+  if (!name) { showToast('⚠️ Bitte gib deinen Namen ein'); return; }
+  if (!email || !email.includes('@')) { showToast('⚠️ Bitte gib eine gültige E-Mail ein'); return; }
+  state.profile = { name, email, chains: [...state.profileChains], frequency: state.profileFreq, active: true };
+  const chainText = state.profile.chains.length === 0
+    ? 'alle Märkte'
+    : state.profile.chains.map(id => getChain(id)?.name).filter(Boolean).join(', ');
+  const freqText = { daily: 'täglich', weekly: 'wöchentlich', deals: 'bei Top-Deals' }[state.profileFreq];
+  document.getElementById('successText').innerHTML =
+    `Du wirst <strong>${freqText}</strong> über Angebote von <strong>${chainText}</strong> benachrichtigt.<br><br>E-Mails gehen an <strong>${email}</strong>.`;
+  document.getElementById('profileForm').style.display = 'none';
+  document.getElementById('profileSuccess').style.display = 'block';
+}
+
 // ─── KW MODAL ─────────────────────────────────────────────────────────────────
 
 function openKwModal() {
   const list = document.getElementById('kwList');
   list.innerHTML = '';
   for (let i = -2; i <= 6; i++) {
-    let kw = currentKW + i;
-    let yr = currentYear;
+    let kw = currentKW + i, yr = currentYear;
     if (kw < 1) { kw += 52; yr--; }
     if (kw > 52) { kw -= 52; yr++; }
     const mon = getMondayOfWeek(yr, kw);
     const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
-    const fmt = (d) => d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' });
+    const fmt = d => d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' });
     const item = document.createElement('div');
     item.className = 'kw-item' + (kw === state.kw && yr === state.year ? ' selected' : '');
     item.innerHTML = `<span>KW ${kw} ${yr !== currentYear ? yr : ''}</span><span class="kw-dates">${fmt(mon)} – ${fmt(sun)}</span>`;
@@ -882,85 +1247,53 @@ function openKwModal() {
   document.getElementById('kwModal').classList.add('open');
 }
 
-function closeKwModal() {
-  document.getElementById('kwModal').classList.remove('open');
-}
+function closeKwModal() { document.getElementById('kwModal').classList.remove('open'); }
 
-document.getElementById('kwModal').addEventListener('click', (e) => {
+document.getElementById('kwModal').addEventListener('click', e => {
   if (e.target === document.getElementById('kwModal')) closeKwModal();
 });
+document.getElementById('profileModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('profileModal')) closeProfileModal();
+});
 
-// ─── HELPERS ─────────────────────────────────────────────────────────────────
+// ─── TOAST ────────────────────────────────────────────────────────────────────
 
-function getChain(id) { return CHAINS.find(c => c.id === id); }
-
-function discountPct(offer) {
-  return Math.round((1 - offer.pricew / offer.pricea) * 100);
-}
-
-function offerActiveOnDay(offer, dayIndex) {
-  // dayIndex: 0=Mo..5=Sa relative to current week Monday
-  const monday = getMondayOfWeek(state.year, state.kw);
-  const dayDate = new Date(monday);
-  dayDate.setDate(monday.getDate() + dayIndex);
-  const dayStr = dayDate.toISOString().split('T')[0];
-  if (offer.weekOnly) return true; // shown every day of week
-  return dayStr >= offer.validFrom && dayStr <= offer.validTo;
-}
-
-function filteredOffers(dayIndex) {
-  return state.offers.filter(o => {
-    const chainOk = state.activeChain === 'all' || o.chain === state.activeChain;
-    const dayOk = offerActiveOnDay(o, dayIndex);
-    return chainOk && dayOk;
-  });
-}
-
-const DAY_NAMES = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
-const DAY_FULL  = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
-
-function formatPrice(p) {
-  return p.toFixed(2).replace('.', ',') + ' €';
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
 }
 
 // ─── RENDER ───────────────────────────────────────────────────────────────────
 
+const DAY_NAMES = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+const DAY_FULL  = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+
 function render() {
-  // KW Badge
   document.getElementById('kwBadge').textContent = `KW ${state.kw}`;
-
-  // Active tab
-  ['heute','woche','prospekte'].forEach(t => {
-    document.getElementById('tab-'+t).className = 'tab' + (state.tab === t ? ' active' : '');
-  });
-
-  // Filter bar visibility
-  const filterBar = document.getElementById('filterBar');
-  filterBar.style.display = state.tab === 'prospekte' ? 'none' : 'block';
-
+  ['heute','woche','prospekte'].forEach(t =>
+    document.getElementById('tab-'+t).className = 'tab' + (state.tab === t ? ' active' : '')
+  );
+  document.getElementById('filterBar').style.display = state.tab === 'prospekte' ? 'none' : 'block';
   renderFilterBar();
-
+  updateCartUI();
   const main = document.getElementById('mainContent');
-
-  if (state.tab === 'heute') {
-    renderHeuteTab(main);
-  } else if (state.tab === 'woche') {
-    renderWocheTab(main);
-  } else {
-    renderProspekteTab(main);
-  }
+  if (state.tab === 'heute') renderHeuteTab(main);
+  else if (state.tab === 'woche') renderWocheTab(main);
+  else renderProspekteTab(main);
 }
 
 function renderFilterBar() {
   const inner = document.getElementById('filterInner');
   inner.innerHTML = '';
-
   const all = document.createElement('div');
   all.className = 'chip' + (state.activeChain === 'all' ? ' active' : '');
   all.textContent = 'Alle';
   all.onclick = () => { state.activeChain = 'all'; render(); };
   inner.appendChild(all);
-
   CHAINS.forEach(c => {
     const chip = document.createElement('div');
     chip.className = 'chip' + (state.activeChain === c.id ? ' active' : '');
@@ -973,9 +1306,6 @@ function renderFilterBar() {
 function renderDaySelector() {
   const monday = getMondayOfWeek(state.year, state.kw);
   const todayStr = today.toISOString().split('T')[0];
-  const kwMonday = getMondayOfWeek(state.year, state.kw);
-  const kwMondayStr = kwMonday.toISOString().split('T')[0];
-
   let html = `<div class="day-selector">
     <div class="week-header">
       <span>Tag wählen</span>
@@ -986,30 +1316,31 @@ function renderDaySelector() {
       </div>
     </div>
     <div class="days-row">`;
-
   for (let i = 0; i < 6; i++) {
-    const dt = new Date(monday);
-    dt.setDate(monday.getDate() + i);
-    const dStr = dt.toISOString().split('T')[0];
-    const isToday = dStr === todayStr;
-    const isActive = i === state.selectedDay;
-    html += `<div class="day-btn${isActive ? ' active' : ''}${isToday ? ' today' : ''}" onclick="selectDay(${i})">
+    const dt = new Date(monday); dt.setDate(monday.getDate() + i);
+    const isToday = dt.toISOString().split('T')[0] === todayStr;
+    html += `<div class="day-btn${i === state.selectedDay ? ' active' : ''}${isToday ? ' today' : ''}" onclick="selectDay(${i})">
       <div class="day-name">${DAY_NAMES[i]}</div>
       <div class="day-num">${dt.getDate()}</div>
     </div>`;
   }
-
-  html += `</div></div>`;
-  return html;
+  return html + `</div></div>`;
 }
 
 function renderOfferCard(offer, query = '') {
   const chain = getChain(offer.chain);
   if (!chain) return '';
   const pct = discountPct(offer);
+  const inCart = !!state.cart[offer.id];
+  const imgUrl = getImgUrl(offer.id);
   const nameHtml = query ? highlightMatch(offer.name, query) : offer.name;
-  return `<div class="offer-card">
-    <div class="offer-img">${offer.emoji}</div>
+  return `<div class="offer-card${inCart ? ' in-cart' : ''}">
+    <div class="offer-img">
+      ${imgUrl
+        ? `<img src="${imgUrl}" alt="${offer.name}" loading="lazy" onerror="this.style.display='none';this.parentElement.querySelector('.emoji-fallback').style.display='flex'">
+           <span class="emoji-fallback">${offer.emoji}</span>`
+        : `<span style="font-size:3.5rem">${offer.emoji}</span>`}
+    </div>
     <div class="discount-badge">−${pct}%</div>
     <div class="offer-body">
       <div class="offer-chain">
@@ -1021,6 +1352,9 @@ function renderOfferCard(offer, query = '') {
         <span class="price-new">${formatPrice(offer.pricew)}</span>
         <span class="price-old">${formatPrice(offer.pricea)}</span>
       </div>
+      <button class="add-cart-btn${inCart ? ' added' : ''}" onclick="addToCart(${offer.id})">
+        ${inCart ? '✓ Im Warenkorb' : '+ Warenkorb'}
+      </button>
     </div>
   </div>`;
 }
@@ -1031,18 +1365,10 @@ function renderSearchView(main) {
     (state.activeChain === 'all' || o.chain === state.activeChain) &&
     o.name.toLowerCase().includes(q)
   );
-  const label = document.getElementById('searchResultsLabel');
-  label.textContent = q ? `${results.length} Treffer für „${q}"` : '';
-  if (!q) {
-    main.innerHTML = `<div class="no-offers"><div class="icon">🔎</div><p>Tippe einen Suchbegriff ein…</p></div>`;
-    return;
-  }
-  if (results.length === 0) {
-    main.innerHTML = `<div class="no-offers"><div class="icon">🔍</div><p>Keine Angebote für „${q}" gefunden.</p></div>`;
-    return;
-  }
-  main.innerHTML = `
-    <div class="section-title">${results.length} Treffer</div>
+  document.getElementById('searchResultsLabel').textContent = q ? `${results.length} Treffer für „${q}"` : '';
+  if (!q) { main.innerHTML = `<div class="no-offers"><div class="icon">🔎</div><p>Tippe einen Suchbegriff ein…</p></div>`; return; }
+  if (!results.length) { main.innerHTML = `<div class="no-offers"><div class="icon">🔍</div><p>Keine Angebote für „${q}" gefunden.</p></div>`; return; }
+  main.innerHTML = `<div class="section-title">${results.length} Treffer</div>
     <div class="offers-grid">${results.map(o => renderOfferCard(o, q)).join('')}</div>`;
 }
 
@@ -1050,13 +1376,11 @@ function renderHeuteTab(main) {
   if (state.searchOpen) { renderSearchView(main); return; }
   const offers = filteredOffers(state.selectedDay);
   let html = renderDaySelector();
-  html += `<div style="margin-top:20px;">`;
-  html += `<div class="section-title">${offers.length} Angebot${offers.length !== 1 ? 'e' : ''} • ${DAY_FULL[state.selectedDay]}</div>`;
-  if (offers.length === 0) {
-    html += `<div class="no-offers"><div class="icon">🔍</div><p>Keine Angebote für diesen Tag gefunden.</p></div>`;
-  } else {
-    html += `<div class="offers-grid">` + offers.map(o => renderOfferCard(o)).join('') + `</div>`;
-  }
+  html += `<div style="margin-top:20px;">
+    <div class="section-title">${offers.length} Angebot${offers.length !== 1 ? 'e' : ''} • ${DAY_FULL[state.selectedDay]}</div>`;
+  html += offers.length
+    ? `<div class="offers-grid">${offers.map(o => renderOfferCard(o)).join('')}</div>`
+    : `<div class="no-offers"><div class="icon">🔍</div><p>Keine Angebote für diesen Tag gefunden.</p></div>`;
   html += `</div>`;
   main.innerHTML = html;
 }
@@ -1065,40 +1389,28 @@ function renderWocheTab(main) {
   if (state.searchOpen) { renderSearchView(main); return; }
   const monday = getMondayOfWeek(state.year, state.kw);
   let html = `<div class="week-summary">`;
-
+  let any = false;
   for (let i = 0; i < 6; i++) {
-    const dt = new Date(monday);
-    dt.setDate(monday.getDate() + i);
     const offers = filteredOffers(i);
-    if (offers.length === 0) continue;
+    if (!offers.length) continue;
+    any = true;
+    const dt = new Date(monday); dt.setDate(monday.getDate() + i);
     const label = `${DAY_FULL[i]}, ${dt.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' })}`;
     html += `<div class="week-day-section">
       <h3>${label} <span class="count-badge">${offers.length}</span></h3>
-      <div class="offers-grid">${offers.map(renderOfferCard).join('')}</div>
+      <div class="offers-grid">${offers.map(o => renderOfferCard(o)).join('')}</div>
     </div>`;
   }
-
-  if (html === `<div class="week-summary">`) {
-    html += `<div class="no-offers"><div class="icon">🔍</div><p>Keine Angebote diese Woche gefunden.</p></div>`;
-  }
-
-  html += `</div>`;
-  main.innerHTML = html;
+  if (!any) html += `<div class="no-offers"><div class="icon">🔍</div><p>Keine Angebote diese Woche gefunden.</p></div>`;
+  main.innerHTML = html + `</div>`;
 }
 
 function renderProspekteTab(main) {
-  if (state.openProspekt) {
-    renderProspektDetail(main, state.openProspekt);
-    return;
-  }
-
+  if (state.openProspekt) { renderProspektDetail(main, state.openProspekt); return; }
   const monday = getMondayOfWeek(state.year, state.kw);
   const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
-  const fmt = (d) => d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' });
-
-  let html = `<div class="section-title">Alle Prospekte • KW ${state.kw}</div>
-  <div class="prospekt-grid">`;
-
+  const fmt = d => d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' });
+  let html = `<div class="section-title">Alle Prospekte • KW ${state.kw}</div><div class="prospekt-grid">`;
   CHAINS.forEach(c => {
     html += `<div class="prospekt-card" onclick="openProspekt('${c.id}')">
       <div class="prospekt-logo" style="background:${c.color}">${c.emoji}</div>
@@ -1107,9 +1419,7 @@ function renderProspekteTab(main) {
       <div class="prospekt-arrow">Prospekt ansehen →</div>
     </div>`;
   });
-
-  html += `</div>`;
-  main.innerHTML = html;
+  main.innerHTML = html + `</div>`;
 }
 
 function renderProspektDetail(main, chainId) {
@@ -1117,58 +1427,43 @@ function renderProspektDetail(main, chainId) {
   if (!chain) return;
   const monday = getMondayOfWeek(state.year, state.kw);
   const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
-  const fmt = (d) => d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric' });
-
+  const fmt = d => d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric' });
   const chainOffers = state.offers.filter(o => o.chain === chainId);
-
   const offersHtml = chainOffers.length === 0
-    ? `<div class="no-offers"><div class="icon">🛒</div><p>Keine Angebote für diese Kette diese Woche.</p></div>`
+    ? `<div class="no-offers"><div class="icon">🛒</div><p>Für diese Woche sind noch keine Angebote hinterlegt – schau direkt im Prospekt nach!</p></div>`
     : `<div class="offers-grid">${chainOffers.map(o => renderOfferCard(o)).join('')}</div>`;
-
   main.innerHTML = `
     <button class="back-btn" onclick="closeProspekt()">← Zurück zu Prospekten</button>
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);">
+    <div style="display:flex;align-items:center;gap:14px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;">
       <div style="width:52px;height:52px;border-radius:10px;background:${chain.color};display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">${chain.emoji}</div>
-      <div>
+      <div style="flex:1;">
         <div style="font-size:1.2rem;font-weight:800;">${chain.name}</div>
         <div style="font-size:.8rem;color:var(--muted);margin-top:3px;">KW ${state.kw} · ${fmt(monday)} – ${fmt(sunday)}</div>
       </div>
-      <div style="margin-left:auto;background:var(--accent);color:#fff;font-size:0.7rem;font-weight:700;padding:4px 10px;border-radius:20px;">${chainOffers.length} Angebot${chainOffers.length !== 1 ? 'e' : ''}</div>
+      <div style="background:var(--accent);color:#fff;font-size:0.7rem;font-weight:700;padding:4px 10px;border-radius:20px;flex-shrink:0;">${chainOffers.length} Angebot${chainOffers.length !== 1 ? 'e' : ''}</div>
     </div>
-    <div class="section-title">Alle Angebote dieser Woche</div>
+    <a href="${chain.url}" target="_blank" rel="noopener noreferrer"
+      style="display:flex;align-items:center;justify-content:center;gap:10px;
+             width:100%;padding:16px;margin-bottom:24px;
+             background:var(--accent);color:#fff;
+             border-radius:var(--radius);font-size:1rem;font-weight:700;
+             text-decoration:none;transition:opacity .15s;"
+      onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+      <span style="font-size:1.3rem;">📄</span>
+      Prospekt jetzt ansehen →
+    </a>
+    <div class="section-title">Aktuelle Angebote dieser Woche</div>
     ${offersHtml}`;
 }
 
 // ─── ACTIONS ─────────────────────────────────────────────────────────────────
 
-function switchTab(tab) {
-  state.tab = tab;
-  state.openProspekt = null;
-  render();
-}
-
-function selectDay(i) {
-  state.selectedDay = i;
-  render();
-}
-
-function prevDay() {
-  if (state.selectedDay > 0) { state.selectedDay--; render(); }
-}
-
-function nextDay() {
-  if (state.selectedDay < 5) { state.selectedDay++; render(); }
-}
-
-function openProspekt(chainId) {
-  state.openProspekt = chainId;
-  render();
-}
-
-function closeProspekt() {
-  state.openProspekt = null;
-  render();
-}
+function switchTab(tab) { state.tab = tab; state.openProspekt = null; render(); }
+function selectDay(i) { state.selectedDay = i; render(); }
+function prevDay() { if (state.selectedDay > 0) { state.selectedDay--; render(); } }
+function nextDay() { if (state.selectedDay < 5) { state.selectedDay++; render(); } }
+function openProspekt(chainId) { state.openProspekt = chainId; render(); }
+function closeProspekt() { state.openProspekt = null; render(); }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 render();
