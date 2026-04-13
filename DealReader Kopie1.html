@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DealRadar – Lebensmittel-Angebote</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #334155;
+    --accent: #16a34a;
+    --accent-light: #22c55e;
+    --red: #ef4444;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --border: #334155;
+    --chip-active: #16a34a;
+    --chip-bg: #1e293b;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 10px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .logo span { color: var(--accent-light); }
+
+  .kw-badge {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+  .kw-badge:hover { border-color: var(--accent); color: var(--text); }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all .2s;
+  }
+
+  .tab.active {
+    color: var(--accent-light);
+    border-bottom-color: var(--accent-light);
+  }
+
+  /* FILTER CHIPS */
+  .filter-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .filter-bar::-webkit-scrollbar { display: none; }
+
+  .filter-inner {
+    display: flex;
+    gap: 8px;
+    padding: 10px 16px;
+    max-width: 900px;
+    margin: 0 auto;
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .chip {
+    background: var(--chip-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .15s;
+    color: var(--muted);
+  }
+
+  .chip:hover { border-color: var(--accent); color: var(--text); }
+  .chip.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  /* DAY SELECTOR */
+  .day-selector {
+    max-width: 900px;
+    margin: 16px auto 0;
+    padding: 0 16px;
+  }
+
+  .week-header {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .week-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .week-nav button {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color .2s;
+  }
+  .week-nav button:hover { border-color: var(--accent); }
+
+  .days-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .day-btn {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 4px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .15s;
+    color: var(--muted);
+  }
+
+  .day-btn .day-name { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .day-btn .day-num { font-size: 1rem; font-weight: 700; margin-top: 2px; color: var(--text); }
+
+  .day-btn:hover { border-color: var(--accent); }
+  .day-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .day-btn.active .day-num { color: #fff; }
+  .day-btn.today .day-name { color: var(--accent-light); }
+
+  /* MAIN CONTENT */
+  .main {
+    max-width: 900px;
+    margin: 20px auto 0;
+    padding: 0 16px;
+  }
+
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 14px;
+  }
+
+  /* OFFER CARDS GRID */
+  .offers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+  }
+
+  @media (min-width: 600px) {
+    .offers-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  }
+
+  .offer-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform .15s, border-color .15s;
+    position: relative;
+  }
+
+  .offer-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+  }
+
+  .offer-img {
+    width: 100%;
+    aspect-ratio: 1;
+    background: var(--surface2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+  }
+
+  .offer-body { padding: 10px 12px 12px; }
+
+  .offer-chain {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .chain-name {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    color: #fff;
+  }
+
+  .valid-label {
+    font-size: 0.65rem;
+    color: var(--muted);
+  }
+
+  .offer-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .offer-prices {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .price-new {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--accent-light);
+  }
+
+  .price-old {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-decoration: line-through;
+  }
+
+  .discount-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--red);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 3px 7px;
+    border-radius: 6px;
+  }
+
+  .no-offers {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  .no-offers .icon { font-size: 3rem; margin-bottom: 12px; }
+  .no-offers p { font-size: 1rem; }
+
+  /* PROSPEKT VIEW */
+  .prospekt-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 14px;
+  }
+
+  .prospekt-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .15s;
+  }
+
+  .prospekt-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .prospekt-logo {
+    width: 56px; height: 56px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    font-weight: 900;
+    margin: 0 auto 10px;
+    color: #fff;
+  }
+
+  .prospekt-chain-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .prospekt-kw {
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+
+  .prospekt-arrow {
+    margin-top: 10px;
+    font-size: 0.75rem;
+    color: var(--accent-light);
+    font-weight: 600;
+  }
+
+  /* PROSPEKT DETAIL */
+  .prospekt-detail { display: none; }
+  .prospekt-detail.open { display: block; }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    transition: border-color .2s;
+  }
+  .back-btn:hover { border-color: var(--accent); }
+
+  .prospekt-pages {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+  }
+
+  .prospekt-page {
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    aspect-ratio: 0.707;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+    border: 1px solid var(--border);
+  }
+
+  .prospekt-page .page-num {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--surface);
+    -webkit-text-stroke: 1px var(--border);
+    margin-bottom: 8px;
+  }
+
+  /* KW MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    width: 90%;
+    max-width: 360px;
+  }
+
+  .modal h3 {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+  }
+
+  .kw-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .kw-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color .15s;
+  }
+  .kw-item:hover { border-color: var(--accent); }
+  .kw-item.selected { border-color: var(--accent); color: var(--accent-light); }
+  .kw-item .kw-dates { font-size: 0.75rem; color: var(--muted); }
+
+  .modal-close {
+    margin-top: 16px;
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  /* THIS WEEK VIEW */
+  .week-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .week-day-section h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .week-day-section h3 .count-badge {
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.65rem;
+    padding: 1px 7px;
+    border-radius: 10px;
+  }
+</style>
+</head>
+<body>
+
+<!-- KW MODAL -->
+<div class="modal-overlay" id="kwModal">
+  <div class="modal">
+    <h3>📅 Kalenderwoche wählen</h3>
+    <div class="kw-list" id="kwList"></div>
+    <button class="modal-close" onclick="closeKwModal()">Schließen</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">📡</div>
+      Deal<span>Radar</span>
+    </div>
+    <div class="kw-badge" onclick="openKwModal()" id="kwBadge">KW –</div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('heute')" id="tab-heute">Heute</div>
+    <div class="tab" onclick="switchTab('woche')" id="tab-woche">Diese Woche</div>
+    <div class="tab" onclick="switchTab('prospekte')" id="tab-prospekte">Prospekte</div>
+  </div>
+</header>
+
+<!-- FILTER BAR -->
+<div class="filter-bar" id="filterBar">
+  <div class="filter-inner" id="filterInner"></div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main" id="mainContent"></div>
+
+<script>
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+
+const CHAINS = [
+  { id: 'aldi-sued',    name: 'Aldi Süd',        color: '#004f9f', emoji: '🔵' },
+  { id: 'aldi-nord',   name: 'Aldi Nord',        color: '#003f7f', emoji: '🔷' },
+  { id: 'lidl',        name: 'Lidl',             color: '#0050aa', emoji: '🟡' },
+  { id: 'penny',       name: 'Penny',            color: '#cc0000', emoji: '🔴' },
+  { id: 'netto',       name: 'Netto',            color: '#ffcc00', emoji: '🟠' },
+  { id: 'rewe',        name: 'Rewe',             color: '#cc0000', emoji: '🍎' },
+  { id: 'edeka',       name: 'Edeka',            color: '#ffcc00', emoji: '🟡' },
+  { id: 'kaufland',    name: 'Kaufland',         color: '#e30613', emoji: '🏪' },
+  { id: 'tegut',       name: 'Tegut',            color: '#e63312', emoji: '🍃' },
+  { id: 'globus',      name: 'Globus',           color: '#004a99', emoji: '🌍' },
+  { id: 'marktkauf',   name: 'Marktkauf',        color: '#e30613', emoji: '🛒' },
+  { id: 'hit',         name: 'Hit',              color: '#e20020', emoji: '💥' },
+  { id: 'alnatura',    name: 'Alnatura',         color: '#5a8a2c', emoji: '🌿' },
+  { id: 'denns',       name: "Denn's Biomarkt",  color: '#4caf50', emoji: '🌱' },
+];
+
+// Helper: get Monday of a given week
+function getMondayOfWeek(year, week) {
+  const jan4 = new Date(year, 0, 4);
+  const dayOfWeek = jan4.getDay() || 7;
+  const monday = new Date(jan4);
+  monday.setDate(jan4.getDate() - dayOfWeek + 1 + (week - 1) * 7);
+  return monday;
+}
+
+function getISOWeek(date) {
+  const d = new Date(date);
+  d.setHours(0,0,0,0);
+  d.setDate(d.getDate() + 3 - ((d.getDay() + 6) % 7));
+  const week1 = new Date(d.getFullYear(), 0, 4);
+  return 1 + Math.round(((d - week1) / 86400000 - 3 + ((week1.getDay() + 6) % 7)) / 7);
+}
+
+const today = new Date();
+const currentKW = getISOWeek(today);
+const currentYear = today.getFullYear();
+const currentDayOfWeek = today.getDay() === 0 ? 6 : today.getDay() - 1; // 0=Mo..5=Sa
+
+// Build offers with dynamic dates for current week
+function buildOffersForWeek(year, kw) {
+  const monday = getMondayOfWeek(year, kw);
+  function d(daysOffset) {
+    const dt = new Date(monday);
+    dt.setDate(monday.getDate() + daysOffset);
+    return dt;
+  }
+  function fmt(dt) { return dt.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' }); }
+  function fmtFull(dt) { return dt.toISOString().split('T')[0]; }
+
+  const mo = d(0), di = d(1), mi = d(2), do_ = d(3), fr = d(4), sa = d(5);
+
+  return [
+    {
+      id: 1, chain: 'aldi-sued', name: 'Müller Milch frisch 3,5% 1L', emoji: '🥛',
+      pricew: 0.89, pricea: 1.29,
+      validFrom: fmtFull(mo), validTo: fmtFull(sa), weekOnly: true,
+      label: `${fmt(mo)} – ${fmt(sa)}`
+    },
+    {
+      id: 2, chain: 'lidl', name: 'Meggle Butter 250g', emoji: '🧈',
+      pricew: 1.79, pricea: 2.49,
+      validFrom: fmtFull(mo), validTo: fmtFull(mi), weekOnly: false,
+      label: `${fmt(mo)} – ${fmt(mi)}`
+    },
+    {
+      id: 3, chain: 'rewe', name: 'Alpro Hafer Drink 1L', emoji: '🌾',
+      pricew: 1.49, pricea: 2.19,
+      validFrom: fmtFull(mo), validTo: fmtFull(fr), weekOnly: false,
+      label: `${fmt(mo)} – ${fmt(fr)}`
+    },
+    {
+      id: 4, chain: 'penny', name: 'Rügenwalder Mühle Aufschnitt 80g', emoji: '🥩',
+      pricew: 0.99, pricea: 1.69,
+      validFrom: fmtFull(mo), validTo: fmtFull(sa), weekOnly: true,
+      label: `${fmt(mo)} – ${fmt(sa)}`
+    },
+    {
+      id: 5, chain: 'edeka', name: 'Gouda Scheiben 400g', emoji: '🧀',
+      pricew: 2.49, pricea: 3.79,
+      validFrom: fmtFull(di), validTo: fmtFull(sa), weekOnly: false,
+      label: `${fmt(di)} – ${fmt(sa)}`
+    },
+    {
+      id: 6, chain: 'kaufland', name: 'Ehrmann Joghurt mild 3,8% 500g', emoji: '🍦',
+      pricew: 0.79, pricea: 1.29,
+      validFrom: fmtFull(mo), validTo: fmtFull(sa), weekOnly: true,
+      label: `${fmt(mo)} – ${fmt(sa)}`
+    },
+    {
+      id: 7, chain: 'aldi-nord', name: 'Goldähren Weizenmehl Type 405 2kg', emoji: '🌾',
+      pricew: 0.99, pricea: 1.59,
+      validFrom: fmtFull(mo), validTo: fmtFull(sa), weekOnly: true,
+      label: `${fmt(mo)} – ${fmt(sa)}`
+    },
+    {
+      id: 8, chain: 'netto', name: 'Bertolli Olivenöl extra vergine 500ml', emoji: '🫒',
+      pricew: 3.99, pricea: 5.49,
+      validFrom: fmtFull(mi), validTo: fmtFull(sa), weekOnly: false,
+      label: `${fmt(mi)} – ${fmt(sa)}`
+    },
+    {
+      id: 9, chain: 'rewe', name: 'Bonduelle Erbsen & Karotten 400g', emoji: '🥕',
+      pricew: 0.69, pricea: 1.09,
+      validFrom: fmtFull(di), validTo: fmtFull(do_), weekOnly: false,
+      label: `${fmt(di)} – ${fmt(do_)}`
+    },
+    {
+      id: 10, chain: 'lidl', name: 'Storck Riesen 125g', emoji: '🍬',
+      pricew: 0.99, pricea: 1.49,
+      validFrom: fmtFull(do_), validTo: fmtFull(sa), weekOnly: false,
+      label: `${fmt(do_)} – ${fmt(sa)}`
+    },
+    {
+      id: 11, chain: 'tegut', name: 'Bio Eier Freilandhaltung 10 Stück', emoji: '🥚',
+      pricew: 2.99, pricea: 3.99,
+      validFrom: fmtFull(mo), validTo: fmtFull(sa), weekOnly: true,
+      label: `${fmt(mo)} – ${fmt(sa)}`
+    },
+    {
+      id: 12, chain: 'alnatura', name: 'Alnatura Dinkel-Vollkornbrot 500g', emoji: '🍞',
+      pricew: 2.49, pricea: 3.19,
+      validFrom: fmtFull(mo), validTo: fmtFull(sa), weekOnly: true,
+      label: `${fmt(mo)} – ${fmt(sa)}`
+    },
+    {
+      id: 13, chain: 'globus', name: 'Hela Gewürzwelt Ketchup 800ml', emoji: '🍅',
+      pricew: 1.79, pricea: 2.79,
+      validFrom: fmtFull(fr), validTo: fmtFull(sa), weekOnly: false,
+      label: `${fmt(fr)} – ${fmt(sa)}`
+    },
+    {
+      id: 14, chain: 'marktkauf', name: 'Ariel Color Waschmittel 20WL', emoji: '🧺',
+      pricew: 7.99, pricea: 12.99,
+      validFrom: fmtFull(mo), validTo: fmtFull(sa), weekOnly: true,
+      label: `${fmt(mo)} – ${fmt(sa)}`
+    },
+    {
+      id: 15, chain: 'hit', name: 'Schwarzwälder Kirschtorte 400g', emoji: '🎂',
+      pricew: 3.49, pricea: 5.29,
+      validFrom: fmtFull(di), validTo: fmtFull(fr), weekOnly: false,
+      label: `${fmt(di)} – ${fmt(fr)}`
+    },
+    {
+      id: 16, chain: 'denns', name: "Denn's Bio Haferflocken zart 500g", emoji: '🥣',
+      pricew: 1.29, pricea: 1.79,
+      validFrom: fmtFull(mo), validTo: fmtFull(sa), weekOnly: true,
+      label: `${fmt(mo)} – ${fmt(sa)}`
+    },
+    {
+      id: 17, chain: 'kaufland', name: 'San Pellegrino Mineralwasser 6×1L', emoji: '💧',
+      pricew: 3.49, pricea: 5.49,
+      validFrom: fmtFull(mi), validTo: fmtFull(sa), weekOnly: false,
+      label: `${fmt(mi)} – ${fmt(sa)}`
+    },
+    {
+      id: 18, chain: 'edeka', name: 'Ferrero Kinder Bueno 3er Pack', emoji: '🍫',
+      pricew: 1.49, pricea: 2.19,
+      validFrom: fmtFull(do_), validTo: fmtFull(sa), weekOnly: false,
+      label: `${fmt(do_)} – ${fmt(sa)}`
+    },
+    {
+      id: 19, chain: 'aldi-sued', name: 'Coca-Cola 6×1,5L', emoji: '🥤',
+      pricew: 4.99, pricea: 7.49,
+      validFrom: fmtFull(mo), validTo: fmtFull(sa), weekOnly: true,
+      label: `${fmt(mo)} – ${fmt(sa)}`
+    },
+    {
+      id: 20, chain: 'penny', name: 'Dr. Oetker Tiefkühlpizza Ristorante 320g', emoji: '🍕',
+      pricew: 2.49, pricea: 3.49,
+      validFrom: fmtFull(di), validTo: fmtFull(mi), weekOnly: false,
+      label: `${fmt(di)} – ${fmt(mi)}`
+    },
+  ];
+}
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+
+let state = {
+  tab: 'heute',
+  kw: currentKW,
+  year: currentYear,
+  selectedDay: currentDayOfWeek, // 0=Mo..5=Sa
+  activeChain: 'all',
+  openProspekt: null,
+  offers: [],
+};
+
+function reloadOffers() {
+  state.offers = buildOffersForWeek(state.year, state.kw);
+}
+reloadOffers();
+
+// ─── KW MODAL ─────────────────────────────────────────────────────────────────
+
+function openKwModal() {
+  const list = document.getElementById('kwList');
+  list.innerHTML = '';
+  for (let i = -2; i <= 6; i++) {
+    let kw = currentKW + i;
+    let yr = currentYear;
+    if (kw < 1) { kw += 52; yr--; }
+    if (kw > 52) { kw -= 52; yr++; }
+    const mon = getMondayOfWeek(yr, kw);
+    const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+    const fmt = (d) => d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' });
+    const item = document.createElement('div');
+    item.className = 'kw-item' + (kw === state.kw && yr === state.year ? ' selected' : '');
+    item.innerHTML = `<span>KW ${kw} ${yr !== currentYear ? yr : ''}</span><span class="kw-dates">${fmt(mon)} – ${fmt(sun)}</span>`;
+    item.onclick = () => { state.kw = kw; state.year = yr; reloadOffers(); closeKwModal(); render(); };
+    list.appendChild(item);
+  }
+  document.getElementById('kwModal').classList.add('open');
+}
+
+function closeKwModal() {
+  document.getElementById('kwModal').classList.remove('open');
+}
+
+document.getElementById('kwModal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('kwModal')) closeKwModal();
+});
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+
+function getChain(id) { return CHAINS.find(c => c.id === id); }
+
+function discountPct(offer) {
+  return Math.round((1 - offer.pricew / offer.pricea) * 100);
+}
+
+function offerActiveOnDay(offer, dayIndex) {
+  // dayIndex: 0=Mo..5=Sa relative to current week Monday
+  const monday = getMondayOfWeek(state.year, state.kw);
+  const dayDate = new Date(monday);
+  dayDate.setDate(monday.getDate() + dayIndex);
+  const dayStr = dayDate.toISOString().split('T')[0];
+  if (offer.weekOnly) return true; // shown every day of week
+  return dayStr >= offer.validFrom && dayStr <= offer.validTo;
+}
+
+function filteredOffers(dayIndex) {
+  return state.offers.filter(o => {
+    const chainOk = state.activeChain === 'all' || o.chain === state.activeChain;
+    const dayOk = offerActiveOnDay(o, dayIndex);
+    return chainOk && dayOk;
+  });
+}
+
+const DAY_NAMES = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+const DAY_FULL  = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+
+function formatPrice(p) {
+  return p.toFixed(2).replace('.', ',') + ' €';
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+
+function render() {
+  // KW Badge
+  document.getElementById('kwBadge').textContent = `KW ${state.kw}`;
+
+  // Active tab
+  ['heute','woche','prospekte'].forEach(t => {
+    document.getElementById('tab-'+t).className = 'tab' + (state.tab === t ? ' active' : '');
+  });
+
+  // Filter bar visibility
+  const filterBar = document.getElementById('filterBar');
+  filterBar.style.display = state.tab === 'prospekte' ? 'none' : 'block';
+
+  renderFilterBar();
+
+  const main = document.getElementById('mainContent');
+
+  if (state.tab === 'heute') {
+    renderHeuteTab(main);
+  } else if (state.tab === 'woche') {
+    renderWocheTab(main);
+  } else {
+    renderProspekteTab(main);
+  }
+}
+
+function renderFilterBar() {
+  const inner = document.getElementById('filterInner');
+  inner.innerHTML = '';
+
+  const all = document.createElement('div');
+  all.className = 'chip' + (state.activeChain === 'all' ? ' active' : '');
+  all.textContent = 'Alle';
+  all.onclick = () => { state.activeChain = 'all'; render(); };
+  inner.appendChild(all);
+
+  CHAINS.forEach(c => {
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (state.activeChain === c.id ? ' active' : '');
+    chip.textContent = c.name;
+    chip.onclick = () => { state.activeChain = c.id; render(); };
+    inner.appendChild(chip);
+  });
+}
+
+function renderDaySelector() {
+  const monday = getMondayOfWeek(state.year, state.kw);
+  const todayStr = today.toISOString().split('T')[0];
+  const kwMonday = getMondayOfWeek(state.year, state.kw);
+  const kwMondayStr = kwMonday.toISOString().split('T')[0];
+
+  let html = `<div class="day-selector">
+    <div class="week-header">
+      <span>Tag wählen</span>
+      <div class="week-nav">
+        <button onclick="prevDay()">‹</button>
+        <span style="font-size:.8rem;color:var(--text)">${DAY_FULL[state.selectedDay]}</span>
+        <button onclick="nextDay()">›</button>
+      </div>
+    </div>
+    <div class="days-row">`;
+
+  for (let i = 0; i < 6; i++) {
+    const dt = new Date(monday);
+    dt.setDate(monday.getDate() + i);
+    const dStr = dt.toISOString().split('T')[0];
+    const isToday = dStr === todayStr;
+    const isActive = i === state.selectedDay;
+    html += `<div class="day-btn${isActive ? ' active' : ''}${isToday ? ' today' : ''}" onclick="selectDay(${i})">
+      <div class="day-name">${DAY_NAMES[i]}</div>
+      <div class="day-num">${dt.getDate()}</div>
+    </div>`;
+  }
+
+  html += `</div></div>`;
+  return html;
+}
+
+function renderOfferCard(offer) {
+  const chain = getChain(offer.chain);
+  if (!chain) return '';
+  const pct = discountPct(offer);
+  return `<div class="offer-card">
+    <div class="offer-img">${offer.emoji}</div>
+    <div class="discount-badge">−${pct}%</div>
+    <div class="offer-body">
+      <div class="offer-chain">
+        <span class="chain-name" style="background:${chain.color}">${chain.name}</span>
+        <span class="valid-label">${offer.label}</span>
+      </div>
+      <div class="offer-name">${offer.name}</div>
+      <div class="offer-prices">
+        <span class="price-new">${formatPrice(offer.pricew)}</span>
+        <span class="price-old">${formatPrice(offer.pricea)}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderHeuteTab(main) {
+  const offers = filteredOffers(state.selectedDay);
+  let html = renderDaySelector();
+  html += `<div style="margin-top:20px;">`;
+  html += `<div class="section-title">${offers.length} Angebot${offers.length !== 1 ? 'e' : ''} • ${DAY_FULL[state.selectedDay]}</div>`;
+
+  if (offers.length === 0) {
+    html += `<div class="no-offers"><div class="icon">🔍</div><p>Keine Angebote für diesen Tag gefunden.</p></div>`;
+  } else {
+    html += `<div class="offers-grid">` + offers.map(renderOfferCard).join('') + `</div>`;
+  }
+  html += `</div>`;
+  main.innerHTML = html;
+}
+
+function renderWocheTab(main) {
+  const monday = getMondayOfWeek(state.year, state.kw);
+  let html = `<div class="week-summary">`;
+
+  for (let i = 0; i < 6; i++) {
+    const dt = new Date(monday);
+    dt.setDate(monday.getDate() + i);
+    const offers = filteredOffers(i);
+    if (offers.length === 0) continue;
+    const label = `${DAY_FULL[i]}, ${dt.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' })}`;
+    html += `<div class="week-day-section">
+      <h3>${label} <span class="count-badge">${offers.length}</span></h3>
+      <div class="offers-grid">${offers.map(renderOfferCard).join('')}</div>
+    </div>`;
+  }
+
+  if (html === `<div class="week-summary">`) {
+    html += `<div class="no-offers"><div class="icon">🔍</div><p>Keine Angebote diese Woche gefunden.</p></div>`;
+  }
+
+  html += `</div>`;
+  main.innerHTML = html;
+}
+
+function renderProspekteTab(main) {
+  if (state.openProspekt) {
+    renderProspektDetail(main, state.openProspekt);
+    return;
+  }
+
+  const monday = getMondayOfWeek(state.year, state.kw);
+  const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
+  const fmt = (d) => d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' });
+
+  let html = `<div class="section-title">Alle Prospekte • KW ${state.kw}</div>
+  <div class="prospekt-grid">`;
+
+  CHAINS.forEach(c => {
+    html += `<div class="prospekt-card" onclick="openProspekt('${c.id}')">
+      <div class="prospekt-logo" style="background:${c.color}">${c.emoji}</div>
+      <div class="prospekt-chain-name">${c.name}</div>
+      <div class="prospekt-kw">${fmt(monday)} – ${fmt(sunday)}</div>
+      <div class="prospekt-arrow">Prospekt ansehen →</div>
+    </div>`;
+  });
+
+  html += `</div>`;
+  main.innerHTML = html;
+}
+
+function renderProspektDetail(main, chainId) {
+  const chain = getChain(chainId);
+  if (!chain) return;
+  const monday = getMondayOfWeek(state.year, state.kw);
+  const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
+  const fmt = (d) => d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric' });
+
+  let html = `<button class="back-btn" onclick="closeProspekt()">← Zurück zu Prospekten</button>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+    <div class="prospekt-logo" style="background:${chain.color};width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;">${chain.emoji}</div>
+    <div>
+      <div style="font-size:1.2rem;font-weight:800;">${chain.name}</div>
+      <div style="font-size:.8rem;color:var(--muted);">Prospekt KW ${state.kw} · Gültig ${fmt(monday)} – ${fmt(sunday)}</div>
+    </div>
+  </div>
+  <div class="prospekt-pages">`;
+
+  for (let i = 1; i <= 12; i++) {
+    const emojis = ['🥛','🧈','🍞','🥩','🧀','🥚','🫒','🍅','🥤','🍕','🎂','🛒'];
+    html += `<div class="prospekt-page">
+      <div class="page-num">${i}</div>
+      <div style="font-size:2rem;">${emojis[(i-1) % emojis.length]}</div>
+      <div style="margin-top:8px;">Seite ${i}</div>
+    </div>`;
+  }
+
+  html += `</div>`;
+  main.innerHTML = html;
+}
+
+// ─── ACTIONS ─────────────────────────────────────────────────────────────────
+
+function switchTab(tab) {
+  state.tab = tab;
+  state.openProspekt = null;
+  render();
+}
+
+function selectDay(i) {
+  state.selectedDay = i;
+  render();
+}
+
+function prevDay() {
+  if (state.selectedDay > 0) { state.selectedDay--; render(); }
+}
+
+function nextDay() {
+  if (state.selectedDay < 5) { state.selectedDay++; render(); }
+}
+
+function openProspekt(chainId) {
+  state.openProspekt = chainId;
+  render();
+}
+
+function closeProspekt() {
+  state.openProspekt = null;
+  render();
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>

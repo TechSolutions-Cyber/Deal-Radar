@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DealRadar – Lebensmittel-Angebote</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-R78ZVC19ER"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-R78ZVC19ER');
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #334155;
+    --accent: #16a34a;
+    --accent-light: #22c55e;
+    --red: #ef4444;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --border: #334155;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  /* ── AFFILIATE BANNER ── */
+  .affiliate-banner {
+    background: #14532d;
+    border-bottom: 1px solid #166534;
+    text-align: center;
+    padding: 6px 16px;
+    font-size: 0.72rem;
+    color: #86efac;
+    letter-spacing: 0.2px;
+  }
+  .affiliate-banner a {
+    color: #86efac;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 10px;
+    max-width: 900px;
+    margin: 0 auto;
+    gap: 10px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    flex-shrink: 0;
+  }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .logo span { color: var(--accent-light); }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .kw-badge {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition: border-color .2s;
+    white-space: nowrap;
+  }
+  .kw-badge:hover { border-color: var(--accent); color: var(--text); }
+
+  .search-btn {
+    width: 34px; height: 34px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    flex-shrink: 0;
+    transition: border-color .2s;
+  }
+  .search-btn:hover, .search-btn.active { border-color: var(--accent); }
+
+  /* SEARCH BAR */
+  .search-bar { display: none; padding: 0 16px 12px; max-width: 900px; margin: 0 auto; }
+  .search-bar.open { display: block; }
+  .search-input-wrap { position: relative; }
+  .search-input-wrap .s-icon {
+    position: absolute; left: 12px; top: 50%;
+    transform: translateY(-50%); font-size: 1rem; pointer-events: none;
+  }
+  .search-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 1rem;
+    padding: 10px 12px 10px 38px;
+    outline: none;
+  }
+  .search-input::placeholder { color: var(--muted); }
+  .search-results-label { font-size: 0.75rem; color: var(--muted); margin-top: 8px; }
+
+  /* ── TABS ── */
+  .tabs { display: flex; max-width: 900px; margin: 0 auto; padding: 0 16px; }
+  .tab {
+    flex: 1; text-align: center; padding: 10px 8px;
+    font-size: 0.9rem; font-weight: 600; color: var(--muted);
+    cursor: pointer; border-bottom: 3px solid transparent; transition: all .2s;
+  }
+  .tab.active { color: var(--accent-light); border-bottom-color: var(--accent-light); }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .filter-bar::-webkit-scrollbar { display: none; }
+  .filter-inner {
+    display: flex; gap: 8px; padding: 10px 16px;
+    max-width: 900px; margin: 0 auto; width: max-content; min-width: 100%;
+  }
+  .chip {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 20px; padding: 5px 14px; font-size: 0.8rem; font-weight: 500;
+    cursor: pointer; white-space: nowrap; transition: all .15s; color: var(--muted);
+  }
+  .chip:hover { border-color: var(--accent); color: var(--text); }
+  .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* ── DAY SELECTOR ── */
+  .day-selector { max-width: 900px; margin: 16px auto 0; padding: 0 16px; }
+  .week-header {
+    font-size: 0.8rem; color: var(--muted); margin-bottom: 10px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .week-nav { display: flex; align-items: center; gap: 12px; }
+  .week-nav button {
+    background: var(--surface); border: 1px solid var(--border); color: var(--text);
+    width: 28px; height: 28px; border-radius: 6px; cursor: pointer;
+    font-size: 1rem; display: flex; align-items: center; justify-content: center;
+    transition: border-color .2s;
+  }
+  .week-nav button:hover { border-color: var(--accent); }
+  .days-row { display: flex; gap: 8px; }
+  .day-btn {
+    flex: 1; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 4px; text-align: center;
+    cursor: pointer; transition: all .15s; color: var(--muted);
+  }
+  .day-btn .day-name { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .day-btn .day-num  { font-size: 1rem; font-weight: 700; margin-top: 2px; color: var(--text); }
+  .day-btn:hover { border-color: var(--accent); }
+  .day-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .day-btn.active .day-num { color: #fff; }
+  .day-btn.today .day-name { color: var(--accent-light); }
+
+  /* ── MAIN ── */
+  .main { max-width: 900px; margin: 20px auto 0; padding: 0 16px; }
+  .section-title {
+    font-size: 1rem; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px;
+  }
+
+  /* ── OFFER CARDS ── */
+  .offers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+  }
+  @media (min-width: 600px) {
+    .offers-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  }
+  .offer-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    transition: transform .15s, border-color .15s;
+    position: relative; display: flex; flex-direction: column;
+  }
+  .offer-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .offer-img {
+    width: 100%; aspect-ratio: 1; background: var(--surface2);
+    display: flex; align-items: center; justify-content: center; font-size: 3.5rem;
+  }
+  .offer-body { padding: 10px 12px 10px; flex: 1; display: flex; flex-direction: column; }
+  .offer-chain { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .chain-name {
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; padding: 2px 7px; border-radius: 4px; color: #fff;
+  }
+  .valid-label { font-size: 0.65rem; color: var(--muted); }
+  .offer-name {
+    font-size: 0.9rem; font-weight: 600; line-height: 1.3; margin-bottom: 8px; flex: 1;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .offer-prices { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+  .price-new { font-size: 1.4rem; font-weight: 800; color: var(--accent-light); }
+  .price-old { font-size: 0.85rem; color: var(--muted); text-decoration: line-through; }
+
+  /* ── AFFILIATE BUTTON ── */
+  .affiliate-btn {
+    display: flex; align-items: center; justify-content: center; gap: 4px;
+    width: 100%; background: transparent;
+    border: 1px solid var(--accent); color: var(--accent-light);
+    border-radius: 6px; padding: 6px 10px;
+    font-size: 0.75rem; font-weight: 600; text-decoration: none;
+    cursor: pointer; transition: background .15s, color .15s;
+    user-select: none;
+  }
+  .affiliate-btn:hover { background: var(--accent); color: #fff; }
+  .affiliate-btn .aff-icon { font-size: 0.8rem; }
+
+  .discount-badge {
+    position: absolute; top: 10px; right: 10px;
+    background: var(--red); color: #fff;
+    font-size: 0.7rem; font-weight: 800; padding: 3px 7px; border-radius: 6px;
+  }
+
+  /* ── NO RESULTS ── */
+  .no-offers { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .no-offers .icon { font-size: 3rem; margin-bottom: 12px; }
+
+  /* ── DIESE WOCHE ── */
+  .week-summary { display: flex; flex-direction: column; gap: 24px; }
+  .week-day-section h3 {
+    font-size: 0.85rem; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    padding-bottom: 10px; border-bottom: 1px solid var(--border);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+  }
+  .count-badge {
+    background: var(--accent); color: #fff;
+    font-size: 0.65rem; padding: 1px 7px; border-radius: 10px;
+  }
+
+  /* ── PROSPEKTE ── */
+  .prospekt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+  .prospekt-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 12px; text-align: center;
+    cursor: pointer; transition: all .15s;
+  }
+  .prospekt-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .prospekt-logo {
+    width: 56px; height: 56px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; font-weight: 900; margin: 0 auto 10px; color: #fff;
+  }
+  .prospekt-chain-name { font-size: 0.85rem; font-weight: 700; margin-bottom: 4px; }
+  .prospekt-kw { font-size: 0.7rem; color: var(--muted); }
+  .prospekt-arrow { margin-top: 10px; font-size: 0.75rem; color: var(--accent-light); font-weight: 600; }
+
+  /* ── PROSPEKT DETAIL ── */
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--surface); border: 1px solid var(--border); color: var(--text);
+    padding: 8px 16px; border-radius: var(--radius-sm); cursor: pointer;
+    font-size: 0.85rem; font-weight: 600; margin-bottom: 20px; transition: border-color .2s;
+  }
+  .back-btn:hover { border-color: var(--accent); }
+  .prospekt-detail-header {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
+    padding: 16px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .prospekt-detail-logo {
+    width: 52px; height: 52px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; flex-shrink: 0; color: #fff;
+  }
+  .prospekt-detail-info h2 { font-size: 1.1rem; font-weight: 800; }
+  .prospekt-detail-info p  { font-size: 0.8rem; color: var(--muted); margin-top: 3px; }
+  .prospekt-pages {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+  .prospekt-page {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); aspect-ratio: 0.707;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 8px; cursor: pointer; padding: 12px;
+    transition: border-color .15s, transform .15s;
+  }
+  .prospekt-page:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .prospekt-page .pg-num {
+    font-size: 2.2rem; font-weight: 900; color: var(--surface2);
+    -webkit-text-stroke: 1.5px var(--border); line-height: 1;
+  }
+  .prospekt-page .pg-emoji { font-size: 2rem; }
+  .prospekt-page .pg-label { font-size: 0.7rem; color: var(--muted); }
+
+  /* ── KW MODAL ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.7); z-index: 200;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px; width: 90%; max-width: 360px;
+  }
+  .modal h3 { font-size: 1.1rem; margin-bottom: 16px; }
+  .kw-list {
+    display: flex; flex-direction: column; gap: 8px;
+    max-height: 300px; overflow-y: auto;
+  }
+  .kw-item {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 14px; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    transition: border-color .15s;
+  }
+  .kw-item:hover { border-color: var(--accent); }
+  .kw-item.selected { border-color: var(--accent); color: var(--accent-light); }
+  .kw-item .kw-dates { font-size: 0.75rem; color: var(--muted); }
+  .modal-close {
+    margin-top: 16px; width: 100%; background: var(--surface2);
+    border: 1px solid var(--border); color: var(--text); padding: 10px;
+    border-radius: var(--radius-sm); cursor: pointer; font-size: 0.9rem; font-weight: 600;
+  }
+
+  mark { background: #854d0e; color: #fef08a; border-radius: 2px; padding: 0 2px; }
+</style>
+</head>
+<body>
+
+<!-- AFFILIATE BANNER -->
+<div class="affiliate-banner">
+  ℹ️ Preise können variieren &nbsp;•&nbsp; Links sind Partnerlinks &nbsp;•&nbsp; Alle Angaben ohne Gewähr
+</div>
+
+<!-- KW MODAL -->
+<div class="modal-overlay" id="kwModal">
+  <div class="modal">
+    <h3>📅 Kalenderwoche wählen</h3>
+    <div class="kw-list" id="kwList"></div>
+    <button class="modal-close" onclick="closeKwModal()">Schließen</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">📡</div>
+      Deal<span>Radar</span>
+    </div>
+    <div class="header-right">
+      <div class="search-btn" id="searchBtn" onclick="toggleSearch()" title="Suche">🔍</div>
+      <div class="kw-badge" onclick="openKwModal()" id="kwBadge">KW –</div>
+    </div>
+  </div>
+  <div class="search-bar" id="searchBar">
+    <div class="search-input-wrap">
+      <span class="s-icon">🔍</span>
+      <input class="search-input" id="searchInput" type="text"
+        placeholder="Produkt suchen, z.B. Butter, Milch, Pizza…"
+        oninput="onSearch()" autocomplete="off">
+    </div>
+    <div class="search-results-label" id="searchResultsLabel"></div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('heute')" id="tab-heute">Heute</div>
+    <div class="tab" onclick="switchTab('woche')" id="tab-woche">Diese Woche</div>
+    <div class="tab" onclick="switchTab('prospekte')" id="tab-prospekte">Prospekte</div>
+  </div>
+</header>
+
+<!-- FILTER BAR -->
+<div class="filter-bar" id="filterBar">
+  <div class="filter-inner" id="filterInner"></div>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="mainContent"></div>
+
+<script>
+// ─── AFFILIATE-DATENBANK ──────────────────────────────────────────────────────
+// Hier später echte Awin/CJ/Tradedoubler-Links eintragen
+const AFFILIATE_LINKS = {
+  'aldi-sued':  'https://www.aldi-sued.de',
+  'aldi-nord':  'https://www.aldi-nord.de',
+  'lidl':       'https://www.lidl.de',
+  'penny':      'https://www.penny.de',
+  'netto':      'https://www.netto-online.de',
+  'rewe':       'https://www.rewe.de',
+  'edeka':      'https://www.edeka.de',
+  'kaufland':   'https://www.kaufland.de',
+  'tegut':      'https://www.tegut.com',
+  'globus':     'https://www.globus.de',
+  'marktkauf':  'https://www.marktkauf.de',
+  'hit':        'https://www.hit.de',
+  'alnatura':   'https://www.alnatura.de',
+  'denns':      'https://www.denns-biomarkt.de',
+};
+
+const UTM = '?utm_source=dealradar&utm_medium=affiliate&utm_campaign=angebot';
+
+function buildAffiliateURL(chainId) {
+  const base = AFFILIATE_LINKS[chainId] || 'https://www.google.com';
+  return base + UTM;
+}
+
+// ─── KLICK-TRACKING ───────────────────────────────────────────────────────────
+function trackClick(offer, chainName) {
+  const event = {
+    event:     'affiliate_click',
+    product:   offer.name,
+    chain:     chainName,
+    chainId:   offer.chain,
+    price:     offer.pw,
+    discount:  Math.round((1 - offer.pw / offer.pa) * 100) + '%',
+    url:       buildAffiliateURL(offer.chain),
+    timestamp: new Date().toISOString(),
+  };
+  console.log('%c[DealRadar] Affiliate-Klick', 'color:#22c55e;font-weight:bold', event);
+  // TODO: fetch('/api/track', { method:'POST', body: JSON.stringify(event) })
+}
+
+// ─── CHAINS ───────────────────────────────────────────────────────────────────
+const CHAINS = [
+  { id: 'aldi-sued',  name: 'Aldi Süd',       color: '#004f9f', emoji: '🔵' },
+  { id: 'aldi-nord',  name: 'Aldi Nord',       color: '#003f7f', emoji: '🔷' },
+  { id: 'lidl',       name: 'Lidl',            color: '#0050aa', emoji: '🟡' },
+  { id: 'penny',      name: 'Penny',           color: '#cc0000', emoji: '🔴' },
+  { id: 'netto',      name: 'Netto',           color: '#e07b00', emoji: '🟠' },
+  { id: 'rewe',       name: 'Rewe',            color: '#cc0000', emoji: '🍎' },
+  { id: 'edeka',      name: 'Edeka',           color: '#d4a000', emoji: '🟡' },
+  { id: 'kaufland',   name: 'Kaufland',        color: '#e30613', emoji: '🏪' },
+  { id: 'tegut',      name: 'Tegut',           color: '#e63312', emoji: '🍃' },
+  { id: 'globus',     name: 'Globus',          color: '#004a99', emoji: '🌍' },
+  { id: 'marktkauf',  name: 'Marktkauf',       color: '#e30613', emoji: '🛒' },
+  { id: 'hit',        name: 'Hit',             color: '#e20020', emoji: '💥' },
+  { id: 'alnatura',   name: 'Alnatura',        color: '#5a8a2c', emoji: '🌿' },
+  { id: 'denns',      name: "Denn's Biomarkt", color: '#4caf50', emoji: '🌱' },
+];
+
+const PAGE_EMOJIS = ['🥛','🧈','🍞','🥩','🧀','🥚','🫒','🍅','🥤','🍕','🎂','🛒'];
+
+// ─── DATE HELPERS ─────────────────────────────────────────────────────────────
+function getMondayOfWeek(year, week) {
+  const jan4 = new Date(year, 0, 4);
+  const dow = jan4.getDay() || 7;
+  const mon = new Date(jan4);
+  mon.setDate(jan4.getDate() - dow + 1 + (week - 1) * 7);
+  return mon;
+}
+function getISOWeek(date) {
+  const d = new Date(date);
+  d.setHours(0,0,0,0);
+  d.setDate(d.getDate() + 3 - ((d.getDay() + 6) % 7));
+  const w1 = new Date(d.getFullYear(), 0, 4);
+  return 1 + Math.round(((d - w1) / 86400000 - 3 + ((w1.getDay() + 6) % 7)) / 7);
+}
+function fmtShort(dt) { return dt.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' }); }
+function fmtISO(dt)   { return dt.toISOString().split('T')[0]; }
+
+const today         = new Date();
+const currentKW     = getISOWeek(today);
+const currentYear   = today.getFullYear();
+const todayStr      = fmtISO(today);
+const currentDayIdx = today.getDay() === 0 ? 5 : Math.min(today.getDay() - 1, 5);
+
+// ─── OFFER DATA ───────────────────────────────────────────────────────────────
+function buildOffers(year, kw) {
+  const mon = getMondayOfWeek(year, kw);
+  function d(n) { const dt = new Date(mon); dt.setDate(mon.getDate() + n); return dt; }
+  const [mo,di,mi,do_,fr,sa] = [0,1,2,3,4,5].map(d);
+
+  const raw = [
+    { id:1,  chain:'aldi-sued',  name:'Müller Milch frisch 3,5% 1L',                 emoji:'🥛', pw:0.89, pa:1.29, from:mo, to:sa, weekOnly:true  },
+    { id:2,  chain:'lidl',       name:'Meggle Butter 250g',                           emoji:'🧈', pw:1.79, pa:2.49, from:mo, to:mi, weekOnly:false },
+    { id:3,  chain:'rewe',       name:'Alpro Hafer Drink 1L',                         emoji:'🌾', pw:1.49, pa:2.19, from:mo, to:fr, weekOnly:false },
+    { id:4,  chain:'penny',      name:'Rügenwalder Mühle Aufschnitt 80g',             emoji:'🥩', pw:0.99, pa:1.69, from:mo, to:sa, weekOnly:true  },
+    { id:5,  chain:'edeka',      name:'Gouda Scheiben 400g',                          emoji:'🧀', pw:2.49, pa:3.79, from:di, to:sa, weekOnly:false },
+    { id:6,  chain:'kaufland',   name:'Ehrmann Joghurt mild 3,8% 500g',               emoji:'🍦', pw:0.79, pa:1.29, from:mo, to:sa, weekOnly:true  },
+    { id:7,  chain:'aldi-nord',  name:'Goldähren Weizenmehl Type 405 2kg',            emoji:'🌾', pw:0.99, pa:1.59, from:mo, to:sa, weekOnly:true  },
+    { id:8,  chain:'netto',      name:'Bertolli Olivenöl extra vergine 500ml',        emoji:'🫒', pw:3.99, pa:5.49, from:mi, to:sa, weekOnly:false },
+    { id:9,  chain:'rewe',       name:'Bonduelle Erbsen & Karotten 400g',             emoji:'🥕', pw:0.69, pa:1.09, from:di, to:do_, weekOnly:false },
+    { id:10, chain:'lidl',       name:'Storck Riesen Karamell 125g',                  emoji:'🍬', pw:0.99, pa:1.49, from:do_, to:sa, weekOnly:false },
+    { id:11, chain:'tegut',      name:'Bio Eier Freilandhaltung 10 Stück',            emoji:'🥚', pw:2.99, pa:3.99, from:mo, to:sa, weekOnly:true  },
+    { id:12, chain:'alnatura',   name:'Alnatura Dinkel-Vollkornbrot 500g',            emoji:'🍞', pw:2.49, pa:3.19, from:mo, to:sa, weekOnly:true  },
+    { id:13, chain:'globus',     name:'Hela Gewürzwelt Ketchup 800ml',                emoji:'🍅', pw:1.79, pa:2.79, from:fr, to:sa, weekOnly:false },
+    { id:14, chain:'marktkauf',  name:'Ariel Color Waschmittel 20 WL',                emoji:'🧺', pw:7.99, pa:12.99,from:mo, to:sa, weekOnly:true  },
+    { id:15, chain:'hit',        name:'Schwarzwälder Kirschtorte 400g',               emoji:'🎂', pw:3.49, pa:5.29, from:di, to:fr, weekOnly:false },
+    { id:16, chain:'denns',      name:"Denn's Bio Haferflocken zart 500g",            emoji:'🥣', pw:1.29, pa:1.79, from:mo, to:sa, weekOnly:true  },
+    { id:17, chain:'kaufland',   name:'San Pellegrino Mineralwasser 6×1L',            emoji:'💧', pw:3.49, pa:5.49, from:mi, to:sa, weekOnly:false },
+    { id:18, chain:'edeka',      name:'Ferrero Kinder Bueno 3er Pack',                emoji:'🍫', pw:1.49, pa:2.19, from:do_, to:sa, weekOnly:false },
+    { id:19, chain:'aldi-sued',  name:'Coca-Cola 6×1,5L',                            emoji:'🥤', pw:4.99, pa:7.49, from:mo, to:sa, weekOnly:true  },
+    { id:20, chain:'penny',      name:'Dr. Oetker Ristorante Pizza Margherita 320g', emoji:'🍕', pw:2.49, pa:3.49, from:di, to:mi, weekOnly:false },
+  ];
+
+  return raw.map(o => ({
+    ...o,
+    validFrom: fmtISO(o.from),
+    validTo:   fmtISO(o.to),
+    label:     `${fmtShort(o.from)} – ${fmtShort(o.to)}`,
+  }));
+}
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+const state = {
+  tab: 'heute',
+  kw: currentKW,
+  year: currentYear,
+  selectedDay: currentDayIdx,
+  activeChain: 'all',
+  openProspekt: null,
+  searchOpen: false,
+  searchQuery: '',
+  offers: [],
+};
+function reloadOffers() { state.offers = buildOffers(state.year, state.kw); }
+reloadOffers();
+
+// ─── SEARCH ───────────────────────────────────────────────────────────────────
+function toggleSearch() {
+  state.searchOpen = !state.searchOpen;
+  state.searchQuery = '';
+  const bar = document.getElementById('searchBar');
+  const btn = document.getElementById('searchBtn');
+  if (state.searchOpen) {
+    bar.classList.add('open'); btn.classList.add('active');
+    document.getElementById('searchInput').focus();
+  } else {
+    bar.classList.remove('open'); btn.classList.remove('active');
+    document.getElementById('searchInput').value = '';
+  }
+  renderMain();
+}
+function onSearch() {
+  state.searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+  renderMain();
+}
+function highlightMatch(text, query) {
+  if (!query) return text;
+  const idx = text.toLowerCase().indexOf(query);
+  if (idx === -1) return text;
+  return text.slice(0, idx) + '<mark>' + text.slice(idx, idx + query.length) + '</mark>' + text.slice(idx + query.length);
+}
+
+// ─── FILTERS ─────────────────────────────────────────────────────────────────
+function getChain(id)      { return CHAINS.find(c => c.id === id); }
+function discountPct(o)    { return Math.round((1 - o.pw / o.pa) * 100); }
+function formatPrice(p)    { return p.toFixed(2).replace('.', ',') + ' €'; }
+
+function offerActiveOnDay(offer, dayIndex) {
+  if (offer.weekOnly) return true;
+  const mon = getMondayOfWeek(state.year, state.kw);
+  const dt  = new Date(mon); dt.setDate(mon.getDate() + dayIndex);
+  const s   = fmtISO(dt);
+  return s >= offer.validFrom && s <= offer.validTo;
+}
+function filterOffersBySearch(offers) {
+  if (!state.searchQuery) return offers;
+  return offers.filter(o => o.name.toLowerCase().includes(state.searchQuery));
+}
+function filteredForDay(dayIndex) {
+  const base = state.offers.filter(o =>
+    (state.activeChain === 'all' || o.chain === state.activeChain) &&
+    offerActiveOnDay(o, dayIndex)
+  );
+  return filterOffersBySearch(base);
+}
+
+// ─── CARD HTML ────────────────────────────────────────────────────────────────
+const DAY_NAMES = ['Mo','Di','Mi','Do','Fr','Sa'];
+const DAY_FULL  = ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+
+// Inline click handler passes offer id; we look it up to avoid serialising the whole object
+function onAffiliateClick(offerId) {
+  const offer = state.offers.find(o => o.id === offerId);
+  if (!offer) return;
+  const chain = getChain(offer.chain);
+  trackClick(offer, chain ? chain.name : offer.chain);
+  // navigation happens via the <a> href
+}
+
+function offerCardHTML(offer, query = '') {
+  const chain = getChain(offer.chain);
+  if (!chain) return '';
+  const pct    = discountPct(offer);
+  const name   = highlightMatch(offer.name, query);
+  const affUrl = buildAffiliateURL(offer.chain);
+
+  return `<div class="offer-card">
+    <div class="offer-img">${offer.emoji}</div>
+    <div class="discount-badge">−${pct}%</div>
+    <div class="offer-body">
+      <div class="offer-chain">
+        <span class="chain-name" style="background:${chain.color}">${chain.name}</span>
+        <span class="valid-label">${offer.label}</span>
+      </div>
+      <div class="offer-name">${name}</div>
+      <div class="offer-prices">
+        <span class="price-new">${formatPrice(offer.pw)}</span>
+        <span class="price-old">${formatPrice(offer.pa)}</span>
+      </div>
+      <a class="affiliate-btn"
+         href="${affUrl}"
+         target="_blank"
+         rel="noopener sponsored"
+         onclick="onAffiliateClick(${offer.id})">
+        <span class="aff-icon">🔗</span> Zum Angebot →
+      </a>
+    </div>
+  </div>`;
+}
+
+function noOffers(msg = 'Keine Angebote gefunden.') {
+  return `<div class="no-offers"><div class="icon">🔍</div><p>${msg}</p></div>`;
+}
+
+// ─── FILTER BAR ───────────────────────────────────────────────────────────────
+function renderFilterBar() {
+  const inner = document.getElementById('filterInner');
+  inner.innerHTML = '';
+  const all = document.createElement('div');
+  all.className = 'chip' + (state.activeChain === 'all' ? ' active' : '');
+  all.textContent = 'Alle';
+  all.onclick = () => { state.activeChain = 'all'; renderMain(); };
+  inner.appendChild(all);
+  CHAINS.forEach(c => {
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (state.activeChain === c.id ? ' active' : '');
+    chip.textContent = c.name;
+    chip.onclick = () => { state.activeChain = c.id; renderMain(); };
+    inner.appendChild(chip);
+  });
+}
+
+// ─── DAY SELECTOR ────────────────────────────────────────────────────────────
+function daySelectorHTML() {
+  const mon = getMondayOfWeek(state.year, state.kw);
+  let html = `<div class="day-selector">
+    <div class="week-header">
+      <span>Tag wählen</span>
+      <div class="week-nav">
+        <button onclick="prevDay()">‹</button>
+        <span style="font-size:.8rem;color:var(--text)">${DAY_FULL[state.selectedDay]}</span>
+        <button onclick="nextDay()">›</button>
+      </div>
+    </div><div class="days-row">`;
+  for (let i = 0; i < 6; i++) {
+    const dt = new Date(mon); dt.setDate(mon.getDate() + i);
+    const isT = fmtISO(dt) === todayStr;
+    const isA = i === state.selectedDay;
+    html += `<div class="day-btn${isA?' active':''}${isT?' today':''}" onclick="selectDay(${i})">
+      <div class="day-name">${DAY_NAMES[i]}</div>
+      <div class="day-num">${dt.getDate()}</div>
+    </div>`;
+  }
+  return html + `</div></div>`;
+}
+
+// ─── TAB RENDERERS ────────────────────────────────────────────────────────────
+function renderSearchView() {
+  const q = state.searchQuery;
+  const all = state.offers.filter(o =>
+    (state.activeChain === 'all' || o.chain === state.activeChain) &&
+    o.name.toLowerCase().includes(q)
+  );
+  document.getElementById('searchResultsLabel').textContent =
+    q ? `${all.length} Treffer für „${q}"` : '';
+  if (!q) return `<div class="no-offers"><div class="icon">🔎</div><p>Tippe einen Suchbegriff ein…</p></div>`;
+  if (!all.length) return noOffers(`Keine Angebote für „${q}" gefunden.`);
+  return `<div class="section-title">${all.length} Treffer</div>
+    <div class="offers-grid">${all.map(o => offerCardHTML(o, q)).join('')}</div>`;
+}
+
+function renderHeuteTab() {
+  if (state.searchOpen) return renderSearchView();
+  const offers = filteredForDay(state.selectedDay);
+  return daySelectorHTML() +
+    `<div style="margin-top:20px;">
+      <div class="section-title">${offers.length} Angebot${offers.length!==1?'e':''} · ${DAY_FULL[state.selectedDay]}</div>
+      ${offers.length
+        ? `<div class="offers-grid">${offers.map(o => offerCardHTML(o, state.searchQuery)).join('')}</div>`
+        : noOffers()}
+    </div>`;
+}
+
+function renderWocheTab() {
+  if (state.searchOpen) return renderSearchView();
+  const mon = getMondayOfWeek(state.year, state.kw);
+  let html = `<div class="week-summary">`;
+  let any = false;
+  for (let i = 0; i < 6; i++) {
+    const offers = filteredForDay(i);
+    if (!offers.length) continue;
+    any = true;
+    const dt = new Date(mon); dt.setDate(mon.getDate() + i);
+    html += `<div class="week-day-section">
+      <h3>${DAY_FULL[i]}, ${fmtShort(dt)} <span class="count-badge">${offers.length}</span></h3>
+      <div class="offers-grid">${offers.map(o => offerCardHTML(o)).join('')}</div>
+    </div>`;
+  }
+  if (!any) html += noOffers('Keine Angebote diese Woche.');
+  return html + `</div>`;
+}
+
+function renderProspekteTab() {
+  if (state.openProspekt) return renderProspektDetail(state.openProspekt);
+  const mon = getMondayOfWeek(state.year, state.kw);
+  const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+  let html = `<div class="section-title">Alle Prospekte · KW ${state.kw}</div>
+    <div class="prospekt-grid">`;
+  CHAINS.forEach(c => {
+    html += `<div class="prospekt-card" onclick="openProspekt('${c.id}')">
+      <div class="prospekt-logo" style="background:${c.color}">${c.emoji}</div>
+      <div class="prospekt-chain-name">${c.name}</div>
+      <div class="prospekt-kw">${fmtShort(mon)} – ${fmtShort(sun)}</div>
+      <div class="prospekt-arrow">Prospekt ansehen →</div>
+    </div>`;
+  });
+  return html + `</div>`;
+}
+
+function renderProspektDetail(chainId) {
+  const chain = getChain(chainId);
+  if (!chain) return '';
+  const mon = getMondayOfWeek(state.year, state.kw);
+  const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+  const fmtL = d => d.toLocaleDateString('de-DE', { day:'2-digit', month:'long', year:'numeric' });
+  let pages = '';
+  for (let i = 1; i <= 12; i++) {
+    pages += `<div class="prospekt-page">
+      <div class="pg-num">${i}</div>
+      <div class="pg-emoji">${PAGE_EMOJIS[(i-1) % PAGE_EMOJIS.length]}</div>
+      <div class="pg-label">Seite ${i}</div>
+    </div>`;
+  }
+  return `<button class="back-btn" onclick="closeProspekt()">← Alle Prospekte</button>
+    <div class="prospekt-detail-header">
+      <div class="prospekt-detail-logo" style="background:${chain.color}">${chain.emoji}</div>
+      <div class="prospekt-detail-info">
+        <h2>${chain.name}</h2>
+        <p>Prospekt KW ${state.kw} · Gültig ${fmtL(mon)} – ${fmtL(sun)}</p>
+      </div>
+    </div>
+    <div class="prospekt-pages">${pages}</div>`;
+}
+
+// ─── MAIN RENDER ─────────────────────────────────────────────────────────────
+function renderMain() {
+  document.getElementById('kwBadge').textContent = `KW ${state.kw}`;
+  ['heute','woche','prospekte'].forEach(t =>
+    document.getElementById('tab-'+t).className = 'tab' + (state.tab === t ? ' active' : '')
+  );
+  document.getElementById('filterBar').style.display =
+    state.tab === 'prospekte' ? 'none' : 'block';
+  renderFilterBar();
+
+  const main = document.getElementById('mainContent');
+  if      (state.tab === 'heute')     main.innerHTML = renderHeuteTab();
+  else if (state.tab === 'woche')     main.innerHTML = renderWocheTab();
+  else                                main.innerHTML = renderProspekteTab();
+}
+
+// ─── KW MODAL ────────────────────────────────────────────────────────────────
+function openKwModal() {
+  const list = document.getElementById('kwList');
+  list.innerHTML = '';
+  for (let i = -2; i <= 6; i++) {
+    let kw = currentKW + i, yr = currentYear;
+    if (kw < 1) { kw += 52; yr--; }
+    if (kw > 52) { kw -= 52; yr++; }
+    const mon = getMondayOfWeek(yr, kw);
+    const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+    const item = document.createElement('div');
+    item.className = 'kw-item' + (kw === state.kw && yr === state.year ? ' selected' : '');
+    item.innerHTML = `<span>KW ${kw}${yr !== currentYear ? ' ' + yr : ''}</span>
+      <span class="kw-dates">${fmtShort(mon)} – ${fmtShort(sun)}</span>`;
+    item.onclick = () => { state.kw = kw; state.year = yr; reloadOffers(); closeKwModal(); renderMain(); };
+    list.appendChild(item);
+  }
+  document.getElementById('kwModal').classList.add('open');
+}
+function closeKwModal() { document.getElementById('kwModal').classList.remove('open'); }
+document.getElementById('kwModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('kwModal')) closeKwModal();
+});
+
+// ─── ACTIONS ─────────────────────────────────────────────────────────────────
+function switchTab(tab)   { state.tab = tab; state.openProspekt = null; renderMain(); }
+function selectDay(i)     { state.selectedDay = i; renderMain(); }
+function prevDay()        { if (state.selectedDay > 0) { state.selectedDay--; renderMain(); } }
+function nextDay()        { if (state.selectedDay < 5) { state.selectedDay++; renderMain(); } }
+function openProspekt(id) { state.openProspekt = id; renderMain(); }
+function closeProspekt()  { state.openProspekt = null; renderMain(); }
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+renderMain();
+</script>
+</body>
+</html>
