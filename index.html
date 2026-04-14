@@ -1649,14 +1649,17 @@ const offImageCache = {};
 
 async function fetchProductImage(name) {
   if (offImageCache[name] !== undefined) return offImageCache[name];
+  const simplified = name.replace(/\d+[\.,]?\d*\s*(kg|g|ml|l|L|cl|stk|st|%)/gi, '').replace(/\s{2,}/g, ' ').trim();
   try {
     const res = await fetch(
-      `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(name)}&search_simple=1&action=process&json=1&page_size=1`
+      `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(simplified)}&search_simple=1&action=process&json=1&page_size=1&lc=de`
     );
     const data = await res.json();
-    const img = data.products?.[0]?.image_front_url || null;
-    offImageCache[name] = img;
-    return img;
+    const p = data.products?.[0];
+    const img = p?.image_front_url || p?.image_url || null;
+    const safeImg = img ? img.replace(/^http:\/\//i, 'https://') : null;
+    offImageCache[name] = safeImg;
+    return safeImg;
   } catch {
     offImageCache[name] = null;
     return null;
