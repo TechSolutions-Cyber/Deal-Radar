@@ -1584,7 +1584,7 @@ function showToast(msg) {
 const DAY_NAMES = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 const DAY_FULL  = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
 
-function render() {
+async function render() {
   document.getElementById('kwBadge').textContent = `KW ${state.kw}`;
   ['heute','woche','favoriten','prospekte'].forEach(t => {
     const el = document.getElementById('tab-'+t);
@@ -1598,10 +1598,10 @@ function render() {
   updateFavBadge();
   updateShopListBadge();
   const main = document.getElementById('mainContent');
-  if (state.tab === 'heute') renderHeuteTab(main);
-  else if (state.tab === 'woche') renderWocheTab(main);
-  else if (state.tab === 'favoriten') renderFavoriteTab(main);
-  else renderProspekteTab(main);
+  if (state.tab === 'heute') await renderHeuteTab(main);
+  else if (state.tab === 'woche') await renderWocheTab(main);
+  else if (state.tab === 'favoriten') await renderFavoriteTab(main);
+  else await renderProspekteTab(main);
 }
 
 function renderFilterBar() {
@@ -1719,21 +1719,21 @@ async function renderSearchView(main) {
     <div class="offers-grid">${(await Promise.all(results.map(o => renderOfferCard(o, q)))).join('')}</div>`;
 }
 
-function renderHeuteTab(main) {
-  if (state.searchOpen) { renderSearchView(main); return; }
+async function renderHeuteTab(main) {
+  if (state.searchOpen) { await renderSearchView(main); return; }
   const offers = filteredOffers(state.selectedDay);
   let html = renderDealOfWeek() + renderDaySelector();
   html += `<div style="margin-top:20px;">
     <div class="section-title">${offers.length} Angebot${offers.length !== 1 ? 'e' : ''} • ${DAY_FULL[state.selectedDay]}</div>`;
   html += offers.length
-    ? `<div class="offers-grid">${renderOffersWithAds(offers)}</div>`
+    ? `<div class="offers-grid">${await renderOffersWithAds(offers)}</div>`
     : `<div class="no-offers"><div class="icon">🔍</div><p>Keine Angebote für diesen Tag gefunden.</p></div>`;
   html += `</div>`;
   main.innerHTML = html;
 }
 
-function renderWocheTab(main) {
-  if (state.searchOpen) { renderSearchView(main); return; }
+async function renderWocheTab(main) {
+  if (state.searchOpen) { await renderSearchView(main); return; }
   const monday = getMondayOfWeek(state.year, state.kw);
   let html = renderDealOfWeek() + `<div class="week-summary">`;
   let any = false;
@@ -1745,15 +1745,15 @@ function renderWocheTab(main) {
     const label = `${DAY_FULL[i]}, ${dt.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' })}`;
     html += `<div class="week-day-section">
       <h3>${label} <span class="count-badge">${offers.length}</span></h3>
-      <div class="offers-grid">${renderOffersWithAds(offers)}</div>
+      <div class="offers-grid">${await renderOffersWithAds(offers)}</div>
     </div>`;
   }
   if (!any) html += `<div class="no-offers"><div class="icon">🔍</div><p>Keine Angebote diese Woche gefunden.</p></div>`;
   main.innerHTML = html + `</div>`;
 }
 
-function renderProspekteTab(main) {
-  if (state.openProspekt) { renderProspektDetail(main, state.openProspekt); return; }
+async function renderProspekteTab(main) {
+  if (state.openProspekt) { await renderProspektDetail(main, state.openProspekt); return; }
   const monday = getMondayOfWeek(state.year, state.kw);
   const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
   const fmt = d => d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' });
@@ -2033,10 +2033,11 @@ function renderDealOfWeek() {
 
 // ─── ADS HELPER ───────────────────────────────────────────────────────────────
 
-function renderOffersWithAds(offers) {
+async function renderOffersWithAds(offers) {
+  const cards = await Promise.all(offers.map(o => renderOfferCard(o)));
   let html = '';
-  offers.forEach((o, i) => {
-    html += renderOfferCard(o);
+  cards.forEach((card, i) => {
+    html += card;
     if ((i + 1) % 6 === 0 && i < offers.length - 1) {
       html += `<div class="ad-in-grid">
         <div class="ad-placeholder">
