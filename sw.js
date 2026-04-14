@@ -18,3 +18,16 @@ self.addEventListener('fetch', e => {
     caches.match(e.request).then(cached => cached || fetch(e.request))
   );
 });
+
+self.addEventListener('push', e => {
+  e.waitUntil(self.registration.showNotification('Deal Radar', {
+    body: e.data ? e.data.text() : 'Neue Angebote verfügbar!',
+    icon: '/icon.png',
+    badge: '/icon.png'
+  }));
+});
+
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  clients.openWindow('/');
+});
