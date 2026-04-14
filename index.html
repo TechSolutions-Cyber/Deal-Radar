@@ -1639,7 +1639,7 @@ function showToast(msg) {
 const DAY_NAMES = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 const DAY_FULL  = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
 
-async function render() {
+function render() {
   document.getElementById('kwBadge').textContent = `KW ${state.kw}`;
   ['heute','woche','favoriten','prospekte'].forEach(t => {
     const el = document.getElementById('tab-'+t);
@@ -1653,10 +1653,11 @@ async function render() {
   updateFavBadge();
   updateShopListBadge();
   const main = document.getElementById('mainContent');
-  if (state.tab === 'heute') await renderHeuteTab(main);
-  else if (state.tab === 'woche') await renderWocheTab(main);
-  else if (state.tab === 'favoriten') await renderFavoriteTab(main);
-  else await renderProspekteTab(main);
+  if (state.tab === 'heute') renderHeuteTab(main);
+  else if (state.tab === 'woche') renderWocheTab(main);
+  else if (state.tab === 'favoriten') renderFavoriteTab(main);
+  else renderProspekteTab(main);
+  loadImagesForCards();
 }
 
 function renderFilterBar() {
@@ -1702,35 +1703,54 @@ function renderDaySelector() {
   return html + `</div></div>`;
 }
 
-const offImageCache = {};
-
-async function fetchProductImage(name) {
-  if (offImageCache[name] !== undefined) return offImageCache[name];
-  const simplified = name.replace(/\d+[\.,]?\d*\s*(kg|g|ml|l|L|cl|stk|st|%)/gi, '').replace(/\s{2,}/g, ' ').trim();
+async function fetchProductImage(productName) {
+  const cacheKey = 'off_img_' + productName;
+  const cached = sessionStorage.getItem(cacheKey);
+  if (cached !== null) return cached || null;
+  const simplified = productName.replace(/\d+[\.,]?\d*\s*(kg|g|ml|l|L|cl|stk|st|%)/gi, '').replace(/\s{2,}/g, ' ').trim();
   try {
     const res = await fetch(
-      `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(simplified)}&search_simple=1&action=process&json=1&page_size=1&lc=de`
+      `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(simplified)}&search_simple=1&action=process&json=1&page_size=3`
     );
     const data = await res.json();
     const p = data.products?.[0];
     const img = p?.image_front_url || p?.image_url || null;
-    const safeImg = img ? img.replace(/^http:\/\//i, 'https://') : null;
-    offImageCache[name] = safeImg;
-    return safeImg;
+    const safeImg = img ? img.replace(/^http:\/\//i, 'https://') : '';
+    sessionStorage.setItem(cacheKey, safeImg);
+    return safeImg || null;
   } catch {
-    offImageCache[name] = null;
+    sessionStorage.setItem(cacheKey, '');
     return null;
   }
 }
 
-async function renderOfferCard(offer, query = '') {
+function loadImagesForCards() {
+  document.querySelectorAll('.offer-img[data-product-name]').forEach(async el => {
+    const name = el.getAttribute('data-product-name');
+    const img = await fetchProductImage(name);
+    if (!img) return;
+    const imgEl = document.createElement('img');
+    imgEl.alt = name;
+    imgEl.loading = 'lazy';
+    imgEl.style.cssText = 'width:100%;height:100%;object-fit:contain;background:white;border-radius:8px;opacity:0;transition:opacity .3s';
+    imgEl.onload = () => {
+      imgEl.style.opacity = '1';
+      const emoji = el.querySelector('.emoji-fallback');
+      if (emoji) emoji.style.display = 'none';
+    };
+    imgEl.onerror = () => imgEl.remove();
+    imgEl.src = img;
+    el.insertBefore(imgEl, el.firstChild);
+  });
+}
+
+function renderOfferCard(offer, query = '') {
   const chain = getChain(offer.chain);
   if (!chain) return '';
   const pct = discountPct(offer);
   const inCart = !!state.cart[offer.id];
   const isFav = state.favorites.has(offer.id);
   const onList = isOnShoppingList(offer.id);
-  const imgUrl = await fetchProductImage(offer.name);
   const nameHtml = query ? highlightMatch(offer.name, query) : offer.name;
   const cmp = state.priceComparisons[offer.id];
   const cmpBadge = cmp
@@ -1738,11 +1758,8 @@ async function renderOfferCard(offer, query = '') {
     : '';
   return `<div class="offer-card${inCart ? ' in-cart' : ''}">
     <button class="fav-btn${isFav ? ' active' : ''}" onclick="toggleFavorite(${offer.id})">${isFav ? '❤️' : '🤍'}</button>
-    <div class="offer-img">
-      ${imgUrl
-        ? `<img src="${imgUrl}" alt="${offer.name}" loading="lazy" onerror="this.style.display='none';this.parentElement.querySelector('.emoji-fallback').style.display='flex'">
-           <span class="emoji-fallback">${offer.emoji}</span>`
-        : `<span style="font-size:3.5rem">${offer.emoji}</span>`}
+    <div class="offer-img" data-product-name="${offer.name.replace(/"/g, '&quot;')}">
+      <span class="emoji-fallback" style="font-size:3.5rem">${offer.emoji}</span>
     </div>
     <div class="discount-badge">−${pct}%</div>
     <div class="offer-body">
@@ -1766,7 +1783,7 @@ async function renderOfferCard(offer, query = '') {
   </div>`;
 }
 
-async function renderSearchView(main) {
+function renderSearchView(main) {
   const q = state.searchQuery;
   const results = state.offers.filter(o =>
     (state.activeChain === 'all' || o.chain === state.activeChain) &&
@@ -1776,24 +1793,24 @@ async function renderSearchView(main) {
   if (!q) { main.innerHTML = `<div class="no-offers"><div class="icon">🔎</div><p>Tippe einen Suchbegriff ein…</p></div>`; return; }
   if (!results.length) { main.innerHTML = `<div class="no-offers"><div class="icon">🔍</div><p>Keine Angebote für „${q}" gefunden.</p></div>`; return; }
   main.innerHTML = `<div class="section-title">${results.length} Treffer</div>
-    <div class="offers-grid">${(await Promise.all(results.map(o => renderOfferCard(o, q)))).join('')}</div>`;
+    <div class="offers-grid">${results.map(o => renderOfferCard(o, q)).join('')}</div>`;
 }
 
-async function renderHeuteTab(main) {
-  if (state.searchOpen) { await renderSearchView(main); return; }
+function renderHeuteTab(main) {
+  if (state.searchOpen) { renderSearchView(main); return; }
   const offers = filteredOffers(state.selectedDay);
   let html = renderDealOfWeek() + renderDaySelector();
   html += `<div style="margin-top:20px;">
     <div class="section-title">${offers.length} Angebot${offers.length !== 1 ? 'e' : ''} • ${DAY_FULL[state.selectedDay]}</div>`;
   html += offers.length
-    ? `<div class="offers-grid">${await renderOffersWithAds(offers)}</div>`
+    ? `<div class="offers-grid">${renderOffersWithAds(offers)}</div>`
     : `<div class="no-offers"><div class="icon">🔍</div><p>Keine Angebote für diesen Tag gefunden.</p></div>`;
   html += `</div>`;
   main.innerHTML = html;
 }
 
-async function renderWocheTab(main) {
-  if (state.searchOpen) { await renderSearchView(main); return; }
+function renderWocheTab(main) {
+  if (state.searchOpen) { renderSearchView(main); return; }
   const monday = getMondayOfWeek(state.year, state.kw);
   let html = renderDealOfWeek() + `<div class="week-summary">`;
   let any = false;
@@ -1805,15 +1822,15 @@ async function renderWocheTab(main) {
     const label = `${DAY_FULL[i]}, ${dt.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' })}`;
     html += `<div class="week-day-section">
       <h3>${label} <span class="count-badge">${offers.length}</span></h3>
-      <div class="offers-grid">${await renderOffersWithAds(offers)}</div>
+      <div class="offers-grid">${renderOffersWithAds(offers)}</div>
     </div>`;
   }
   if (!any) html += `<div class="no-offers"><div class="icon">🔍</div><p>Keine Angebote diese Woche gefunden.</p></div>`;
   main.innerHTML = html + `</div>`;
 }
 
-async function renderProspekteTab(main) {
-  if (state.openProspekt) { await renderProspektDetail(main, state.openProspekt); return; }
+function renderProspekteTab(main) {
+  if (state.openProspekt) { renderProspektDetail(main, state.openProspekt); return; }
   const monday = getMondayOfWeek(state.year, state.kw);
   const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
   const fmt = d => d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' });
@@ -1839,7 +1856,7 @@ async function renderProspekteTab(main) {
   main.innerHTML = html + `</div>`;
 }
 
-async function renderProspektDetail(main, chainId) {
+function renderProspektDetail(main, chainId) {
   const chain = getChain(chainId);
   if (!chain) return;
   const monday = getMondayOfWeek(state.year, state.kw);
@@ -1848,7 +1865,7 @@ async function renderProspektDetail(main, chainId) {
   const chainOffers = state.offers.filter(o => o.chain === chainId);
   const offersHtml = chainOffers.length === 0
     ? `<div class="no-offers"><div class="icon">🛒</div><p>Für diese Woche sind noch keine Angebote hinterlegt – schau direkt im Prospekt nach!</p></div>`
-    : `<div class="offers-grid">${(await Promise.all(chainOffers.map(o => renderOfferCard(o)))).join('')}</div>`;
+    : `<div class="offers-grid">${chainOffers.map(o => renderOfferCard(o)).join('')}</div>`;
   main.innerHTML = `
     <button class="back-btn" onclick="closeProspekt()">← Zurück zu Prospekten</button>
     <div style="display:flex;align-items:center;gap:14px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;">
@@ -1943,14 +1960,14 @@ function updateFavBadge() {
   badge.style.display = count > 0 ? 'inline' : 'none';
 }
 
-async function renderFavoriteTab(main) {
+function renderFavoriteTab(main) {
   const favOffers = state.offers.filter(o => state.favorites.has(o.id));
   if (!favOffers.length) {
     main.innerHTML = `<div class="fav-empty"><div class="icon">🤍</div><p>Noch keine Favoriten.<br>Tippe ❤️ auf Angeboten um sie zu merken.</p></div>`;
     return;
   }
   main.innerHTML = `<div class="section-title">${favOffers.length} Favorit${favOffers.length !== 1 ? 'en' : ''}</div>
-    <div class="offers-grid">${(await Promise.all(favOffers.map(o => renderOfferCard(o)))).join('')}</div>`;
+    <div class="offers-grid">${favOffers.map(o => renderOfferCard(o)).join('')}</div>`;
 }
 
 // ─── SHOPPING LIST ────────────────────────────────────────────────────────────
@@ -2093,11 +2110,10 @@ function renderDealOfWeek() {
 
 // ─── ADS HELPER ───────────────────────────────────────────────────────────────
 
-async function renderOffersWithAds(offers) {
-  const cards = await Promise.all(offers.map(o => renderOfferCard(o)));
+function renderOffersWithAds(offers) {
   let html = '';
-  cards.forEach((card, i) => {
-    html += card;
+  offers.forEach((o, i) => {
+    html += renderOfferCard(o);
     if ((i + 1) % 6 === 0 && i < offers.length - 1) {
       html += `<div class="ad-in-grid">
         <div class="ad-placeholder">
