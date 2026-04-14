@@ -1645,14 +1645,32 @@ function renderDaySelector() {
   return html + `</div></div>`;
 }
 
-function renderOfferCard(offer, query = '') {
+const offImageCache = {};
+
+async function fetchProductImage(name) {
+  if (offImageCache[name] !== undefined) return offImageCache[name];
+  try {
+    const res = await fetch(
+      `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(name)}&search_simple=1&action=process&json=1&page_size=1`
+    );
+    const data = await res.json();
+    const img = data.products?.[0]?.image_front_url || null;
+    offImageCache[name] = img;
+    return img;
+  } catch {
+    offImageCache[name] = null;
+    return null;
+  }
+}
+
+async function renderOfferCard(offer, query = '') {
   const chain = getChain(offer.chain);
   if (!chain) return '';
   const pct = discountPct(offer);
   const inCart = !!state.cart[offer.id];
   const isFav = state.favorites.has(offer.id);
   const onList = isOnShoppingList(offer.id);
-  const imgUrl = getImgUrl(offer.id);
+  const imgUrl = await fetchProductImage(offer.name);
   const nameHtml = query ? highlightMatch(offer.name, query) : offer.name;
   const cmp = state.priceComparisons[offer.id];
   const cmpBadge = cmp
@@ -1688,7 +1706,7 @@ function renderOfferCard(offer, query = '') {
   </div>`;
 }
 
-function renderSearchView(main) {
+async function renderSearchView(main) {
   const q = state.searchQuery;
   const results = state.offers.filter(o =>
     (state.activeChain === 'all' || o.chain === state.activeChain) &&
@@ -1698,7 +1716,7 @@ function renderSearchView(main) {
   if (!q) { main.innerHTML = `<div class="no-offers"><div class="icon">🔎</div><p>Tippe einen Suchbegriff ein…</p></div>`; return; }
   if (!results.length) { main.innerHTML = `<div class="no-offers"><div class="icon">🔍</div><p>Keine Angebote für „${q}" gefunden.</p></div>`; return; }
   main.innerHTML = `<div class="section-title">${results.length} Treffer</div>
-    <div class="offers-grid">${results.map(o => renderOfferCard(o, q)).join('')}</div>`;
+    <div class="offers-grid">${(await Promise.all(results.map(o => renderOfferCard(o, q)))).join('')}</div>`;
 }
 
 function renderHeuteTab(main) {
@@ -1761,7 +1779,7 @@ function renderProspekteTab(main) {
   main.innerHTML = html + `</div>`;
 }
 
-function renderProspektDetail(main, chainId) {
+async function renderProspektDetail(main, chainId) {
   const chain = getChain(chainId);
   if (!chain) return;
   const monday = getMondayOfWeek(state.year, state.kw);
@@ -1770,7 +1788,7 @@ function renderProspektDetail(main, chainId) {
   const chainOffers = state.offers.filter(o => o.chain === chainId);
   const offersHtml = chainOffers.length === 0
     ? `<div class="no-offers"><div class="icon">🛒</div><p>Für diese Woche sind noch keine Angebote hinterlegt – schau direkt im Prospekt nach!</p></div>`
-    : `<div class="offers-grid">${chainOffers.map(o => renderOfferCard(o)).join('')}</div>`;
+    : `<div class="offers-grid">${(await Promise.all(chainOffers.map(o => renderOfferCard(o)))).join('')}</div>`;
   main.innerHTML = `
     <button class="back-btn" onclick="closeProspekt()">← Zurück zu Prospekten</button>
     <div style="display:flex;align-items:center;gap:14px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;">
@@ -1865,14 +1883,14 @@ function updateFavBadge() {
   badge.style.display = count > 0 ? 'inline' : 'none';
 }
 
-function renderFavoriteTab(main) {
+async function renderFavoriteTab(main) {
   const favOffers = state.offers.filter(o => state.favorites.has(o.id));
   if (!favOffers.length) {
     main.innerHTML = `<div class="fav-empty"><div class="icon">🤍</div><p>Noch keine Favoriten.<br>Tippe ❤️ auf Angeboten um sie zu merken.</p></div>`;
     return;
   }
   main.innerHTML = `<div class="section-title">${favOffers.length} Favorit${favOffers.length !== 1 ? 'en' : ''}</div>
-    <div class="offers-grid">${favOffers.map(o => renderOfferCard(o)).join('')}</div>`;
+    <div class="offers-grid">${(await Promise.all(favOffers.map(o => renderOfferCard(o)))).join('')}</div>`;
 }
 
 // ─── SHOPPING LIST ────────────────────────────────────────────────────────────
