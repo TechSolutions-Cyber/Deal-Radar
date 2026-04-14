@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="de">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -1237,6 +1237,13 @@ function buildOffersForWeek(year, kw) {
   ];
 }
 
+// ─── SAFE STORAGE (Safari file:// fix) ───────────────────────────────────────
+
+const safeStorage = {
+  getItem: k => { try { return localStorage.getItem(k); } catch(e) { return null; } },
+  setItem: (k,v) => { try { localStorage.setItem(k,v); } catch(e) {} }
+};
+
 // ─── STATE ────────────────────────────────────────────────────────────────────
 
 let state = {
@@ -1256,8 +1263,8 @@ let state = {
   profileChains: new Set(),
   activeCategory: 'all',
   priceMax: 20,
-  favorites: new Set(JSON.parse(localStorage.getItem('dealradar_fav') || '[]')),
-  shoppingList: JSON.parse(localStorage.getItem('dealradar_shop') || '[]'),
+  favorites: new Set(JSON.parse(safeStorage.getItem('dealradar_fav') || '[]')),
+  shoppingList: JSON.parse(safeStorage.getItem('dealradar_shop') || '[]'),
   shoppingListOpen: false,
   plzFilter: null,
   lastUpdated: null,
@@ -1845,7 +1852,7 @@ document.getElementById('plzModal').addEventListener('click', e => {
 function toggleFavorite(offerId) {
   if (state.favorites.has(offerId)) { state.favorites.delete(offerId); showToast('💔 Aus Favoriten entfernt'); }
   else { state.favorites.add(offerId); showToast('❤️ Zu Favoriten hinzugefügt'); }
-  localStorage.setItem('dealradar_fav', JSON.stringify([...state.favorites]));
+  safeStorage.setItem('dealradar_fav', JSON.stringify([...state.favorites]));
   updateFavBadge();
   render();
 }
@@ -1882,7 +1889,7 @@ function toggleShoppingItem_card(offerId) {
     state.shoppingList.push({ offerId, checked: false });
     showToast('📋 Zur Einkaufsliste hinzugefügt');
   }
-  localStorage.setItem('dealradar_shop', JSON.stringify(state.shoppingList));
+  safeStorage.setItem('dealradar_shop', JSON.stringify(state.shoppingList));
   updateShopListBadge();
   render();
 }
@@ -1908,13 +1915,13 @@ function closeShoppingList() {
 
 function toggleShopItem(index) {
   state.shoppingList[index].checked = !state.shoppingList[index].checked;
-  localStorage.setItem('dealradar_shop', JSON.stringify(state.shoppingList));
+  safeStorage.setItem('dealradar_shop', JSON.stringify(state.shoppingList));
   renderShoppingListDrawer();
 }
 
 function removeShopItem(index) {
   state.shoppingList.splice(index, 1);
-  localStorage.setItem('dealradar_shop', JSON.stringify(state.shoppingList));
+  safeStorage.setItem('dealradar_shop', JSON.stringify(state.shoppingList));
   updateShopListBadge();
   renderShoppingListDrawer();
   render();
@@ -1923,7 +1930,7 @@ function removeShopItem(index) {
 function clearShoppingList() {
   if (!state.shoppingList.length) return;
   state.shoppingList = [];
-  localStorage.setItem('dealradar_shop', JSON.stringify(state.shoppingList));
+  safeStorage.setItem('dealradar_shop', JSON.stringify(state.shoppingList));
   updateShopListBadge();
   renderShoppingListDrawer();
   render();
