@@ -1295,6 +1295,48 @@ function reloadOffers() {
 }
 reloadOffers();
 
+async function loadOffersFromAPI() {
+  const CHAIN_MAP = {
+    'aldi süd':'aldi-sued','aldi sued':'aldi-sued','aldi süd':'aldi-sued',
+    'aldi nord':'aldi-nord','aldi':'aldi-sued','lidl':'lidl','penny':'penny',
+    'rewe':'rewe','edeka':'edeka','kaufland':'kaufland','netto':'netto',
+    'tegut':'tegut','globus':'globus','marktkauf':'marktkauf','hit':'hit',
+    'alnatura':'alnatura',"denn's biomarkt":'denns','denns':'denns'
+  };
+  try {
+    const res = await fetch(
+      'https://api.marktguru.de/api/v1/offers?as=web&limit=100&offset=0',
+      { headers: { 'x-apikey': 'wB9MkCNNpJwbKSNBjTCHkTmBIgrR5hfzGEyUPgVp' } }
+    );
+    const data = await res.json();
+    const monday = getMondayOfWeek(state.year, state.kw);
+    function fmtFull(dt) { return dt.toISOString().split('T')[0]; }
+    function fmt(dt) { return dt.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' }); }
+    const saturday = new Date(monday); saturday.setDate(monday.getDate() + 5);
+    const mapped = (data.offers || []).map((item, i) => {
+      const retailer = (item.retailer?.name || '').toLowerCase();
+      const chain = CHAIN_MAP[retailer] || 'rewe';
+      const pricew = item.price?.amount || 0;
+      const pricea = item.regularPrice?.amount > pricew
+        ? item.regularPrice.amount
+        : Math.round(pricew * 1.3 * 100) / 100;
+      const validFrom = item.validFrom || fmtFull(monday);
+      const validTo   = item.validTo   || fmtFull(saturday);
+      const label = `${fmt(new Date(validFrom))} – ${fmt(new Date(validTo))}`;
+      return {
+        id: i + 1, chain, name: item.name || '', cat: 'sonstiges', emoji: '🛒',
+        pricew, pricea, validFrom, validTo, weekOnly: true, label,
+        image: item.images?.[0]?.url || null
+      };
+    });
+    if (mapped.length) state.offers = mapped;
+    detectPriceComparisons();
+  } catch (e) {
+    // Fallback: Demo-Daten bleiben erhalten
+  }
+  await render();
+}
+
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 
 function getChain(id) { return CHAINS.find(c => c.id === id); }
@@ -1841,7 +1883,7 @@ function openProspekt(chainId) { state.openProspekt = chainId; render(); }
 function closeProspekt() { state.openProspekt = null; render(); }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
-render();
+loadOffersFromAPI();
 
 // ─── PLZ ─────────────────────────────────────────────────────────────────────
 
