@@ -1,0 +1,123 @@
+{
+  "version": 3,
+  "middleware": {
+    "/": {
+      "files": [
+        "server/edge-runtime-webpack.js",
+        "server/src/middleware.js"
+      ],
+      "name": "src/middleware",
+      "page": "/",
+      "matchers": [
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?(?:\\/((?!_next\\/static|_next\\/image|favicon.ico|manifest.json|sw.js|icons|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*))(\\.json)?[\\/#\\?]?$",
+          "originalSource": "/((?!_next/static|_next/image|favicon.ico|manifest.json|sw.js|icons|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "7UkuaXdTxaNiJqeGCG4d0",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "3yMvp8tmKMWOybraxQ0pDzF2zIbRhSQyYCIHFG5a/iQ=",
+        "__NEXT_PREVIEW_MODE_ID": "89f7f1b60b83d8d85714f1d5eaa63e97",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "d85889a9346c678e1f7bb557e15ff572cb3f982cf98b6ce8736d6dd8c9ae835e",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "ea981ae817b7f5b5be561a0fab7288521e120f09cfb86bbf1a373f22e00fafac"
+      }
+    }
+  },
+  "functions": {
+    "/api/supermarkets/route": {
+      "files": [
+        "server/server-reference-manifest.js",
+        "server/app/api/supermarkets/route_client-reference-manifest.js",
+        "server/middleware-build-manifest.js",
+        "server/middleware-react-loadable-manifest.js",
+        "server/next-font-manifest.js",
+        "server/interception-route-rewrite-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/edge-chunks/48.js",
+        "server/app/api/supermarkets/route.js"
+      ],
+      "name": "app/api/supermarkets/route",
+      "page": "/api/supermarkets/route",
+      "matchers": [
+        {
+          "regexp": "^/api/supermarkets$",
+          "originalSource": "/api/supermarkets"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "7UkuaXdTxaNiJqeGCG4d0",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "3yMvp8tmKMWOybraxQ0pDzF2zIbRhSQyYCIHFG5a/iQ=",
+        "__NEXT_PREVIEW_MODE_ID": "89f7f1b60b83d8d85714f1d5eaa63e97",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "d85889a9346c678e1f7bb557e15ff572cb3f982cf98b6ce8736d6dd8c9ae835e",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "ea981ae817b7f5b5be561a0fab7288521e120f09cfb86bbf1a373f22e00fafac"
+      }
+    },
+    "/api/offers/route": {
+      "files": [
+        "server/server-reference-manifest.js",
+        "server/app/api/offers/route_client-reference-manifest.js",
+        "server/middleware-build-manifest.js",
+        "server/middleware-react-loadable-manifest.js",
+        "server/next-font-manifest.js",
+        "server/interception-route-rewrite-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/edge-chunks/48.js",
+        "server/app/api/offers/route.js"
+      ],
+      "name": "app/api/offers/route",
+      "page": "/api/offers/route",
+      "matchers": [
+        {
+          "regexp": "^/api/offers$",
+          "originalSource": "/api/offers"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "7UkuaXdTxaNiJqeGCG4d0",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "3yMvp8tmKMWOybraxQ0pDzF2zIbRhSQyYCIHFG5a/iQ=",
+        "__NEXT_PREVIEW_MODE_ID": "89f7f1b60b83d8d85714f1d5eaa63e97",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "d85889a9346c678e1f7bb557e15ff572cb3f982cf98b6ce8736d6dd8c9ae835e",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "ea981ae817b7f5b5be561a0fab7288521e120f09cfb86bbf1a373f22e00fafac"
+      }
+    },
+    "/api/categories/route": {
+      "files": [
+        "server/server-reference-manifest.js",
+        "server/app/api/categories/route_client-reference-manifest.js",
+        "server/middleware-build-manifest.js",
+        "server/middleware-react-loadable-manifest.js",
+        "server/next-font-manifest.js",
+        "server/interception-route-rewrite-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/edge-chunks/48.js",
+        "server/app/api/categories/route.js"
+      ],
+      "name": "app/api/categories/route",
+      "page": "/api/categories/route",
+      "matchers": [
+        {
+          "regexp": "^/api/categories$",
+          "originalSource": "/api/categories"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "7UkuaXdTxaNiJqeGCG4d0",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "3yMvp8tmKMWOybraxQ0pDzF2zIbRhSQyYCIHFG5a/iQ=",
+        "__NEXT_PREVIEW_MODE_ID": "89f7f1b60b83d8d85714f1d5eaa63e97",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "d85889a9346c678e1f7bb557e15ff572cb3f982cf98b6ce8736d6dd8c9ae835e",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "ea981ae817b7f5b5be561a0fab7288521e120f09cfb86bbf1a373f22e00fafac"
+      }
+    }
+  },
+  "sortedMiddleware": [
+    "/"
+  ]
+}

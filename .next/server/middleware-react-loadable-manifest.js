@@ -1,0 +1,1 @@
+self.__REACT_LOADABLE_MANIFEST='{"components/HomeClient.tsx -> @/components/DealGrid":{"id":8794,"files":["static/chunks/267.e1a499810112ee18.js","static/chunks/794.8f36fddf7b4f5e3a.js"]},"components/HomeClient.tsx -> @/components/FilterBar":{"id":3960,"files":["static/chunks/960.e3edd083f2e5557a.js"]}}';
