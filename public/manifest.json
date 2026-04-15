@@ -1,12 +1,18 @@
 {
+  "id": "/",
   "name": "Deal Radar",
   "short_name": "Deal Radar",
-  "description": "Die besten Supermarkt-Angebote auf einen Blick",
-  "start_url": "/",
+  "description": "Die besten Supermarkt-Angebote auf einen Blick – täglich aktuell.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
   "background_color": "#1e1e2e",
   "theme_color": "#f97316",
   "orientation": "portrait-primary",
+  "lang": "de",
+  "dir": "ltr",
+  "categories": ["shopping", "lifestyle"],
   "icons": [
     { "src": "/icons/icon-72.png", "sizes": "72x72", "type": "image/png" },
     { "src": "/icons/icon-96.png", "sizes": "96x96", "type": "image/png" },
@@ -17,6 +23,20 @@
     { "src": "/icons/icon-384.png", "sizes": "384x384", "type": "image/png" },
     { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
   ],
-  "categories": ["shopping", "lifestyle"],
-  "lang": "de"
+  "shortcuts": [
+    {
+      "name": "Angebote",
+      "short_name": "Angebote",
+      "description": "Aktuelle Supermarkt-Angebote",
+      "url": "/?source=shortcut",
+      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Mein Dashboard",
+      "short_name": "Dashboard",
+      "description": "Persönliche Angebote und Merkliste",
+      "url": "/dashboard?source=shortcut",
+      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
+    }
+  ]
 }

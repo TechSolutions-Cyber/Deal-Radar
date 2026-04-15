@@ -17,43 +17,43 @@
       "wasm": [],
       "assets": [],
       "env": {
-        "__NEXT_BUILD_ID": "7UkuaXdTxaNiJqeGCG4d0",
+        "__NEXT_BUILD_ID": "MXl-qk8wRsfk_hzFfovpA",
         "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "3yMvp8tmKMWOybraxQ0pDzF2zIbRhSQyYCIHFG5a/iQ=",
-        "__NEXT_PREVIEW_MODE_ID": "89f7f1b60b83d8d85714f1d5eaa63e97",
-        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "d85889a9346c678e1f7bb557e15ff572cb3f982cf98b6ce8736d6dd8c9ae835e",
-        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "ea981ae817b7f5b5be561a0fab7288521e120f09cfb86bbf1a373f22e00fafac"
+        "__NEXT_PREVIEW_MODE_ID": "5a345c718af4c9dc8aba41d29a8ded8f",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "6e1eda585a6becbd7591e907dc7f290c1a53d0ac5f00806c3def5ce03197a3a4",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "a3a2116a01ab1a735d4f89fb4e573870e2ce0a3a87764f17a08e6957fc68eb00"
       }
     }
   },
   "functions": {
-    "/api/supermarkets/route": {
+    "/api/categories/route": {
       "files": [
         "server/server-reference-manifest.js",
-        "server/app/api/supermarkets/route_client-reference-manifest.js",
+        "server/app/api/categories/route_client-reference-manifest.js",
         "server/middleware-build-manifest.js",
         "server/middleware-react-loadable-manifest.js",
         "server/next-font-manifest.js",
         "server/interception-route-rewrite-manifest.js",
         "server/edge-runtime-webpack.js",
         "server/edge-chunks/48.js",
-        "server/app/api/supermarkets/route.js"
+        "server/app/api/categories/route.js"
       ],
-      "name": "app/api/supermarkets/route",
-      "page": "/api/supermarkets/route",
+      "name": "app/api/categories/route",
+      "page": "/api/categories/route",
       "matchers": [
         {
-          "regexp": "^/api/supermarkets$",
-          "originalSource": "/api/supermarkets"
+          "regexp": "^/api/categories$",
+          "originalSource": "/api/categories"
         }
       ],
       "wasm": [],
       "assets": [],
       "env": {
-        "__NEXT_BUILD_ID": "7UkuaXdTxaNiJqeGCG4d0",
+        "__NEXT_BUILD_ID": "MXl-qk8wRsfk_hzFfovpA",
         "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "3yMvp8tmKMWOybraxQ0pDzF2zIbRhSQyYCIHFG5a/iQ=",
-        "__NEXT_PREVIEW_MODE_ID": "89f7f1b60b83d8d85714f1d5eaa63e97",
-        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "d85889a9346c678e1f7bb557e15ff572cb3f982cf98b6ce8736d6dd8c9ae835e",
-        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "ea981ae817b7f5b5be561a0fab7288521e120f09cfb86bbf1a373f22e00fafac"
+        "__NEXT_PREVIEW_MODE_ID": "5a345c718af4c9dc8aba41d29a8ded8f",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "6e1eda585a6becbd7591e907dc7f290c1a53d0ac5f00806c3def5ce03197a3a4",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "a3a2116a01ab1a735d4f89fb4e573870e2ce0a3a87764f17a08e6957fc68eb00"
       }
     },
     "/api/offers/route": {
@@ -79,41 +79,71 @@
       "wasm": [],
       "assets": [],
       "env": {
-        "__NEXT_BUILD_ID": "7UkuaXdTxaNiJqeGCG4d0",
+        "__NEXT_BUILD_ID": "MXl-qk8wRsfk_hzFfovpA",
         "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "3yMvp8tmKMWOybraxQ0pDzF2zIbRhSQyYCIHFG5a/iQ=",
-        "__NEXT_PREVIEW_MODE_ID": "89f7f1b60b83d8d85714f1d5eaa63e97",
-        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "d85889a9346c678e1f7bb557e15ff572cb3f982cf98b6ce8736d6dd8c9ae835e",
-        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "ea981ae817b7f5b5be561a0fab7288521e120f09cfb86bbf1a373f22e00fafac"
+        "__NEXT_PREVIEW_MODE_ID": "5a345c718af4c9dc8aba41d29a8ded8f",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "6e1eda585a6becbd7591e907dc7f290c1a53d0ac5f00806c3def5ce03197a3a4",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "a3a2116a01ab1a735d4f89fb4e573870e2ce0a3a87764f17a08e6957fc68eb00"
       }
     },
-    "/api/categories/route": {
+    "/api/supermarkets/route": {
       "files": [
         "server/server-reference-manifest.js",
-        "server/app/api/categories/route_client-reference-manifest.js",
+        "server/app/api/supermarkets/route_client-reference-manifest.js",
         "server/middleware-build-manifest.js",
         "server/middleware-react-loadable-manifest.js",
         "server/next-font-manifest.js",
         "server/interception-route-rewrite-manifest.js",
         "server/edge-runtime-webpack.js",
         "server/edge-chunks/48.js",
-        "server/app/api/categories/route.js"
+        "server/app/api/supermarkets/route.js"
       ],
-      "name": "app/api/categories/route",
-      "page": "/api/categories/route",
+      "name": "app/api/supermarkets/route",
+      "page": "/api/supermarkets/route",
       "matchers": [
         {
-          "regexp": "^/api/categories$",
-          "originalSource": "/api/categories"
+          "regexp": "^/api/supermarkets$",
+          "originalSource": "/api/supermarkets"
         }
       ],
       "wasm": [],
       "assets": [],
       "env": {
-        "__NEXT_BUILD_ID": "7UkuaXdTxaNiJqeGCG4d0",
+        "__NEXT_BUILD_ID": "MXl-qk8wRsfk_hzFfovpA",
         "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "3yMvp8tmKMWOybraxQ0pDzF2zIbRhSQyYCIHFG5a/iQ=",
-        "__NEXT_PREVIEW_MODE_ID": "89f7f1b60b83d8d85714f1d5eaa63e97",
-        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "d85889a9346c678e1f7bb557e15ff572cb3f982cf98b6ce8736d6dd8c9ae835e",
-        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "ea981ae817b7f5b5be561a0fab7288521e120f09cfb86bbf1a373f22e00fafac"
+        "__NEXT_PREVIEW_MODE_ID": "5a345c718af4c9dc8aba41d29a8ded8f",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "6e1eda585a6becbd7591e907dc7f290c1a53d0ac5f00806c3def5ce03197a3a4",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "a3a2116a01ab1a735d4f89fb4e573870e2ce0a3a87764f17a08e6957fc68eb00"
+      }
+    },
+    "/api/deals/route": {
+      "files": [
+        "server/server-reference-manifest.js",
+        "server/app/api/deals/route_client-reference-manifest.js",
+        "server/middleware-build-manifest.js",
+        "server/middleware-react-loadable-manifest.js",
+        "server/next-font-manifest.js",
+        "server/interception-route-rewrite-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/edge-chunks/48.js",
+        "server/app/api/deals/route.js"
+      ],
+      "name": "app/api/deals/route",
+      "page": "/api/deals/route",
+      "matchers": [
+        {
+          "regexp": "^/api/deals$",
+          "originalSource": "/api/deals"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "MXl-qk8wRsfk_hzFfovpA",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "3yMvp8tmKMWOybraxQ0pDzF2zIbRhSQyYCIHFG5a/iQ=",
+        "__NEXT_PREVIEW_MODE_ID": "5a345c718af4c9dc8aba41d29a8ded8f",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "6e1eda585a6becbd7591e907dc7f290c1a53d0ac5f00806c3def5ce03197a3a4",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "a3a2116a01ab1a735d4f89fb4e573870e2ce0a3a87764f17a08e6957fc68eb00"
       }
     }
   },

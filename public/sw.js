@@ -1,6 +1,7 @@
 /**
  * Deal Radar Service Worker
  * Strategy:
+ *   - Navigation requests: Network-first, fallback to cached page, then offline.html
  *   - Static assets: Cache First (long TTL)
  *   - API /api/offers: Stale-While-Revalidate (5 min fresh, 15 min stale)
  *   - API /api/supermarkets, /api/categories: Cache First (1 hour)
@@ -67,11 +68,35 @@ self.addEventListener('fetch', (event) => {
     return
   }
 
+  // Navigation requests (HTML pages): network-first with offline fallback
+  if (request.mode === 'navigate') {
+    event.respondWith(handleNavigationRequest(request))
+    return
+  }
+
   // Static assets: cache-first
   event.respondWith(
     caches.match(request).then((cached) => cached || fetch(request))
   )
 })
+
+async function handleNavigationRequest(request) {
+  try {
+    const response = await fetch(request)
+    // Cache successful navigation responses for offline fallback
+    if (response.ok) {
+      const cache = await caches.open(STATIC_CACHE)
+      cache.put(request, response.clone())
+    }
+    return response
+  } catch {
+    // Network failed: try cached version first, then offline.html
+    const cached = await caches.match(request)
+    if (cached) return cached
+    const offline = await caches.match('/offline.html')
+    return offline || new Response('<h1>Offline</h1>', { headers: { 'Content-Type': 'text/html' } })
+  }
+}
 
 async function handleApiRequest(request, url) {
   const cache = await caches.open(API_CACHE)

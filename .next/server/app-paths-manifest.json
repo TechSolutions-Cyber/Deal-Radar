@@ -1,11 +1,16 @@
 {
+  "/api/alerts/unsubscribe/route": "app/api/alerts/unsubscribe/route.js",
   "/_not-found/page": "app/_not-found/page.js",
+  "/api/alerts/preferences/route": "app/api/alerts/preferences/route.js",
+  "/api/push/route": "app/api/push/route.js",
   "/auth/callback/route": "app/auth/callback/route.js",
   "/page": "app/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/(auth)/signup/page": "app/(auth)/signup/page.js",
   "/(auth)/forgot-password/page": "app/(auth)/forgot-password/page.js",
   "/(auth)/login/page": "app/(auth)/login/page.js",
-  "/(auth)/signup/page": "app/(auth)/signup/page.js",
-  "/api/supermarkets/route": "app/api/supermarkets/route.js",
+  "/api/categories/route": "app/api/categories/route.js",
   "/api/offers/route": "app/api/offers/route.js",
-  "/api/categories/route": "app/api/categories/route.js"
+  "/api/supermarkets/route": "app/api/supermarkets/route.js",
+  "/api/deals/route": "app/api/deals/route.js"
 }

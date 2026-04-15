@@ -27,6 +27,15 @@ img {
   height: auto;
 }
 
+/* Safe-area padding utilities for iOS notch / home-indicator */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
 /* Skeleton loading animation */
 @keyframes skeleton-pulse {
   0%, 100% { opacity: 1; }

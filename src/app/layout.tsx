@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import ServiceWorkerRegistrar from '@/components/ServiceWorkerRegistrar'
+import BottomNav from '@/components/BottomNav'
+import InstallBanner from '@/components/InstallBanner'
 
 export const metadata: Metadata = {
   title: 'Deal Radar – Supermarkt Angebote',
@@ -21,6 +23,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  viewportFit: 'cover',
   themeColor: '#f97316',
 }
 
@@ -35,6 +38,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ServiceWorkerRegistrar />
         {children}
+        <BottomNav />
+        <InstallBanner />
       </body>
     </html>
   )
