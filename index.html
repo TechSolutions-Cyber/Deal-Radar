@@ -925,6 +925,87 @@
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .fb-offer-price { font-size: .9rem; font-weight: 800; color: var(--accent-light); flex-shrink: 0; }
 
+  /* ─── ADVANCED FILTER F4 ───────────────────────────────── */
+  .sort-bar {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    overflow-x: auto; scrollbar-width: none; }
+  .sort-bar::-webkit-scrollbar { display: none; }
+  .sort-bar-inner {
+    display: flex; gap: 8px; padding: 8px 16px;
+    max-width: 900px; margin: 0 auto; align-items: center;
+    width: max-content; min-width: 100%; }
+  .sort-label { font-size:.75rem; color:var(--muted); font-weight:700; white-space:nowrap; flex-shrink:0; }
+  .sort-chip {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 4px 12px; font-size:.78rem;
+    font-weight:500; cursor:pointer; white-space:nowrap;
+    transition: all .15s; color:var(--muted); }
+  .sort-chip:hover { border-color:var(--accent); color:var(--text); }
+  .sort-chip.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .filter-actions { display:flex; gap:6px; margin-left:auto; flex-shrink:0; }
+  .filter-reset-btn {
+    background:rgba(239,68,68,.1); border:1px solid var(--red);
+    color:var(--red-light); border-radius:20px; padding:4px 10px;
+    font-size:.75rem; font-weight:700; cursor:pointer; white-space:nowrap;
+    transition:all .15s; display:none; align-items:center; gap:4px; }
+  .filter-reset-btn.visible { display:inline-flex; }
+  .filter-reset-btn:hover { background:rgba(239,68,68,.2); }
+  .share-filter-btn {
+    background:var(--surface2); border:1px solid var(--border);
+    color:var(--muted); border-radius:20px; padding:4px 10px;
+    font-size:.75rem; font-weight:600; cursor:pointer; white-space:nowrap;
+    transition:all .15s; }
+  .share-filter-btn:hover { border-color:var(--accent); color:var(--text); }
+  .save-filter-btn {
+    background:rgba(22,163,74,.1); border:1px solid var(--accent);
+    color:var(--accent-light); border-radius:20px; padding:4px 10px;
+    font-size:.75rem; font-weight:700; cursor:pointer; white-space:nowrap;
+    transition:all .15s; }
+  .save-filter-btn:hover { background:var(--accent); color:#fff; }
+
+  /* ─── SUGGESTIONS ────────────────────────────────────────── */
+  .search-suggestions-wrap { position:relative; }
+  .suggestions-list {
+    display:none; position:absolute; top:calc(100% + 4px);
+    left:0; right:0; background:var(--surface);
+    border:1px solid var(--accent); border-radius:var(--radius-sm);
+    z-index:150; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.4); }
+  .suggestion-item {
+    padding:9px 14px; cursor:pointer;
+    display:flex; justify-content:space-between; align-items:center; gap:8px;
+    transition:background .1s; border-bottom:1px solid var(--border); }
+  .suggestion-item:last-child { border-bottom:none; }
+  .suggestion-item:hover { background:var(--surface2); }
+  .suggestion-name { font-size:.85rem; flex:1; min-width:0;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .suggestion-meta { font-size:.72rem; color:var(--muted); white-space:nowrap; flex-shrink:0; }
+
+  /* ─── SAVED FILTER PROFILES ──────────────────────────────── */
+  .saved-filters-bar {
+    background:var(--bg); border-bottom:1px solid var(--border);
+    overflow-x:auto; scrollbar-width:none; display:none; }
+  .saved-filters-bar.visible { display:block; }
+  .saved-filters-bar::-webkit-scrollbar { display:none; }
+  .saved-filters-inner {
+    display:flex; gap:8px; padding:8px 16px;
+    max-width:900px; margin:0 auto; align-items:center;
+    width:max-content; min-width:100%; }
+  .saved-filter-label { font-size:.72rem; color:var(--muted); white-space:nowrap; font-weight:700; flex-shrink:0; }
+  .saved-filter-chip {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:20px; padding:4px 10px 4px 12px;
+    font-size:.78rem; font-weight:600; cursor:pointer;
+    white-space:nowrap; transition:border-color .15s; color:var(--text);
+    display:inline-flex; align-items:center; gap:6px; }
+  .saved-filter-chip:hover { border-color:var(--accent); }
+  .saved-filter-chip-x { color:var(--muted); font-size:.75rem; line-height:1; transition:color .15s; }
+  .saved-filter-chip-x:hover { color:var(--red); }
+
+  /* ─── EXTRA SLIDERS ─────────────────────────────────────── */
+  .extra-slider-wrap {
+    padding:4px 16px 10px; max-width:900px; margin:0 auto;
+    display:flex; align-items:center; gap:12px; }
+
   /* ─── PRINT ────────────────────────────────────────────── */
   #shoplistPrintArea { display: none; }
   @media print {
@@ -1101,9 +1182,13 @@ async function registerPush() {
     </div>
   </div>
   <div class="search-bar" id="searchBar">
-    <input class="search-input" id="searchInput" type="text"
-      placeholder="Produkt suchen, z.B. Butter, Milch, Pizza…"
-      oninput="onSearch()" autocomplete="off">
+    <div class="search-suggestions-wrap">
+      <input class="search-input" id="searchInput" type="text"
+        placeholder="Produkt suchen, z.B. Butter, Milch, Pizza…"
+        oninput="onSearch()" autocomplete="off"
+        onblur="setTimeout(()=>{const s=document.getElementById('searchSuggestions');if(s)s.style.display='none'},150)">
+      <div class="suggestions-list" id="searchSuggestions"></div>
+    </div>
     <div class="search-results-label" id="searchResultsLabel"></div>
   </div>
   <div class="tabs">
@@ -1132,17 +1217,48 @@ async function registerPush() {
 <!-- ─── CATEGORY BAR ───────────────────────────────────────── -->
 <div class="category-bar" id="categoryBar">
   <div class="category-bar-inner">
-    <div class="chip active" data-cat="all" onclick="setCategory('all')">Alle</div>
-    <div class="chip" data-cat="milch" onclick="setCategory('milch')">🥛 Milch & Käse</div>
-    <div class="chip" data-cat="fleisch" onclick="setCategory('fleisch')">🥩 Fleisch</div>
-    <div class="chip" data-cat="getraenke" onclick="setCategory('getraenke')">🥤 Getränke</div>
-    <div class="chip" data-cat="sues" onclick="setCategory('sues')">🍬 Süßes</div>
-    <div class="chip" data-cat="bio" onclick="setCategory('bio')">🌿 Bio</div>
-    <div class="chip" data-cat="haushalt" onclick="setCategory('haushalt')">🧹 Haushalt</div>
+    <div class="chip active" data-cat="all" onclick="toggleCategory('all')">Alle</div>
+    <div class="chip" data-cat="milch" onclick="toggleCategory('milch')">🥛 Milch & Käse</div>
+    <div class="chip" data-cat="fleisch" onclick="toggleCategory('fleisch')">🥩 Fleisch</div>
+    <div class="chip" data-cat="getraenke" onclick="toggleCategory('getraenke')">🥤 Getränke</div>
+    <div class="chip" data-cat="sues" onclick="toggleCategory('sues')">🍬 Süßes</div>
+    <div class="chip" data-cat="bio" onclick="toggleCategory('bio')">🌿 Bio</div>
+    <div class="chip" data-cat="haushalt" onclick="toggleCategory('haushalt')">🧹 Haushalt</div>
   </div>
   <div class="price-slider-wrap">
+    <span class="price-slider-label">Ab <strong id="priceMinLabel">0,00 €</strong></span>
+    <input type="range" id="priceMinSlider" min="0" max="20" step="0.5" value="0" oninput="onPriceMinSlider()">
+  </div>
+  <div class="price-slider-wrap" style="padding-top:2px">
     <span class="price-slider-label">Bis <strong id="priceLabel">20,00 €</strong></span>
     <input type="range" id="priceSlider" min="0" max="20" step="0.5" value="20" oninput="onPriceSlider()">
+  </div>
+  <div class="extra-slider-wrap">
+    <span class="price-slider-label">Min. Rabatt <strong id="discountLabel">0%</strong></span>
+    <input type="range" id="discountSlider" min="0" max="80" step="5" value="0" oninput="onDiscountSlider()">
+  </div>
+</div>
+
+<!-- ─── SORT BAR ───────────────────────────────────────────── -->
+<div class="sort-bar" id="sortBar">
+  <div class="sort-bar-inner">
+    <span class="sort-label">Sortierung:</span>
+    <div class="sort-chip active" data-sort="default" onclick="setSortBy('default')">Standard</div>
+    <div class="sort-chip" data-sort="discount" onclick="setSortBy('discount')">💰 Rabatt ↓</div>
+    <div class="sort-chip" data-sort="price-asc" onclick="setSortBy('price-asc')">Preis ↑</div>
+    <div class="sort-chip" data-sort="price-desc" onclick="setSortBy('price-desc')">Preis ↓</div>
+    <div class="sort-chip" data-sort="recency" onclick="setSortBy('recency')">Neueste</div>
+    <div class="filter-actions">
+      <button class="share-filter-btn" onclick="shareFilterView()">🔗 Teilen</button>
+      <button class="save-filter-btn" onclick="saveCurrentFilter()">💾 Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SAVED FILTERS BAR ──────────────────────────────────── -->
+<div class="saved-filters-bar" id="savedFiltersBar">
+  <div class="saved-filters-inner" id="savedFiltersInner">
+    <span class="saved-filter-label">Gespeichert:</span>
   </div>
 </div>
 
@@ -1247,7 +1363,76 @@ function buildOffersForWeek(year, kw) {
     { id:18, chain:'edeka',     name:'Ferrero Kinder Bueno 3er Pack',             cat:'sues',     emoji:'🍫', pricew:1.49, pricea:2.19, validFrom:fmtFull(do_), validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(do_)} – ${fmt(sa)}` },
     { id:19, chain:'aldi-sued', name:'Coca-Cola 6×1,5L',                          cat:'getraenke',emoji:'🥤', pricew:4.99, pricea:7.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
     { id:20, chain:'penny',     name:'Dr. Oetker Tiefkühlpizza Ristorante 320g',  cat:'sonstiges',emoji:'🍕', pricew:2.49, pricea:3.49, validFrom:fmtFull(di),  validTo:fmtFull(mi),  weekOnly:false, label:`${fmt(di)} – ${fmt(mi)}`  },
+    { id:100, chain:'aldi-sued', name:'KINDER Country 211,5g',              cat:'sues',      emoji:'🍫', pricew:1.99,  pricea:3.29,  validFrom:fmtFull(mo), validTo:fmtFull(sa), weekOnly:true, label:`${fmt(mo)} – ${fmt(sa)}`, image:'https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/e4e16c95-ad44-46c2-9ead-f016640c924e/Country%202115%20g' },
+    { id:101, chain:'aldi-sued', name:'FERRERO Nutella 450g',                cat:'sues',      emoji:'🍯', pricew:1.99,  pricea:3.79,  validFrom:fmtFull(mo), validTo:fmtFull(sa), weekOnly:true, label:`${fmt(mo)} – ${fmt(sa)}`, image:'https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/7d6ecfec-339d-42e5-8261-c93a57616b4f/Nutella%20450%20g' },
+    { id:102, chain:'aldi-sued', name:'KROMBACHER Pils 0,5l',                cat:'getraenke', emoji:'🍺', pricew:0.65,  pricea:0.99,  validFrom:fmtFull(mo), validTo:fmtFull(sa), weekOnly:true, label:`${fmt(mo)} – ${fmt(sa)}`, image:'https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/3a64b164-94cd-482b-a678-672d84befaac/Pils%2005%20l' },
+    { id:103, chain:'aldi-sued', name:'APEROL 11% 700ml',                    cat:'getraenke', emoji:'🍹', pricew:9.39,  pricea:13.49, validFrom:fmtFull(mo), validTo:fmtFull(sa), weekOnly:true, label:`${fmt(mo)} – ${fmt(sa)}`, image:'https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/7a762803-6fe7-4c4c-ab12-11372165a2a2/Aperol%2011%20%25%20700%20ml' },
+    { id:104, chain:'aldi-sued', name:'COCA-COLA Original 1,25l',            cat:'getraenke', emoji:'🥤', pricew:0.79,  pricea:1.29,  validFrom:fmtFull(mo), validTo:fmtFull(sa), weekOnly:true, label:`${fmt(mo)} – ${fmt(sa)}`, image:'https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/e60fae3b-551d-42cc-90d3-546d3c3a0775/Cola%20Original%20125%20l' },
+    { id:105, chain:'aldi-sued', name:'WEIHENSTEPHAN H-Milch 3,5% 1l',      cat:'milch',     emoji:'🥛', pricew:0.95,  pricea:1.69,  validFrom:fmtFull(mo), validTo:fmtFull(sa), weekOnly:true, label:`${fmt(mo)} – ${fmt(sa)}`, image:'https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/3236a43c-f324-4e08-ba27-971278cec4dc/HMilch%2035%20%25%201%20l' },
+    { id:106, chain:'aldi-sued', name:'JACOBS Krönung 0,5kg',                cat:'getraenke', emoji:'☕', pricew:5.49,  pricea:10.49, validFrom:fmtFull(mo), validTo:fmtFull(sa), weekOnly:true, label:`${fmt(mo)} – ${fmt(sa)}`, image:'https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/be4cbba4-6826-4c94-b6ae-3d06d8059377/Krnung%2005%20kg' },
+    { id:107, chain:'aldi-sued', name:'BRESSO Frischkäse Kräuter 150g',     cat:'milch',     emoji:'🧀', pricew:1.11,  pricea:2.39,  validFrom:fmtFull(mo), validTo:fmtFull(sa), weekOnly:true, label:`${fmt(mo)} – ${fmt(sa)}`, image:'https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/cf060644-80b0-4e9b-b2d5-3528dd3f3c68/Kruter%20150%20g' },
+    { id:108, chain:'aldi-sued', name:'BERGADER Bavaria Blu 150g',           cat:'milch',     emoji:'🧀', pricew:1.49,  pricea:1.99,  validFrom:fmtFull(mo), validTo:fmtFull(sa), weekOnly:true, label:`${fmt(mo)} – ${fmt(sa)}`, image:'https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/e5eacf00-1669-463a-b614-529fa9f4487a/Weichkse%20150%20g%20Bavaria%20Blu' },
+    { id:109, chain:'aldi-sued', name:'ALPRO Haferdrink ohne Zucker 1l',    cat:'getraenke', emoji:'🌾', pricew:1.49,  pricea:2.49,  validFrom:fmtFull(mo), validTo:fmtFull(sa), weekOnly:true, label:`${fmt(mo)} – ${fmt(sa)}`, image:'https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/a5136469-e75a-4d99-8f3b-aa483967bea7/Haferdrink%201%20l%20Ohne%20Zucker' },
+    { id:110, chain:'aldi-sued', name:'POM-BÄR Original 75g',                cat:'sues',      emoji:'🥔', pricew:0.88,  pricea:1.79,  validFrom:fmtFull(mo), validTo:fmtFull(sa), weekOnly:true, label:`${fmt(mo)} – ${fmt(sa)}`, image:'https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/15466658-92d6-4366-a709-dca9cf83673b/PomBr%2075%20g%20Original' },
+    { id:111, chain:'aldi-sued', name:'COCA-COLA Zero 1,25l',                cat:'getraenke', emoji:'🥤', pricew:0.79,  pricea:1.29,  validFrom:fmtFull(mo), validTo:fmtFull(sa), weekOnly:true, label:`${fmt(mo)} – ${fmt(sa)}`, image:'https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/fbd0decf-cf3e-46d4-b9e3-02799e6dd59f/Cola%20Zero%20125%20l' },
+    { id:112, chain:'aldi-sued', name:'FANTA Orange 1,25l',                  cat:'getraenke', emoji:'🍊', pricew:0.79,  pricea:1.29,  validFrom:fmtFull(mo), validTo:fmtFull(sa), weekOnly:true, label:`${fmt(mo)} – ${fmt(sa)}`, image:'https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/59bf6c74-9baf-444d-9bc9-8ef310a074e6/Fanta%20Orange%20125%20l' },
   ];
+}
+
+// ─── MARKTGURU LIVE OFFERS ────────────────────────────────────────────────────
+
+async function fetchLiveOffers() {
+  const res = await fetch('https://api.marktguru.de/api/v1/offers?as=web&limit=100&offset=0', {
+    headers: { 'x-apikey': 'wB9MkCNNpJwbKSNBjTCHkTmBIgrR5hfzGEyUPgVp' }
+  });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const json = await res.json();
+  const items = Array.isArray(json) ? json : (json.offers || json.data?.offers || []);
+  if (!items.length) throw new Error('Keine Angebote in API-Antwort');
+
+  const CHAIN_MAP = {
+    'aldi süd':'aldi-sued', 'aldi sued':'aldi-sued', 'aldi nord':'aldi-nord',
+    'aldi':'aldi-sued', 'lidl':'lidl', 'penny':'penny', 'rewe':'rewe',
+    'edeka':'edeka', 'kaufland':'kaufland', 'netto':'netto', 'tegut':'tegut',
+    'globus':'globus', 'marktkauf':'marktkauf', 'hit':'hit',
+    'alnatura':'alnatura', "denn's biomarkt":'denns', 'denns':'denns'
+  };
+
+  function inferCat(name) {
+    const n = name.toLowerCase();
+    if (/milch|butter|k[äa]se|joghurt|quark|sahne|frischk[äa]se/.test(n)) return 'milch';
+    if (/fleisch|wurst|schinken|h[äa]hnchen|steak|hackfleisch/.test(n)) return 'fleisch';
+    if (/wasser|cola|bier|wein|saft|drink|kaffee|tee|espresso/.test(n)) return 'getraenke';
+    if (/schokolade|bonbon|gummi|kuchen|torte|keks|chips|snack|riegel/.test(n)) return 'sues';
+    if (/bio|[öo]ko|organic/.test(n)) return 'bio';
+    if (/waschmittel|sp[üu]lmittel|reiniger|putzmittel|toilettenpapier/.test(n)) return 'haushalt';
+    return 'sonstiges';
+  }
+
+  const CAT_EMOJI = { milch:'🥛', fleisch:'🥩', getraenke:'🥤', sues:'🍬', bio:'🌿', haushalt:'🧹', sonstiges:'🛒' };
+
+  const monday = getMondayOfWeek(state.year, state.kw);
+  const saturday = new Date(monday); saturday.setDate(monday.getDate() + 5);
+  function fmtFull(dt) { return dt.toISOString().split('T')[0]; }
+  function fmt(dt) { return dt.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' }); }
+
+  return items.map((item, i) => {
+    const retailerName = (item.retailer?.name || item.advertiser?.name || '').toLowerCase();
+    const chain = CHAIN_MAP[retailerName] || 'rewe';
+    const pricew = typeof item.price === 'object' ? (item.price?.amount ?? 0) : (item.price ?? 0);
+    const regularPrice = item.regularPrice?.amount ?? 0;
+    const pricea = regularPrice > pricew ? regularPrice : Math.round(pricew * 1.3 * 100) / 100;
+    const validFrom = item.validFrom || fmtFull(monday);
+    const validTo = item.validTo || fmtFull(saturday);
+    const label = `${fmt(new Date(validFrom))} – ${fmt(new Date(validTo))}`;
+    const cat = inferCat(item.name || '');
+    return {
+      id: i + 1, chain, name: item.name || '', cat,
+      emoji: CAT_EMOJI[cat] || '🛒', pricew, pricea,
+      validFrom, validTo, weekOnly: true, label,
+      image: item.images?.[0]?.url || null
+    };
+  });
 }
 
 // ─── SAFE STORAGE (Safari file:// fix) ───────────────────────────────────────
@@ -1264,7 +1449,7 @@ let state = {
   kw: currentKW,
   year: currentYear,
   selectedDay: currentDayOfWeek,
-  activeChain: 'all',
+  activeChains: new Set(),       // empty = all chains; replaces activeChain
   openProspekt: null,
   searchOpen: false,
   searchQuery: '',
@@ -1274,8 +1459,12 @@ let state = {
   profile: { name: '', email: '', chains: [], frequency: 'daily', active: false },
   profileFreq: 'daily',
   profileChains: new Set(),
-  activeCategory: 'all',
+  activeCategories: new Set(),   // empty = all categories; replaces activeCategory
   priceMax: 20,
+  priceMin: 0,
+  minDiscount: 0,
+  sortBy: 'default',
+  savedFilters: JSON.parse(safeStorage.getItem('dealradar_filters') || '[]'),
   favorites: new Set(JSON.parse(safeStorage.getItem('dealradar_fav') || '[]')),
   shoppingList: JSON.parse(safeStorage.getItem('dealradar_shop') || '[]'),
   shoppingListOpen: false,
@@ -1285,15 +1474,28 @@ let state = {
   priceComparisons: {},
 };
 
-function reloadOffers() {
-  state.offers = buildOffersForWeek(state.year, state.kw);
+async function reloadOffers() {
+  const main = document.getElementById('mainContent');
+  if (main) main.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem;gap:1rem;color:var(--text-muted)">
+    <div style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite"></div>
+    <span style="font-size:.9rem">Lade aktuelle Angebote...</span>
+  </div>`;
+  try {
+    const offers = await fetchLiveOffers();
+    state.offers = offers.length ? offers : buildOffersForWeek(state.year, state.kw);
+  } catch (e) {
+    console.warn('Marktguru-API nicht verfügbar, nutze Demo-Daten:', e);
+    state.offers = buildOffersForWeek(state.year, state.kw);
+  }
   Object.keys(state.cart).forEach(id => {
     const offer = state.offers.find(o => o.id === parseInt(id));
     if (offer) state.cart[id].priceNow = offer.pricew;
   });
   detectPriceComparisons();
+  render();
 }
 reloadOffers();
+loadFiltersFromURL(); // restore filter state from URL on startup
 
 async function loadOffersFromAPI() {
   const CHAIN_MAP = {
@@ -1303,38 +1505,76 @@ async function loadOffersFromAPI() {
     'tegut':'tegut','globus':'globus','marktkauf':'marktkauf','hit':'hit',
     'alnatura':'alnatura',"denn's biomarkt":'denns','denns':'denns'
   };
+
+  const CACHE_KEY = 'dealradar_live_offers';
+  const CACHE_TTL = 3 * 60 * 60 * 1000; // 3 Stunden
+
+  // Spinner anzeigen
+  const main = document.getElementById('mainContent');
+  main.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem;gap:1rem;color:var(--text-muted)">
+    <div style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite"></div>
+    <span style="font-size:.9rem">Lade aktuelle Angebote...</span>
+  </div>`;
+
   try {
-    const res = await fetch(
-      'https://api.marktguru.de/api/v1/offers?as=web&limit=100&offset=0',
-      { headers: { 'x-apikey': 'wB9MkCNNpJwbKSNBjTCHkTmBIgrR5hfzGEyUPgVp' } }
-    );
-    const data = await res.json();
-    const monday = getMondayOfWeek(state.year, state.kw);
-    function fmtFull(dt) { return dt.toISOString().split('T')[0]; }
-    function fmt(dt) { return dt.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' }); }
-    const saturday = new Date(monday); saturday.setDate(monday.getDate() + 5);
-    const mapped = (data.offers || []).map((item, i) => {
-      const retailer = (item.retailer?.name || '').toLowerCase();
-      const chain = CHAIN_MAP[retailer] || 'rewe';
-      const pricew = item.price?.amount || 0;
-      const pricea = item.regularPrice?.amount > pricew
-        ? item.regularPrice.amount
-        : Math.round(pricew * 1.3 * 100) / 100;
-      const validFrom = item.validFrom || fmtFull(monday);
-      const validTo   = item.validTo   || fmtFull(saturday);
-      const label = `${fmt(new Date(validFrom))} – ${fmt(new Date(validTo))}`;
-      return {
-        id: i + 1, chain, name: item.name || '', cat: 'sonstiges', emoji: '🛒',
-        pricew, pricea, validFrom, validTo, weekOnly: true, label,
-        image: item.images?.[0]?.url || null
-      };
-    });
-    if (mapped.length) state.offers = mapped;
-    detectPriceComparisons();
+    // Cache prüfen
+    const cached = sessionStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const { ts, offers } = JSON.parse(cached);
+      if (Date.now() - ts < CACHE_TTL && offers.length) {
+        state.offers = offers;
+        detectPriceComparisons();
+        render();
+        return;
+      }
+    }
+
+    // Live-Daten über Vercel Serverless Function holen (kein CORS-Problem)
+    const res = await fetch('/api/deals');
+    const json = await res.json();
+
+    if (json.source === 'live' && json.data?.offers?.length > 0) {
+      const monday = getMondayOfWeek(state.year, state.kw);
+      function fmtFull(dt) { return dt.toISOString().split('T')[0]; }
+      function fmt(dt) { return dt.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' }); }
+      const saturday = new Date(monday); saturday.setDate(monday.getDate() + 5);
+
+      const mapped = json.data.offers.map((item, i) => {
+        // Marktguru liefert je nach Endpoint retailer oder advertiser
+        const retailerName = (item.advertiser?.name || item.retailer?.name || '').toLowerCase();
+        const chain = CHAIN_MAP[retailerName] || 'rewe';
+        const pricew = item.price?.amount ?? item.price ?? 0;
+        const pricea = item.regularPrice?.amount > pricew
+          ? item.regularPrice.amount
+          : Math.round(pricew * 1.3 * 100) / 100;
+        const validFrom = item.validFrom || item.validTo
+          ? (item.validFrom || fmtFull(monday))
+          : fmtFull(monday);
+        const validTo = item.validTo || fmtFull(saturday);
+        const label = `${fmt(new Date(validFrom))} – ${fmt(new Date(validTo))}`;
+        return {
+          id: i + 1, chain, name: item.name || item.title || '', cat: item.category?.name || 'sonstiges',
+          emoji: '🛒', pricew, pricea, validFrom, validTo, weekOnly: true, label,
+          image: item.images?.[0]?.url || item.image?.url || item.imageUrl || null
+        };
+      });
+
+      if (mapped.length) {
+        state.offers = mapped;
+        // Im sessionStorage cachen
+        try {
+          sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), offers: mapped }));
+        } catch (_) {}
+        detectPriceComparisons();
+        console.log(`✅ ${mapped.length} Live-Angebote geladen`);
+      }
+    }
+    // Wenn source === 'fallback' oder leer: bestehende Mock-Daten bleiben erhalten
   } catch (e) {
-    // Fallback: Demo-Daten bleiben erhalten
+    console.warn('Live-Daten nicht verfügbar, nutze Mock-Daten:', e);
   }
-  await render();
+
+  render();
 }
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -1355,13 +1595,24 @@ function offerActiveOnDay(offer, dayIndex) {
 
 function filteredOffers(dayIndex) {
   const plzChains = state.plzFilter ? getChainsForPlz(state.plzFilter) : null;
-  return state.offers.filter(o =>
-    (state.activeChain === 'all' || o.chain === state.activeChain) &&
-    (state.activeCategory === 'all' || o.cat === state.activeCategory) &&
+  const offers = state.offers.filter(o =>
+    (state.activeChains.size === 0 || state.activeChains.has(o.chain)) &&
+    (state.activeCategories.size === 0 || state.activeCategories.has(o.cat)) &&
     (o.pricew <= state.priceMax) &&
+    (o.pricew >= state.priceMin) &&
+    (discountPct(o) >= state.minDiscount) &&
     (!plzChains || plzChains.includes(o.chain)) &&
     offerActiveOnDay(o, dayIndex)
   );
+  return sortOffers(offers);
+}
+
+function sortOffers(offers) {
+  if (state.sortBy === 'price-asc')  return [...offers].sort((a, b) => a.pricew - b.pricew);
+  if (state.sortBy === 'price-desc') return [...offers].sort((a, b) => b.pricew - a.pricew);
+  if (state.sortBy === 'discount')   return [...offers].sort((a, b) => discountPct(b) - discountPct(a));
+  if (state.sortBy === 'recency')    return [...offers].sort((a, b) => (b.validFrom > a.validFrom ? 1 : -1));
+  return offers;
 }
 
 function getImgUrl(id, size = 300) {
@@ -1398,12 +1649,15 @@ function toggleSearch() {
     btn.classList.remove('active');
     document.getElementById('searchInput').value = '';
     document.getElementById('searchResultsLabel').textContent = '';
+    const sugg = document.getElementById('searchSuggestions');
+    if (sugg) sugg.style.display = 'none';
   }
   render();
 }
 
 function onSearch() {
   state.searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+  renderSuggestions();
   render();
 }
 
@@ -1648,7 +1902,11 @@ function render() {
   const hide = state.tab === 'prospekte';
   document.getElementById('filterBar').style.display = hide ? 'none' : 'block';
   document.getElementById('categoryBar').style.display = hide ? 'none' : 'block';
+  const sb = document.getElementById('sortBar');
+  if (sb) sb.style.display = hide ? 'none' : 'block';
   renderFilterBar();
+  updateCategoryChips();
+  renderSavedFiltersBar();
   updateCartUI();
   updateFavBadge();
   updateShopListBadge();
@@ -1663,20 +1921,32 @@ function render() {
 function renderFilterBar() {
   const inner = document.getElementById('filterInner');
   inner.innerHTML = '';
+  const allActive = state.activeChains.size === 0;
   const all = document.createElement('div');
-  all.className = 'chip' + (state.activeChain === 'all' ? ' active' : '');
+  all.className = 'chip' + (allActive ? ' active' : '');
   all.textContent = 'Alle';
-  all.onclick = () => { state.activeChain = 'all'; render(); };
+  all.onclick = () => { state.activeChains.clear(); syncURL(); render(); };
   inner.appendChild(all);
   const plzChains = state.plzFilter ? getChainsForPlz(state.plzFilter) : null;
   CHAINS.forEach(c => {
     if (plzChains && !plzChains.includes(c.id)) return;
     const chip = document.createElement('div');
-    chip.className = 'chip' + (state.activeChain === c.id ? ' active' : '');
+    chip.className = 'chip' + (state.activeChains.has(c.id) ? ' active' : '');
     chip.textContent = c.name;
-    chip.onclick = () => { state.activeChain = c.id; render(); };
+    chip.onclick = () => {
+      if (state.activeChains.has(c.id)) state.activeChains.delete(c.id);
+      else state.activeChains.add(c.id);
+      syncURL(); render();
+    };
     inner.appendChild(chip);
   });
+  if (hasActiveFilters()) {
+    const btn = document.createElement('div');
+    btn.className = 'filter-reset-btn visible';
+    btn.innerHTML = `✕ ${getActiveFilterCount()} Filter`;
+    btn.onclick = resetAllFilters;
+    inner.appendChild(btn);
+  }
 }
 
 function renderDaySelector() {
@@ -1759,7 +2029,13 @@ function renderOfferCard(offer, query = '') {
   return `<div class="offer-card${inCart ? ' in-cart' : ''}">
     <button class="fav-btn${isFav ? ' active' : ''}" onclick="toggleFavorite(${offer.id})">${isFav ? '❤️' : '🤍'}</button>
     <div class="offer-img" data-product-name="${offer.name.replace(/"/g, '&quot;')}">
-      <span class="emoji-fallback" style="font-size:3.5rem">${offer.emoji}</span>
+      ${offer.image
+    ? `<img src="${offer.image}" alt="${offer.name}"
+           style="height:80px;width:100%;object-fit:contain;border-radius:8px;padding:4px;"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+       <span style="display:none;font-size:2.5rem">${offer.emoji}</span>`
+    : `<span style="font-size:2.5rem">${offer.emoji}</span>`
+  }
     </div>
     <div class="discount-badge">−${pct}%</div>
     <div class="offer-body">
@@ -1786,7 +2062,7 @@ function renderOfferCard(offer, query = '') {
 function renderSearchView(main) {
   const q = state.searchQuery;
   const results = state.offers.filter(o =>
-    (state.activeChain === 'all' || o.chain === state.activeChain) &&
+    (state.activeChains.size === 0 || state.activeChains.has(o.chain)) &&
     o.name.toLowerCase().includes(q)
   );
   document.getElementById('searchResultsLabel').textContent = q ? `${results.length} Treffer für „${q}"` : '';
@@ -1900,7 +2176,7 @@ function openProspekt(chainId) { state.openProspekt = chainId; render(); }
 function closeProspekt() { state.openProspekt = null; render(); }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
-loadOffersFromAPI();
+setInterval(() => reloadOffers(), 6 * 60 * 60 * 1000); // Auto-Refresh alle 6 Stunden
 
 // ─── PLZ ─────────────────────────────────────────────────────────────────────
 
@@ -2128,18 +2404,223 @@ function renderOffersWithAds(offers) {
 
 // ─── CATEGORY & PRICE FILTER ──────────────────────────────────────────────────
 
-function setCategory(cat) {
-  state.activeCategory = cat;
-  document.querySelectorAll('#categoryBar .chip').forEach(el =>
-    el.classList.toggle('active', el.dataset.cat === cat)
-  );
+function toggleCategory(cat) {
+  if (cat === 'all') {
+    state.activeCategories.clear();
+  } else {
+    if (state.activeCategories.has(cat)) state.activeCategories.delete(cat);
+    else state.activeCategories.add(cat);
+  }
+  updateCategoryChips();
+  syncURL();
   render();
+}
+
+function updateCategoryChips() {
+  document.querySelectorAll('#categoryBar .chip').forEach(el => {
+    const cat = el.dataset.cat;
+    if (!cat) return;
+    el.classList.toggle('active', cat === 'all' ? state.activeCategories.size === 0 : state.activeCategories.has(cat));
+  });
 }
 
 function onPriceSlider() {
   state.priceMax = parseFloat(document.getElementById('priceSlider').value);
+  if (state.priceMax < state.priceMin) {
+    state.priceMin = state.priceMax;
+    const pms = document.getElementById('priceMinSlider');
+    if (pms) pms.value = state.priceMin;
+    const pml = document.getElementById('priceMinLabel');
+    if (pml) pml.textContent = formatPrice(state.priceMin);
+  }
   document.getElementById('priceLabel').textContent = formatPrice(state.priceMax);
+  syncURL(); render();
+}
+
+function onPriceMinSlider() {
+  state.priceMin = parseFloat(document.getElementById('priceMinSlider').value);
+  if (state.priceMin > state.priceMax) {
+    state.priceMax = state.priceMin;
+    const ps = document.getElementById('priceSlider');
+    if (ps) ps.value = state.priceMax;
+    const pl = document.getElementById('priceLabel');
+    if (pl) pl.textContent = formatPrice(state.priceMax);
+  }
+  document.getElementById('priceMinLabel').textContent = formatPrice(state.priceMin);
+  syncURL(); render();
+}
+
+function onDiscountSlider() {
+  state.minDiscount = parseInt(document.getElementById('discountSlider').value);
+  document.getElementById('discountLabel').textContent = state.minDiscount + '%';
+  syncURL(); render();
+}
+
+// ─── SORT ─────────────────────────────────────────────────────────────────────
+
+function setSortBy(sort) {
+  state.sortBy = sort;
+  document.querySelectorAll('.sort-chip').forEach(el =>
+    el.classList.toggle('active', el.dataset.sort === sort)
+  );
+  syncURL(); render();
+}
+
+// ─── SUGGESTIONS ──────────────────────────────────────────────────────────────
+
+function renderSuggestions() {
+  const q = state.searchQuery;
+  const container = document.getElementById('searchSuggestions');
+  if (!container || !q || q.length < 2) {
+    if (container) container.style.display = 'none';
+    return;
+  }
+  const seen = new Set();
+  const suggs = state.offers
+    .filter(o => o.name.toLowerCase().includes(q))
+    .filter(o => { const k = o.name.toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; })
+    .slice(0, 7)
+    .map(o => ({ name: o.name, chain: getChain(o.chain)?.name || '', price: formatPrice(o.pricew) }));
+  if (!suggs.length) { container.style.display = 'none'; return; }
+  container.innerHTML = suggs.map(s => {
+    const safe = s.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    return `<div class="suggestion-item" onmousedown="selectSuggestion('${safe}')">
+      <span class="suggestion-name">${highlightMatch(s.name, q)}</span>
+      <span class="suggestion-meta">${s.chain} · ${s.price}</span>
+    </div>`;
+  }).join('');
+  container.style.display = 'block';
+}
+
+function selectSuggestion(name) {
+  const input = document.getElementById('searchInput');
+  if (input) input.value = name;
+  state.searchQuery = name.toLowerCase();
+  const c = document.getElementById('searchSuggestions');
+  if (c) c.style.display = 'none';
   render();
+}
+
+// ─── URL STATE ────────────────────────────────────────────────────────────────
+
+function syncURL() {
+  const p = new URLSearchParams();
+  if (state.activeChains.size > 0) p.set('chains', [...state.activeChains].join(','));
+  if (state.activeCategories.size > 0) p.set('cats', [...state.activeCategories].join(','));
+  if (state.priceMax < 20) p.set('maxPrice', state.priceMax);
+  if (state.priceMin > 0) p.set('minPrice', state.priceMin);
+  if (state.minDiscount > 0) p.set('minDiscount', state.minDiscount);
+  if (state.sortBy !== 'default') p.set('sort', state.sortBy);
+  if (state.searchQuery) p.set('q', state.searchQuery);
+  const qs = p.toString();
+  window.history.replaceState(null, '', qs ? '?' + qs : window.location.pathname);
+}
+
+function loadFiltersFromURL() {
+  const p = new URLSearchParams(window.location.search);
+  if (p.get('chains')) state.activeChains = new Set(p.get('chains').split(',').filter(Boolean));
+  if (p.get('cats')) state.activeCategories = new Set(p.get('cats').split(',').filter(Boolean));
+  if (p.get('maxPrice')) state.priceMax = parseFloat(p.get('maxPrice'));
+  if (p.get('minPrice')) state.priceMin = parseFloat(p.get('minPrice'));
+  if (p.get('minDiscount')) state.minDiscount = parseInt(p.get('minDiscount'));
+  if (p.get('sort')) state.sortBy = p.get('sort');
+  if (p.get('q')) { state.searchQuery = p.get('q'); state.searchOpen = true; }
+}
+
+function shareFilterView() {
+  syncURL();
+  if (navigator.share) {
+    navigator.share({ title: 'Deal Radar Filter', url: window.location.href }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => showToast('🔗 Link kopiert!'))
+      .catch(() => showToast('🔗 URL in Adressleiste kopieren'));
+  }
+}
+
+// ─── SAVED FILTERS ────────────────────────────────────────────────────────────
+
+function saveCurrentFilter() {
+  const name = prompt('Filter-Name:');
+  if (!name?.trim()) return;
+  const filter = {
+    id: Date.now(), name: name.trim(),
+    chains: [...state.activeChains], categories: [...state.activeCategories],
+    priceMax: state.priceMax, priceMin: state.priceMin,
+    minDiscount: state.minDiscount, sortBy: state.sortBy,
+  };
+  state.savedFilters.push(filter);
+  safeStorage.setItem('dealradar_filters', JSON.stringify(state.savedFilters));
+  showToast(`💾 "${name.trim()}" gespeichert`);
+  renderSavedFiltersBar();
+}
+
+function loadSavedFilter(id) {
+  const f = state.savedFilters.find(x => x.id === id);
+  if (!f) return;
+  state.activeChains = new Set(f.chains);
+  state.activeCategories = new Set(f.categories);
+  state.priceMax = f.priceMax; state.priceMin = f.priceMin || 0;
+  state.minDiscount = f.minDiscount; state.sortBy = f.sortBy;
+  syncSliders(); syncURL(); render();
+  showToast(`📂 "${f.name}" geladen`);
+}
+
+function deleteSavedFilter(id, e) {
+  e.stopPropagation();
+  state.savedFilters = state.savedFilters.filter(f => f.id !== id);
+  safeStorage.setItem('dealradar_filters', JSON.stringify(state.savedFilters));
+  renderSavedFiltersBar();
+}
+
+function syncSliders() {
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+  const setText = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+  set('priceSlider', state.priceMax); setText('priceLabel', formatPrice(state.priceMax));
+  set('priceMinSlider', state.priceMin); setText('priceMinLabel', formatPrice(state.priceMin));
+  set('discountSlider', state.minDiscount); setText('discountLabel', state.minDiscount + '%');
+  document.querySelectorAll('.sort-chip').forEach(el =>
+    el.classList.toggle('active', el.dataset.sort === state.sortBy)
+  );
+}
+
+function renderSavedFiltersBar() {
+  const bar = document.getElementById('savedFiltersBar');
+  const inner = document.getElementById('savedFiltersInner');
+  if (!bar || !inner) return;
+  if (!state.savedFilters.length) { bar.classList.remove('visible'); return; }
+  bar.classList.add('visible');
+  inner.innerHTML = '<span class="saved-filter-label">Gespeichert:</span>';
+  state.savedFilters.forEach(f => {
+    const chip = document.createElement('div');
+    chip.className = 'saved-filter-chip';
+    chip.innerHTML = `${f.name}<span class="saved-filter-chip-x" onmousedown="deleteSavedFilter(${f.id}, event)">✕</span>`;
+    chip.onclick = () => loadSavedFilter(f.id);
+    inner.appendChild(chip);
+  });
+}
+
+// ─── RESET & HELPERS ──────────────────────────────────────────────────────────
+
+function resetAllFilters() {
+  state.activeChains.clear(); state.activeCategories.clear();
+  state.priceMax = 20; state.priceMin = 0; state.minDiscount = 0; state.sortBy = 'default';
+  syncSliders(); syncURL(); render();
+  showToast('🔄 Filter zurückgesetzt');
+}
+
+function hasActiveFilters() {
+  return state.activeChains.size > 0 || state.activeCategories.size > 0 ||
+    state.priceMax < 20 || state.priceMin > 0 || state.minDiscount > 0 || state.sortBy !== 'default';
+}
+
+function getActiveFilterCount() {
+  let n = state.activeChains.size + state.activeCategories.size;
+  if (state.priceMax < 20) n++;
+  if (state.priceMin > 0) n++;
+  if (state.minDiscount > 0) n++;
+  if (state.sortBy !== 'default') n++;
+  return n;
 }
 
 // ─── FLIPBOOK ────────────────────────────────────────────────────────────────
