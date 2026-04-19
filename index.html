@@ -1474,6 +1474,23 @@ let state = {
   priceComparisons: {},
 };
 
+async function loadLiveDeals() {
+  try {
+    const res = await fetch('/api/deals');
+    const json = await res.json();
+    if (json.deals && json.deals.length > 0) {
+      state.offers = json.deals;
+      state.lastUpdated = new Date().toISOString();
+      console.log('[DealRadar] Live-Daten geladen:', json.deals.length, 'Angebote');
+      render();
+      return true;
+    }
+  } catch(e) {
+    console.log('[DealRadar] Live-Daten nicht verfügbar, lade Demo-Daten');
+  }
+  return false;
+}
+
 async function reloadOffers() {
   const main = document.getElementById('mainContent');
   if (main) main.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem;gap:1rem;color:var(--text-muted)">
@@ -1495,6 +1512,7 @@ async function reloadOffers() {
   render();
 }
 reloadOffers();
+loadLiveDeals();
 loadFiltersFromURL(); // restore filter state from URL on startup
 
 async function loadOffersFromAPI() {
