@@ -1,16 +1,35 @@
  <!DOCTYPE html>
 <html lang="de">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-R78ZVC19ER"></script>
+<!-- Google Analytics & AdSense werden nur nach Cookie-Einwilligung geladen -->
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-R78ZVC19ER');
+  function loadTrackingScripts() {
+    // Google Analytics 4
+    if (!document.querySelector('script[src*="googletagmanager"]')) {
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-R78ZVC19ER';
+      document.head.appendChild(s);
+    }
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    window.gtag = gtag;
+    gtag('js', new Date());
+    gtag('config', 'G-R78ZVC19ER');
+    // Google AdSense
+    if (!document.querySelector('script[src*="adsbygoogle"]')) {
+      var a = document.createElement('script');
+      a.async = true;
+      a.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXX';
+      a.crossOrigin = 'anonymous';
+      document.head.appendChild(a);
+    }
+  }
+  // Nur laden wenn Einwilligung vorhanden
+  if (localStorage.getItem('cookieConsent') === 'all') {
+    loadTrackingScripts();
+  }
 </script>
-<!-- AdSense -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXX" crossorigin="anonymous"></script>
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -25,7 +44,7 @@
 
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#16a34a">
+<meta name="theme-color" content="#FFD600">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -39,11 +58,11 @@
     --bg: #0f172a;
     --surface: #1e293b;
     --surface2: #334155;
-    --accent: #16a34a;
-    --accent-light: #22c55e;
+    --accent: #FFD600;
+    --accent-light: #FFD600;
     --red: #ef4444;
     --red-light: #fca5a5;
-    --green-light: #86efac;
+    --green-light: #FFD600;
     --text: #f1f5f9;
     --muted: #94a3b8;
     --border: #334155;
@@ -130,7 +149,7 @@
     color: var(--text);
     flex-shrink: 0;
   }
-  .icon-btn:hover { border-color: var(--accent); background: rgba(22,163,74,0.1); }
+  .icon-btn:hover { border-color: var(--accent); background: rgba(255,214,0,0.1); }
   .icon-btn.active { border-color: var(--accent); }
 
   .cart-badge {
@@ -231,7 +250,7 @@
   }
 
   .chip:hover { border-color: var(--accent); color: var(--text); }
-  .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .chip.active { background: var(--accent); border-color: var(--accent); color: #1a1a1a; }
 
   /* ─── DAY SELECTOR ───────────────────────────────────── */
   .day-selector {
@@ -286,8 +305,8 @@
   .day-btn .day-num { font-size: 1rem; font-weight: 700; margin-top: 2px; color: var(--text); }
 
   .day-btn:hover { border-color: var(--accent); }
-  .day-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .day-btn.active .day-num { color: #fff; }
+  .day-btn.active { background: var(--accent); border-color: var(--accent); color: #1a1a1a; }
+  .day-btn.active .day-num { color: #1a1a1a; }
   .day-btn.today .day-name { color: var(--accent-light); }
 
   /* ─── MAIN CONTENT ───────────────────────────────────── */
@@ -424,8 +443,8 @@
     transition: all .15s;
     display: flex; align-items: center; justify-content: center; gap: 6px;
   }
-  .add-cart-btn:hover { background: var(--accent); color: #fff; }
-  .add-cart-btn.added { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .add-cart-btn:hover { background: var(--accent); color: #1a1a1a; }
+  .add-cart-btn.added { background: var(--accent); color: #1a1a1a; border-color: var(--accent); }
   .add-cart-btn.added:hover { background: #dc2626; border-color: #dc2626; }
 
   .no-offers {
@@ -483,13 +502,13 @@
 
   .check-prices-btn {
     flex: 1; padding: 8px 12px;
-    background: rgba(22,163,74,0.15); border: 1px solid var(--accent);
+    background: rgba(255,214,0,0.15); border: 1px solid var(--accent);
     border-radius: var(--radius-sm); color: var(--accent-light);
     font-size: 0.8rem; font-weight: 700; cursor: pointer;
     transition: all .2s;
     display: flex; align-items: center; justify-content: center; gap: 6px;
   }
-  .check-prices-btn:hover { background: var(--accent); color: #fff; }
+  .check-prices-btn:hover { background: var(--accent); color: #1a1a1a; }
 
   .cart-items {
     flex: 1; overflow-y: auto; padding: 16px 20px;
@@ -515,7 +534,7 @@
     padding: 6px 12px; font-size: 0.75rem; font-weight: 700;
     display: flex; align-items: center; gap: 6px;
   }
-  .cart-item-alert.dropped { background: rgba(22,163,74,0.15); color: var(--green-light); }
+  .cart-item-alert.dropped { background: rgba(255,214,0,0.15); color: var(--green-light); }
   .cart-item-alert.risen { background: rgba(239,68,68,0.15); color: var(--red-light); }
 
   .cart-item-body { display: flex; gap: 10px; padding: 12px; }
@@ -564,10 +583,10 @@
 
   .checkout-btn {
     width: 100%; padding: 14px; background: var(--accent); border: none;
-    border-radius: var(--radius-sm); color: #fff; font-size: 1rem; font-weight: 700;
+    border-radius: var(--radius-sm); color: #1a1a1a; font-size: 1rem; font-weight: 700;
     cursor: pointer; transition: background .2s;
   }
-  .checkout-btn:hover { background: #15803d; }
+  .checkout-btn:hover { background: #e6c000; }
 
   /* ─── MODALS ──────────────────────────────────────────── */
   .modal-overlay {
@@ -633,7 +652,7 @@
   }
   .chain-check:hover { border-color: var(--accent); }
   .chain-check input { display: none; }
-  .chain-check.checked { border-color: var(--accent); background: rgba(22,163,74,0.1); }
+  .chain-check.checked { border-color: var(--accent); background: rgba(255,214,0,0.1); }
 
   .chain-check-dot {
     width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--border);
@@ -657,15 +676,15 @@
     transition: all .15s;
   }
   .freq-option:hover { border-color: var(--accent); }
-  .freq-option.selected { border-color: var(--accent); background: rgba(22,163,74,0.15); color: var(--accent-light); }
+  .freq-option.selected { border-color: var(--accent); background: rgba(255,214,0,0.15); color: var(--accent-light); }
 
   .save-profile-btn {
     width: 100%; padding: 12px; background: var(--accent); border: none;
-    border-radius: var(--radius-sm); color: #fff; font-size: 0.95rem; font-weight: 700;
+    border-radius: var(--radius-sm); color: #1a1a1a; font-size: 0.95rem; font-weight: 700;
     cursor: pointer; margin-top: 8px; transition: background .2s;
     display: flex; align-items: center; justify-content: center; gap: 8px;
   }
-  .save-profile-btn:hover { background: #15803d; }
+  .save-profile-btn:hover { background: #e6c000; }
 
   .profile-success { text-align: center; padding: 20px 0; }
   .profile-success .success-icon { font-size: 3rem; margin-bottom: 12px; }
@@ -715,7 +734,7 @@
   }
 
   .week-day-section h3 .count-badge {
-    background: var(--accent); color: #fff;
+    background: var(--accent); color: #1a1a1a;
     font-size: 0.65rem; padding: 1px 7px; border-radius: 10px;
   }
 
@@ -748,7 +767,7 @@
   .deal-week-section { margin-bottom: 20px; }
   .deal-week-title { font-size: 1rem; font-weight: 800; margin-bottom: 12px; }
   .deal-week-grid { display: flex; flex-direction: column; gap: 10px; }
-  .deal-card { background: linear-gradient(135deg,rgba(22,163,74,.15),rgba(22,163,74,.05));
+  .deal-card { background: linear-gradient(135deg,rgba(255,214,0,.15),rgba(255,214,0,.05));
     border: 1px solid var(--accent); border-radius: var(--radius);
     padding: 14px 16px; display: flex; align-items: center; gap: 14px; }
   .deal-card-emoji { font-size: 2.8rem; flex-shrink: 0; }
@@ -825,7 +844,7 @@
   /* ─── PRICE COMPARISON ─────────────────────────────────── */
   .price-cmp-badge { display: inline-flex; align-items: center; gap: 4px;
     font-size: .65rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-bottom: 6px; }
-  .price-cmp-badge.cheapest { background: rgba(22,163,74,.2); color: var(--green-light);
+  .price-cmp-badge.cheapest { background: rgba(255,214,0,.2); color: var(--green-light);
     border: 1px solid var(--accent); }
   .price-cmp-badge.compare { background: var(--surface2); color: var(--muted);
     border: 1px solid var(--border); }
@@ -854,9 +873,9 @@
     outline: none; margin: 16px 0; transition: border-color .2s; }
   .plz-modal-input:focus { border-color: var(--accent); }
   .plz-apply-btn { width: 100%; padding: 12px; background: var(--accent); border: none;
-    border-radius: var(--radius-sm); color: #fff; font-size: .95rem; font-weight: 700;
+    border-radius: var(--radius-sm); color: #1a1a1a; font-size: .95rem; font-weight: 700;
     cursor: pointer; transition: background .2s; }
-  .plz-apply-btn:hover { background: #15803d; }
+  .plz-apply-btn:hover { background: #e6c000; }
 
   /* ─── ADSENSE ──────────────────────────────────────────── */
   .ad-leaderboard { max-width: 900px; margin: 0 auto; padding: 6px 16px; text-align: center; }
@@ -944,7 +963,7 @@
     font-weight:500; cursor:pointer; white-space:nowrap;
     transition: all .15s; color:var(--muted); }
   .sort-chip:hover { border-color:var(--accent); color:var(--text); }
-  .sort-chip.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .sort-chip.active { background:var(--accent); border-color:var(--accent); color:#1a1a1a; }
   .filter-actions { display:flex; gap:6px; margin-left:auto; flex-shrink:0; }
   .filter-reset-btn {
     background:rgba(239,68,68,.1); border:1px solid var(--red);
@@ -960,11 +979,11 @@
     transition:all .15s; }
   .share-filter-btn:hover { border-color:var(--accent); color:var(--text); }
   .save-filter-btn {
-    background:rgba(22,163,74,.1); border:1px solid var(--accent);
+    background:rgba(255,214,0,.1); border:1px solid var(--accent);
     color:var(--accent-light); border-radius:20px; padding:4px 10px;
     font-size:.75rem; font-weight:700; cursor:pointer; white-space:nowrap;
     transition:all .15s; }
-  .save-filter-btn:hover { background:var(--accent); color:#fff; }
+  .save-filter-btn:hover { background:var(--accent); color:#1a1a1a; }
 
   /* ─── SUGGESTIONS ────────────────────────────────────────── */
   .search-suggestions-wrap { position:relative; }
@@ -1016,6 +1035,122 @@
     #shoplistPrintArea { display: block !important; font-family: sans-serif; }
     #shoplistPrintArea h2 { font-size: 18px; margin-bottom: 12px; }
     #shoplistPrintArea .print-item { padding: 6px 0; border-bottom: 1px solid #ccc; font-size: 14px; }
+  }
+
+  /* ─── FOOTER ────────────────────────────────────────────── */
+  .app-footer {
+    max-width: 900px;
+    margin: 40px auto 20px;
+    padding: 16px 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+  .app-footer a, .app-footer button {
+    color: var(--muted);
+    font-size: 0.78rem;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-family: inherit;
+    transition: color .2s;
+  }
+  .app-footer a:hover, .app-footer button:hover { color: var(--accent); }
+  .app-footer .footer-sep { color: var(--border); font-size: 0.78rem; }
+
+  /* ─── COOKIE BANNER ─────────────────────────────────────── */
+  .cookie-banner {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 16px;
+    z-index: 400;
+    display: none;
+  }
+  .cookie-banner.visible { display: block; }
+  .cookie-banner-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .cookie-banner-text {
+    flex: 1;
+    font-size: 0.85rem;
+    color: var(--text);
+    line-height: 1.5;
+    min-width: 220px;
+  }
+  .cookie-banner-text a { color: var(--accent); text-decoration: underline; cursor: pointer; }
+  .cookie-banner-btns {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .cookie-btn-accept {
+    background: #16a34a;
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 10px 20px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s;
+    font-family: inherit;
+  }
+  .cookie-btn-accept:hover { background: #15803d; }
+  .cookie-btn-necessary {
+    background: var(--surface2);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 16px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .2s;
+    font-family: inherit;
+  }
+  .cookie-btn-necessary:hover { border-color: var(--accent); color: var(--text); }
+
+  /* ─── LEGAL PAGES ────────────────────────────────────────── */
+  .legal-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 16px 40px;
+  }
+  .legal-page h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 24px;
+    color: var(--text);
+  }
+  .legal-page h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent-light);
+    margin: 24px 0 8px;
+  }
+  .legal-page p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+  .legal-page .placeholder {
+    color: var(--accent);
+    font-weight: 600;
   }
 </style>
 <script>
@@ -1165,8 +1300,10 @@ async function registerPush() {
 <header>
   <div class="header-top">
     <div class="logo">
-      <div class="logo-icon">📡</div>
-      Deal<span>Radar</span>
+      <div style="display:flex;flex-direction:column;gap:1px;">
+        <span style="font-size:1.5rem;font-weight:900;letter-spacing:-1px;">⚡ Deal<span style="color:#FFD600">Radar</span></span>
+        <span style="font-size:0.75rem;opacity:0.8;">Alle Supermarkt-Deals auf einen Blick</span>
+      </div>
     </div>
     <div class="header-right">
       <div class="kw-badge" onclick="openKwModal()" id="kwBadge">KW –</div>
@@ -1268,8 +1405,33 @@ async function registerPush() {
 <!-- ─── MAIN CONTENT ───────────────────────────────────────── -->
 <div class="main" id="mainContent"></div>
 
+<!-- ─── FOOTER ────────────────────────────────────────────── -->
+<footer class="app-footer">
+  <a href="#" onclick="openLegalPage('impressum');return false;">Impressum</a>
+  <span class="footer-sep">·</span>
+  <a href="#" onclick="openLegalPage('datenschutz');return false;">Datenschutz</a>
+  <span class="footer-sep">·</span>
+  <button onclick="showCookieBanner()">Cookie-Einstellungen</button>
+</footer>
+
 <!-- ─── TOAST ─────────────────────────────────────────────── -->
 <div class="toast" id="toast"></div>
+
+<!-- ─── COOKIE BANNER ─────────────────────────────────────── -->
+<div class="cookie-banner" id="cookieBanner">
+  <div class="cookie-banner-inner">
+    <div class="cookie-banner-text">
+      🍪 Wir verwenden Cookies, um dir die bestmögliche Erfahrung zu bieten.
+      Dazu gehören technisch notwendige Cookies sowie Cookies für Analyse
+      (Google Analytics) und Werbung (Google AdSense). Mehr in der
+      <a onclick="openLegalPage('datenschutz')">Datenschutzerklärung</a>.
+    </div>
+    <div class="cookie-banner-btns">
+      <button class="cookie-btn-accept" onclick="acceptCookies('all')">Alle akzeptieren</button>
+      <button class="cookie-btn-necessary" onclick="acceptCookies('necessary')">Nur notwendige</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ─── DATA ─────────────────────────────────────────────────────────────────────
@@ -1288,7 +1450,7 @@ const CHAINS = [
   { id: 'marktkauf',  name: 'Marktkauf',       color: '#e30613', emoji: '🛒', url: 'https://www.marktkauf.de/angebote/' },
   { id: 'hit',        name: 'Hit',             color: '#e20020', emoji: '💥', url: 'https://www.hit.de/angebote/' },
   { id: 'alnatura',   name: 'Alnatura',        color: '#5a8a2c', emoji: '🌿', url: 'https://www.alnatura.de/de-de/angebote/' },
-  { id: 'denns',      name: "Denn's Biomarkt", color: '#4caf50', emoji: '🌱', url: 'https://www.denns-biomarkt.de/angebote/' },
+  { id: 'denns',      name: "Denn's Biomarkt", color: '#FFD600', emoji: '🌱', url: 'https://www.denns-biomarkt.de/angebote/' },
 ];
 
 const OFFER_IMAGES = {
@@ -1443,6 +1605,7 @@ let state = {
   selectedDay: currentDayOfWeek,
   activeChains: new Set(),       // empty = all chains; replaces activeChain
   openProspekt: null,
+  legalPage: null,               // 'impressum' | 'datenschutz' | null
   searchOpen: false,
   searchQuery: '',
   offers: [],
@@ -1904,6 +2067,18 @@ const DAY_NAMES = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 const DAY_FULL  = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
 
 function render() {
+  // Legal-Seiten übernehmen den gesamten mainContent
+  if (state.legalPage) {
+    const main = document.getElementById('mainContent');
+    document.getElementById('filterBar').style.display = 'none';
+    document.getElementById('categoryBar').style.display = 'none';
+    const sb = document.getElementById('sortBar');
+    if (sb) sb.style.display = 'none';
+    if (state.legalPage === 'impressum') renderImpressumPage(main);
+    else if (state.legalPage === 'datenschutz') renderDatenschutzPage(main);
+    return;
+  }
+
   document.getElementById('kwBadge').textContent = `KW ${state.kw}`;
   ['heute','woche','favoriten','prospekte'].forEach(t => {
     const el = document.getElementById('tab-'+t);
@@ -2160,12 +2335,12 @@ function renderProspektDetail(main, chainId) {
         <div style="font-size:1.2rem;font-weight:800;">${chain.name}</div>
         <div style="font-size:.8rem;color:var(--muted);margin-top:3px;">KW ${state.kw} · ${fmt(monday)} – ${fmt(sunday)}</div>
       </div>
-      <div style="background:var(--accent);color:#fff;font-size:0.7rem;font-weight:700;padding:4px 10px;border-radius:20px;flex-shrink:0;">${chainOffers.length} Angebot${chainOffers.length !== 1 ? 'e' : ''}</div>
+      <div style="background:var(--accent);color:#1a1a1a;font-size:0.7rem;font-weight:700;padding:4px 10px;border-radius:20px;flex-shrink:0;">${chainOffers.length} Angebot${chainOffers.length !== 1 ? 'e' : ''}</div>
     </div>
     <a href="${chain.url}" target="_blank" rel="noopener noreferrer"
       style="display:flex;align-items:center;justify-content:center;gap:10px;
              width:100%;padding:16px;margin-bottom:24px;
-             background:var(--accent);color:#fff;
+             background:var(--accent);color:#1a1a1a;
              border-radius:var(--radius);font-size:1rem;font-weight:700;
              text-decoration:none;transition:opacity .15s;"
       onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
@@ -2178,12 +2353,124 @@ function renderProspektDetail(main, chainId) {
 
 // ─── ACTIONS ─────────────────────────────────────────────────────────────────
 
-function switchTab(tab) { state.tab = tab; state.openProspekt = null; render(); }
+function switchTab(tab) { state.tab = tab; state.openProspekt = null; state.legalPage = null; render(); }
 function selectDay(i) { state.selectedDay = i; render(); }
 function prevDay() { if (state.selectedDay > 0) { state.selectedDay--; render(); } }
 function nextDay() { if (state.selectedDay < 5) { state.selectedDay++; render(); } }
 function openProspekt(chainId) { state.openProspekt = chainId; render(); }
 function closeProspekt() { state.openProspekt = null; render(); }
+
+// ─── LEGAL PAGES ──────────────────────────────────────────────────────────────
+
+function openLegalPage(page) {
+  state.legalPage = page;
+  state.openProspekt = null;
+  window.scrollTo(0, 0);
+  render();
+}
+
+function closeLegalPage() {
+  state.legalPage = null;
+  render();
+}
+
+function renderImpressumPage(main) {
+  main.innerHTML = `<div class="legal-page">
+    <button class="back-btn" onclick="closeLegalPage()">← Zurück</button>
+    <h1>Impressum</h1>
+    <p>Angaben gemäß § 5 TMG:</p>
+    <p>
+      <span class="placeholder">[DEIN VOLLSTÄNDIGER NAME]</span><br>
+      <span class="placeholder">[STRASSE UND HAUSNUMMER]</span><br>
+      <span class="placeholder">[PLZ UND ORT]</span><br>
+      Deutschland
+    </p>
+    <h2>Kontakt</h2>
+    <p>E-Mail: <span class="placeholder">[DEINE E-MAIL]</span></p>
+    <h2>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
+    <p>
+      <span class="placeholder">[DEIN NAME]</span><br>
+      <span class="placeholder">[ADRESSE WIE OBEN]</span>
+    </p>
+    <h2>Haftungsausschluss</h2>
+    <p>
+      Die Inhalte dieser Website wurden mit größtmöglicher Sorgfalt erstellt.
+      Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann
+      jedoch keine Gewähr übernommen werden. Die angezeigten Angebote und
+      Preise basieren auf Daten externer Quellen (u.a. Marktguru) und können
+      abweichen. Verbindlich sind ausschließlich die Angaben in den
+      jeweiligen Geschäften.
+    </p>
+  </div>`;
+}
+
+function renderDatenschutzPage(main) {
+  main.innerHTML = `<div class="legal-page">
+    <button class="back-btn" onclick="closeLegalPage()">← Zurück</button>
+    <h1>Datenschutzerklärung</h1>
+    <h2>1. Verantwortlicher</h2>
+    <p>
+      <span class="placeholder">[NAME]</span><br>
+      <span class="placeholder">[ADRESSE]</span><br>
+      E-Mail: <span class="placeholder">[E-MAIL]</span>
+    </p>
+    <h2>2. Erhebung allgemeiner Daten</h2>
+    <p>
+      Beim Besuch unserer Website werden durch den Server automatisch
+      Informationen wie IP-Adresse, Browsertyp, Betriebssystem, Referrer-URL,
+      Uhrzeit und Datum erfasst. Diese Daten sind technisch notwendig und
+      werden nicht mit anderen Datenquellen zusammengeführt.
+    </p>
+    <h2>3. Google Analytics 4</h2>
+    <p>
+      Diese Website nutzt Google Analytics 4 (Messung-ID: G-R78ZVC19ER),
+      einen Webanalysedienst der Google Ireland Limited. Google Analytics
+      verwendet Cookies, die eine Analyse der Benutzung der Website
+      ermöglichen. Die IP-Adresse wird anonymisiert. Sie können die
+      Erfassung durch Google Analytics über unser Cookie-Banner verhindern.
+    </p>
+    <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung)</p>
+    <h2>4. Google AdSense</h2>
+    <p>
+      Diese Website verwendet Google AdSense, einen Dienst der Google
+      Ireland Limited, zur Einbindung von Werbeanzeigen. Google AdSense
+      verwendet Cookies, um personalisierte Werbung anzuzeigen. Sie können
+      personalisierte Werbung über unser Cookie-Banner deaktivieren.
+    </p>
+    <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung)</p>
+    <h2>5. Ihre Rechte</h2>
+    <p>
+      Sie haben das Recht auf Auskunft, Berichtigung, Löschung,
+      Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch.
+      Bei Beschwerden können Sie sich an die zuständige Datenschutzbehörde
+      wenden.
+    </p>
+    <h2>6. Kontakt</h2>
+    <p>Bei Fragen zum Datenschutz: <span class="placeholder">[DEINE E-MAIL]</span></p>
+    <p>Stand: April 2026</p>
+  </div>`;
+}
+
+// ─── COOKIE CONSENT ───────────────────────────────────────────────────────────
+
+function acceptCookies(choice) {
+  localStorage.setItem('cookieConsent', choice);
+  document.getElementById('cookieBanner').classList.remove('visible');
+  if (choice === 'all') {
+    loadTrackingScripts();
+  }
+}
+
+function showCookieBanner() {
+  document.getElementById('cookieBanner').classList.add('visible');
+}
+
+function initCookieBanner() {
+  const consent = localStorage.getItem('cookieConsent');
+  if (!consent) {
+    showCookieBanner();
+  }
+}
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 setInterval(() => reloadOffers(), 6 * 60 * 60 * 1000); // Auto-Refresh alle 6 Stunden
@@ -2749,6 +3036,9 @@ function updateFlipbookControls() {
     setTimeout(() => overlay.remove(), 500);
   }, 1500);
 })();
+
+// Cookie-Banner beim ersten Besuch anzeigen
+initCookieBanner();
 
 // ─── CLOSE SHOPLIST ON OVERLAY CLICK ─────────────────────────────────────────
 
