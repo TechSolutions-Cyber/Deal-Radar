@@ -2,46 +2,40 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
 
   try {
-    const url = 'https://api.marktguru.de/api/v1/offers?as=web&limit=100&offset=0';
+    const apiKey = process.env.MARKTGURU_API_KEY;
+    const clientKey = process.env.MARKTGURU_CLIENT_KEY;
 
-    const response = await fetch(url, {
+    const response = await fetch('https://api.marktguru.de/api/v1/offers?limit=100&offset=0', {
       headers: {
-        'x-apikey': 'wB9MkCNNpJwbKSNBjTCHkTmBIgrR5hfzGEyUPgVp',
+        'x-apikey': apiKey,
+        'x-clientkey': clientKey,
         'User-Agent': 'Mozilla/5.0',
         'Accept': 'application/json'
       }
     });
 
-    if (!response.ok) throw new Error(`Status ${response.status}`);
+    if (!response.ok) throw new Error(`API returned status ${response.status}`);
+
     const data = await response.json();
 
-    const offers = Array.isArray(data.results) ? data.results
-                 : Array.isArray(data.offers)  ? data.offers
-                 : Array.isArray(data)          ? data
-                 : [];
+    const raw = Array.isArray(data.results) ? data.results
+               : Array.isArray(data.offers)  ? data.offers
+               : Array.isArray(data)          ? data
+               : [];
 
-    const deals = offers.map((item, i) => {
-      const rawChain = item.retailer?.name ?? 'unbekannt';
-      const chain = rawChain.toLowerCase().replace(/\s+/g, '-');
-      const pricew = item.price?.amount ?? 0;
-      return {
-        id:        item.id ?? i,
-        chain,
-        name:      item.name ?? '',
-        cat:       'sonstiges',
-        emoji:     '🛒',
-        pricew,
-        pricea:    Math.round(pricew * 1.4 * 100) / 100,
-        validFrom: item.validFrom   ?? null,
-        validTo:   item.validUntil  ?? null,
-        weekOnly:  true,
-        label:     'Mo – Sa'
-      };
-    });
+    const offers = raw.map(item => ({
+      title:         item.name ?? '',
+      price:         item.price?.amount ?? 0,
+      originalPrice: item.originalPrice?.amount ?? null,
+      store:         item.retailer?.name ?? 'unbekannt',
+      validFrom:     item.validFrom ?? null,
+      validUntil:    item.validUntil ?? null,
+      image:         item.imageUrl ?? item.image ?? null
+    }));
 
-    res.status(200).json({ source: 'live', deals });
+    res.status(200).json({ success: true, offers });
 
   } catch (err) {
-    res.status(200).json({ source: 'fallback', deals: [] });
+    res.status(500).json({ success: false, error: err.message });
   }
 }
