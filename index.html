@@ -1354,47 +1354,6 @@ async function registerPush() {
   <div class="filter-inner" id="filterInner"></div>
 </div>
 
-<!-- ─── CATEGORY BAR ───────────────────────────────────────── -->
-<div class="category-bar" id="categoryBar">
-  <div class="category-bar-inner">
-    <div class="chip active" data-cat="all" onclick="toggleCategory('all')">Alle</div>
-    <div class="chip" data-cat="milch" onclick="toggleCategory('milch')">🥛 Milch & Käse</div>
-    <div class="chip" data-cat="fleisch" onclick="toggleCategory('fleisch')">🥩 Fleisch</div>
-    <div class="chip" data-cat="getraenke" onclick="toggleCategory('getraenke')">🥤 Getränke</div>
-    <div class="chip" data-cat="sues" onclick="toggleCategory('sues')">🍬 Süßes</div>
-    <div class="chip" data-cat="bio" onclick="toggleCategory('bio')">🌿 Bio</div>
-    <div class="chip" data-cat="haushalt" onclick="toggleCategory('haushalt')">🧹 Haushalt</div>
-  </div>
-  <div class="price-slider-wrap">
-    <span class="price-slider-label">Ab <strong id="priceMinLabel">0,00 €</strong></span>
-    <input type="range" id="priceMinSlider" min="0" max="20" step="0.5" value="0" oninput="onPriceMinSlider()">
-  </div>
-  <div class="price-slider-wrap" style="padding-top:2px">
-    <span class="price-slider-label">Bis <strong id="priceLabel">20,00 €</strong></span>
-    <input type="range" id="priceSlider" min="0" max="20" step="0.5" value="20" oninput="onPriceSlider()">
-  </div>
-  <div class="extra-slider-wrap">
-    <span class="price-slider-label">Min. Rabatt <strong id="discountLabel">0%</strong></span>
-    <input type="range" id="discountSlider" min="0" max="80" step="5" value="0" oninput="onDiscountSlider()">
-  </div>
-</div>
-
-<!-- ─── SORT BAR ───────────────────────────────────────────── -->
-<div class="sort-bar" id="sortBar">
-  <div class="sort-bar-inner">
-    <span class="sort-label">Sortierung:</span>
-    <div class="sort-chip active" data-sort="default" onclick="setSortBy('default')">Standard</div>
-    <div class="sort-chip" data-sort="discount" onclick="setSortBy('discount')">💰 Rabatt ↓</div>
-    <div class="sort-chip" data-sort="price-asc" onclick="setSortBy('price-asc')">Preis ↑</div>
-    <div class="sort-chip" data-sort="price-desc" onclick="setSortBy('price-desc')">Preis ↓</div>
-    <div class="sort-chip" data-sort="recency" onclick="setSortBy('recency')">Neueste</div>
-    <div class="filter-actions">
-      <button class="share-filter-btn" onclick="shareFilterView()">🔗 Teilen</button>
-      <button class="save-filter-btn" onclick="saveCurrentFilter()">💾 Speichern</button>
-    </div>
-  </div>
-</div>
-
 <!-- ─── SAVED FILTERS BAR ──────────────────────────────────── -->
 <div class="saved-filters-bar" id="savedFiltersBar">
   <div class="saved-filters-inner" id="savedFiltersInner">
