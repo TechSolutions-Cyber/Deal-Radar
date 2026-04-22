@@ -1634,10 +1634,13 @@ async function reloadOffers() {
   });
   detectPriceComparisons();
   render();
+  hideLoadingOverlay();
 }
-reloadOffers();
-loadLiveDeals();
-loadFiltersFromURL(); // restore filter state from URL on startup
+(async () => {
+  await reloadOffers();
+  loadFiltersFromURL(); // restore filter state from URL on startup
+  loadLiveDeals();     // update with live data in background after initial render
+})();
 
 async function loadOffersFromAPI() {
   const CHAIN_MAP = {
@@ -2992,19 +2995,19 @@ function updateFlipbookControls() {
   document.getElementById('flipbookNext').disabled = fb.currentPage === fb.totalPages - 1;
 }
 
-// ─── LOADING SIMULATION ───────────────────────────────────────────────────────
+// ─── LOADING OVERLAY ──────────────────────────────────────────────────────────
 
-(function simulateDataLoad() {
+function hideLoadingOverlay() {
   const overlay = document.getElementById('loadingOverlay');
   if (!overlay) return;
-  setTimeout(() => {
-    overlay.classList.add('hidden');
-    state.lastUpdated = new Date().toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit' });
-    const lu = document.getElementById('lastUpdated');
-    if (lu) lu.textContent = `Zuletzt aktualisiert: ${state.lastUpdated} Uhr`;
-    setTimeout(() => overlay.remove(), 500);
-  }, 1500);
-})();
+  state.lastUpdated = new Date().toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit' });
+  const lu = document.getElementById('lastUpdated');
+  if (lu) lu.textContent = `Zuletzt aktualisiert: ${state.lastUpdated} Uhr`;
+  overlay.classList.add('hidden');
+  setTimeout(() => overlay.remove(), 500);
+}
+// Safety fallback: hide overlay after max 8 seconds no matter what
+setTimeout(hideLoadingOverlay, 8000);
 
 // Cookie-Banner beim ersten Besuch anzeigen
 initCookieBanner();
