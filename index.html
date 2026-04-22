@@ -1505,9 +1505,17 @@ function buildOffersForWeek(year, kw) {
 // ─── MARKTGURU LIVE OFFERS ────────────────────────────────────────────────────
 
 async function fetchLiveOffers() {
-  const res = await fetch('https://api.marktguru.de/api/v1/offers?as=web&limit=100&offset=0', {
-    headers: { 'x-apikey': 'wB9MkCNNpJwbKSNBjTCHkTmBIgrR5hfzGEyUPgVp' }
-  });
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 5000); // 5s timeout
+  let res;
+  try {
+    res = await fetch('https://api.marktguru.de/api/v1/offers?as=web&limit=100&offset=0', {
+      headers: { 'x-apikey': 'wB9MkCNNpJwbKSNBjTCHkTmBIgrR5hfzGEyUPgVp' },
+      signal: controller.signal
+    });
+  } finally {
+    clearTimeout(timer);
+  }
   if (!res.ok) throw new Error('HTTP ' + res.status);
   const json = await res.json();
   const items = Array.isArray(json) ? json : (json.offers || json.data?.offers || []);
@@ -1633,7 +1641,7 @@ async function reloadOffers() {
     if (offer) state.cart[id].priceNow = offer.pricew;
   });
   detectPriceComparisons();
-  render();
+  try { render(); } catch(e) { console.error('render() Fehler:', e); }
   hideLoadingOverlay();
 }
 (async () => {
@@ -2042,10 +2050,9 @@ function render() {
   // Legal-Seiten übernehmen den gesamten mainContent
   if (state.legalPage) {
     const main = document.getElementById('mainContent');
-    document.getElementById('filterBar').style.display = 'none';
-    document.getElementById('categoryBar').style.display = 'none';
-    const sb = document.getElementById('sortBar');
-    if (sb) sb.style.display = 'none';
+    const fb = document.getElementById('filterBar'); if (fb) fb.style.display = 'none';
+    const cb = document.getElementById('categoryBar'); if (cb) cb.style.display = 'none';
+    const sb = document.getElementById('sortBar'); if (sb) sb.style.display = 'none';
     if (state.legalPage === 'impressum') renderImpressumPage(main);
     else if (state.legalPage === 'datenschutz') renderDatenschutzPage(main);
     return;
@@ -2057,10 +2064,9 @@ function render() {
     if (el) el.className = 'tab' + (state.tab === t ? ' active' : '');
   });
   const hide = state.tab === 'prospekte';
-  document.getElementById('filterBar').style.display = hide ? 'none' : 'block';
-  document.getElementById('categoryBar').style.display = hide ? 'none' : 'block';
-  const sb = document.getElementById('sortBar');
-  if (sb) sb.style.display = hide ? 'none' : 'block';
+  const fb = document.getElementById('filterBar'); if (fb) fb.style.display = hide ? 'none' : 'block';
+  const cb = document.getElementById('categoryBar'); if (cb) cb.style.display = hide ? 'none' : 'block';
+  const sb = document.getElementById('sortBar'); if (sb) sb.style.display = hide ? 'none' : 'block';
   renderFilterBar();
   updateCategoryChips();
   renderSavedFiltersBar();
