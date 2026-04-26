@@ -1151,6 +1151,40 @@
     color: var(--accent);
     font-weight: 600;
   }
+
+  /* === Mystery Card Side Button === */
+  .mc-side-btn {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    z-index: 9999;
+    writing-mode: vertical-rl;
+    transform: translateY(-50%) rotate(180deg);
+    padding: 16px 10px;
+    background: linear-gradient(180deg, #8B5CF6 0%, #22D3EE 100%);
+    color: #0f172a;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+    border-radius: 10px 0 0 10px;
+    text-decoration: none;
+    box-shadow: -4px 0 20px rgba(139,92,246,0.45);
+    transition: padding 0.2s, box-shadow 0.2s;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+  .mc-side-btn:hover {
+    padding: 16px 15px;
+    box-shadow: -6px 0 30px rgba(139,92,246,0.7);
+  }
+  @media (max-width: 480px) {
+    .mc-side-btn {
+      font-size: 0.75rem;
+      padding: 12px 8px;
+    }
+  }
 </style>
 <script>
 async function registerPush() {
@@ -3006,5 +3040,9 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 </script>
+
+<!-- Mystery Card Side Button -->
+<a href="/mystery.html" class="mc-side-btn">🎴 Mystery Card</a>
+
 </body>
 </html>
