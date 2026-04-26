@@ -348,33 +348,32 @@
   .offer-card:hover { transform: translateY(-2px); border-color: var(--accent); }
   .offer-card.in-cart { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
 
+  @keyframes float-qmark {
+    0%, 100% { transform: translateY(6px); }
+    50% { transform: translateY(-6px); }
+  }
+
   .offer-img {
     width: 100%;
     aspect-ratio: 1;
-    background: var(--surface2);
+    background: radial-gradient(ellipse at center, #ffffff 0%, #e8ecf0 60%, #d0d8e0 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 3.5rem;
     overflow: hidden;
     position: relative;
   }
 
-  .offer-img img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform .3s ease;
-  }
-  .offer-card:hover .offer-img img { transform: scale(1.05); }
+  .offer-img img { display: none !important; }
+  .offer-img .emoji-fallback { display: none !important; }
 
-  .offer-img .emoji-fallback {
+  .offer-img .float-question {
     font-size: 3.5rem;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    width: 100%; height: 100%;
-    position: absolute; top: 0;
+    color: #111;
+    font-weight: 900;
+    animation: float-qmark 2.4s ease-in-out infinite;
+    user-select: none;
+    line-height: 1;
   }
 
   .offer-body { padding: 10px 12px 12px; }
@@ -2158,23 +2157,7 @@ async function fetchProductImage(productName) {
 }
 
 function loadImagesForCards() {
-  document.querySelectorAll('.offer-img[data-product-name]').forEach(async el => {
-    const name = el.getAttribute('data-product-name');
-    const img = await fetchProductImage(name);
-    if (!img) return;
-    const imgEl = document.createElement('img');
-    imgEl.alt = name;
-    imgEl.loading = 'lazy';
-    imgEl.style.cssText = 'width:100%;height:100%;object-fit:contain;background:white;border-radius:8px;opacity:0;transition:opacity .3s';
-    imgEl.onload = () => {
-      imgEl.style.opacity = '1';
-      const emoji = el.querySelector('.emoji-fallback');
-      if (emoji) emoji.style.display = 'none';
-    };
-    imgEl.onerror = () => imgEl.remove();
-    imgEl.src = img;
-    el.insertBefore(imgEl, el.firstChild);
-  });
+  // Replaced by floating question mark animation
 }
 
 function renderOfferCard(offer, query = '') {
@@ -2191,14 +2174,8 @@ function renderOfferCard(offer, query = '') {
     : '';
   return `<div class="offer-card${inCart ? ' in-cart' : ''}">
     <button class="fav-btn${isFav ? ' active' : ''}" onclick="toggleFavorite(${offer.id})">${isFav ? '❤️' : '🤍'}</button>
-    <div class="offer-img" data-product-name="${offer.name.replace(/"/g, '&quot;')}">
-      ${offer.image
-    ? `<img src="${offer.image}" alt="${offer.name}"
-           style="height:80px;width:100%;object-fit:contain;border-radius:8px;padding:4px;"
-           onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-       <span style="display:none;font-size:2.5rem">${offer.emoji}</span>`
-    : `<span style="font-size:2.5rem">${offer.emoji}</span>`
-  }
+    <div class="offer-img">
+      <span class="float-question">?</span>
     </div>
     <div class="discount-badge">−${pct}%</div>
     <div class="offer-body">
