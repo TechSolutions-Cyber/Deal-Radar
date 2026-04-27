@@ -1153,36 +1153,43 @@
   }
 
   /* === Mystery Card Side Button === */
-  .mc-side-btn {
+  .mc-side-wrap {
     position: fixed;
     right: 0;
     top: 50%;
     z-index: 9999;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: stretch;
+  }
+  .mc-side-btn {
+    display: block;
     writing-mode: vertical-rl;
-    transform: translateY(-50%) rotate(180deg);
-    padding: 16px 10px;
-    background: linear-gradient(180deg, #8B5CF6 0%, #22D3EE 100%);
+    transform: rotate(180deg);
+    padding: 18px 11px;
+    background: linear-gradient(to top, #8B5CF6, #22D3EE);
     color: #0f172a;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-weight: 700;
-    font-size: 0.85rem;
-    letter-spacing: 0.03em;
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
     border-radius: 10px 0 0 10px;
     text-decoration: none;
-    box-shadow: -4px 0 20px rgba(139,92,246,0.45);
+    box-shadow: -4px 0 18px rgba(139,92,246,0.5);
     transition: padding 0.2s, box-shadow 0.2s;
     white-space: nowrap;
     cursor: pointer;
     user-select: none;
+    line-height: 1;
   }
   .mc-side-btn:hover {
-    padding: 16px 15px;
-    box-shadow: -6px 0 30px rgba(139,92,246,0.7);
+    padding: 18px 16px;
+    box-shadow: -6px 0 28px rgba(139,92,246,0.75);
   }
   @media (max-width: 480px) {
     .mc-side-btn {
-      font-size: 0.75rem;
-      padding: 12px 8px;
+      font-size: 0.72rem;
+      padding: 14px 9px;
     }
   }
 </style>
@@ -3042,7 +3049,9 @@ if ('serviceWorker' in navigator) {
 </script>
 
 <!-- Mystery Card Side Button -->
-<a href="/mystery.html" class="mc-side-btn">🎴 Mystery Card</a>
+<div class="mc-side-wrap">
+  <a href="/mystery.html" class="mc-side-btn">🎴 Mystery Card</a>
+</div>
 
 </body>
 </html>
