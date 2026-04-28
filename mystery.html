@@ -257,6 +257,17 @@
     font-size: .75rem; color: var(--mc-muted); max-width: 500px; line-height: 1.55;
   }
 
+  /* ── AdSense Slots ── */
+  .mc-ad-slot {
+    width: 100%; max-width: 728px;
+    min-height: 90px;
+    background: rgba(255,255,255,0.03);
+    border: 1px dashed rgba(255,255,255,0.1);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+
   @media (max-width: 500px) {
     .mc-cards-row { gap: 18px; }
     .mc-card-col { min-width: 150px; }
@@ -282,6 +293,16 @@
   <div class="mc-intro">
     <h1>Mystery Card</h1>
     <p>Enthülle zufällige Solana-NFTs – wähle deinen Marktplatz und klicke auf Reveal.</p>
+  </div>
+
+  <!-- ── AdSense Platzhalter OBEN ── -->
+  <div class="mc-ad-slot">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-XXXXXXXXXX"
+         data-ad-slot="XXXXXXXXXX"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
   </div>
 
   <div class="mc-cards-row">
@@ -370,6 +391,16 @@
 
   </div><!-- /.mc-cards-row -->
 
+  <!-- ── AdSense Platzhalter UNTEN ── -->
+  <div class="mc-ad-slot">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-XXXXXXXXXX"
+         data-ad-slot="XXXXXXXXXX"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+  </div>
+
   <p class="mc-disclaimer">UI-Mockup · Keine echte Zahlung · Solana-NFTs zu Demo-Zwecken</p>
 
 </div>
@@ -381,30 +412,32 @@
 }
 </style>
 <script>
+// ── Echte Solana NFT Collections auf OpenSea ──
 const MC_CARDS_OS = [
-  { name: "Neon Tiger #001",      emoji: "🐯", gradient: "linear-gradient(135deg,#f97316,#ef4444)", url: "https://opensea.io/collection/solana-neon-tiger",      value: "1.2 SOL" },
-  { name: "Cosmic Dragon #042",   emoji: "🐉", gradient: "linear-gradient(135deg,#8B5CF6,#1d4ed8)", url: "https://opensea.io/collection/solana-cosmic-dragon",   value: "2.5 SOL" },
-  { name: "Pixel Fox #007",       emoji: "🦊", gradient: "linear-gradient(135deg,#f59e0b,#b45309)", url: "https://opensea.io/collection/solana-pixel-fox",       value: "0.6 SOL" },
-  { name: "Glitch Owl #113",      emoji: "🦉", gradient: "linear-gradient(135deg,#22D3EE,#0284c7)", url: "https://opensea.io/collection/solana-glitch-owl",      value: "1.4 SOL" },
-  { name: "Shadow Wolf #088",     emoji: "🐺", gradient: "linear-gradient(135deg,#475569,#0f172a)", url: "https://opensea.io/collection/solana-shadow-wolf",     value: "1.9 SOL" },
-  { name: "Crystal Unicorn #003", emoji: "🦄", gradient: "linear-gradient(135deg,#ec4899,#8B5CF6)", url: "https://opensea.io/collection/solana-crystal-unicorn", value: "3.8 SOL" },
-  { name: "Inferno Phoenix #019", emoji: "🔥", gradient: "linear-gradient(135deg,#ef4444,#fbbf24)", url: "https://opensea.io/collection/solana-inferno-phoenix", value: "2.9 SOL" },
-  { name: "Deep Sea Kraken #055", emoji: "🐙", gradient: "linear-gradient(135deg,#0e7490,#064e3b)", url: "https://opensea.io/collection/solana-deep-sea-kraken", value: "1.1 SOL" },
-  { name: "Galactic Bear #031",   emoji: "🐻", gradient: "linear-gradient(135deg,#7c3aed,#1e1b4b)", url: "https://opensea.io/collection/solana-galactic-bear",   value: "0.9 SOL" },
-  { name: "Neon Shark #099",      emoji: "🦈", gradient: "linear-gradient(135deg,#22D3EE,#1d4ed8)", url: "https://opensea.io/collection/solana-neon-shark",      value: "1.7 SOL" }
+  { name: "DeGods",                   emoji: "👑", gradient: "linear-gradient(135deg,#7c3aed,#1d4ed8)", url: "https://opensea.io/collection/degods",                   value: "Floor ansehen" },
+  { name: "Okay Bears",               emoji: "🐻", gradient: "linear-gradient(135deg,#f97316,#b45309)", url: "https://opensea.io/collection/okay-bears",               value: "Floor ansehen" },
+  { name: "Degenerate Ape Academy",   emoji: "🦧", gradient: "linear-gradient(135deg,#22D3EE,#0284c7)", url: "https://opensea.io/collection/degenerate-ape-academy",   value: "Floor ansehen" },
+  { name: "Famous Fox Federation",    emoji: "🦊", gradient: "linear-gradient(135deg,#f59e0b,#ef4444)", url: "https://opensea.io/collection/famous-fox-federation",    value: "Floor ansehen" },
+  { name: "Aurory",                   emoji: "✨", gradient: "linear-gradient(135deg,#8B5CF6,#22D3EE)", url: "https://opensea.io/collection/aurory",                   value: "Floor ansehen" },
+  { name: "Thugbirdz",               emoji: "🐦", gradient: "linear-gradient(135deg,#064e3b,#0284c7)", url: "https://opensea.io/collection/thugbirdz",               value: "Floor ansehen" },
+  { name: "Galactic Geckos",          emoji: "🦎", gradient: "linear-gradient(135deg,#15803d,#1d4ed8)", url: "https://opensea.io/collection/galactic-geckos",          value: "Floor ansehen" },
+  { name: "SolPunks",                 emoji: "😤", gradient: "linear-gradient(135deg,#475569,#7c3aed)", url: "https://opensea.io/collection/solpunks",                 value: "Floor ansehen" },
+  { name: "Cets on Creck",            emoji: "🐱", gradient: "linear-gradient(135deg,#e42575,#7c3aed)", url: "https://opensea.io/collection/cets-on-creck",            value: "Floor ansehen" },
+  { name: "Shadowy Super Coder",      emoji: "💻", gradient: "linear-gradient(135deg,#0f172a,#7c3aed)", url: "https://opensea.io/collection/shadowy-super-coder-dao",  value: "Floor ansehen" }
 ];
 
+// ── Echte Solana NFT Collections auf Magic Eden ──
 const MC_CARDS_ME = [
-  { name: "Sol Ape #214",         emoji: "🦧", gradient: "linear-gradient(135deg,#e42575,#7c3aed)", url: "https://magiceden.io/marketplace/sol_ape",         value: "4.2 SOL" },
-  { name: "Degen Rabbit #037",    emoji: "🐰", gradient: "linear-gradient(135deg,#ff6b35,#f59e0b)", url: "https://magiceden.io/marketplace/degen_rabbit",    value: "1.8 SOL" },
-  { name: "Cyber Cat #509",       emoji: "🐱", gradient: "linear-gradient(135deg,#e42575,#0284c7)", url: "https://magiceden.io/marketplace/cyber_cat",       value: "2.2 SOL" },
-  { name: "Ghost Samurai #011",   emoji: "👻", gradient: "linear-gradient(135deg,#334155,#7c3aed)", url: "https://magiceden.io/marketplace/ghost_samurai",   value: "3.1 SOL" },
-  { name: "Lava Panda #088",      emoji: "🐼", gradient: "linear-gradient(135deg,#ef4444,#1d4ed8)", url: "https://magiceden.io/marketplace/lava_panda",      value: "1.5 SOL" },
-  { name: "Storm Eagle #421",     emoji: "🦅", gradient: "linear-gradient(135deg,#0284c7,#064e3b)", url: "https://magiceden.io/marketplace/storm_eagle",     value: "2.7 SOL" },
-  { name: "Mystic Llama #173",    emoji: "🦙", gradient: "linear-gradient(135deg,#ec4899,#f59e0b)", url: "https://magiceden.io/marketplace/mystic_llama",    value: "0.8 SOL" },
-  { name: "Void Serpent #066",    emoji: "🐍", gradient: "linear-gradient(135deg,#064e3b,#1e1b4b)", url: "https://magiceden.io/marketplace/void_serpent",    value: "1.3 SOL" },
-  { name: "Neon Crab #302",       emoji: "🦀", gradient: "linear-gradient(135deg,#e42575,#ef4444)", url: "https://magiceden.io/marketplace/neon_crab",       value: "0.7 SOL" },
-  { name: "Solar Bat #777",       emoji: "🦇", gradient: "linear-gradient(135deg,#7c3aed,#ff6b35)", url: "https://magiceden.io/marketplace/solar_bat",       value: "2.0 SOL" }
+  { name: "DeGods",                   emoji: "👑", gradient: "linear-gradient(135deg,#7c3aed,#1d4ed8)", url: "https://magiceden.io/marketplace/degods",                   value: "Floor ansehen" },
+  { name: "Okay Bears",               emoji: "🐻", gradient: "linear-gradient(135deg,#f97316,#b45309)", url: "https://magiceden.io/marketplace/okay_bears",               value: "Floor ansehen" },
+  { name: "Degenerate Ape Academy",   emoji: "🦧", gradient: "linear-gradient(135deg,#22D3EE,#0284c7)", url: "https://magiceden.io/marketplace/degenerate_ape_academy",   value: "Floor ansehen" },
+  { name: "Famous Fox Federation",    emoji: "🦊", gradient: "linear-gradient(135deg,#f59e0b,#ef4444)", url: "https://magiceden.io/marketplace/famous_fox_federation",    value: "Floor ansehen" },
+  { name: "Aurory",                   emoji: "✨", gradient: "linear-gradient(135deg,#8B5CF6,#22D3EE)", url: "https://magiceden.io/marketplace/aurory",                   value: "Floor ansehen" },
+  { name: "Thugbirdz",               emoji: "🐦", gradient: "linear-gradient(135deg,#064e3b,#0284c7)", url: "https://magiceden.io/marketplace/thugbirdz",               value: "Floor ansehen" },
+  { name: "Galactic Geckos",          emoji: "🦎", gradient: "linear-gradient(135deg,#15803d,#1d4ed8)", url: "https://magiceden.io/marketplace/galactic_geckos",          value: "Floor ansehen" },
+  { name: "Shadowy Super Coder",      emoji: "💻", gradient: "linear-gradient(135deg,#0f172a,#7c3aed)", url: "https://magiceden.io/marketplace/shadowy_super_coder_dao",  value: "Floor ansehen" },
+  { name: "Cets on Creck",            emoji: "🐱", gradient: "linear-gradient(135deg,#e42575,#7c3aed)", url: "https://magiceden.io/marketplace/cets_on_creck",            value: "Floor ansehen" },
+  { name: "SolPunks",                 emoji: "😤", gradient: "linear-gradient(135deg,#475569,#7c3aed)", url: "https://magiceden.io/marketplace/solpunks",                 value: "Floor ansehen" }
 ];
 
 let revealedOS = false;
