@@ -204,16 +204,29 @@
   .mc-result-val {
     font-size: 1rem; font-weight: 700; color: var(--mc-cyan); margin-bottom: 20px;
   }
-  .mc-opensea {
+  .mc-market-btns {
+    display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+  }
+  .mc-opensea, .mc-magiceden {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 11px 22px; border-radius: 10px;
-    background: var(--mc-grad);
-    color: #0f172a; font-weight: 700; font-size: .9rem;
-    text-decoration: none;
-    box-shadow: 0 4px 18px rgba(139,92,246,.35);
+    padding: 11px 18px; border-radius: 10px;
+    font-weight: 700; font-size: .85rem;
+    text-decoration: none; flex: 1; min-width: 130px;
+    justify-content: center;
     transition: transform .15s, box-shadow .2s;
   }
+  .mc-opensea {
+    background: var(--mc-grad);
+    color: #0f172a;
+    box-shadow: 0 4px 18px rgba(139,92,246,.35);
+  }
   .mc-opensea:hover { transform: translateY(-2px); box-shadow: 0 7px 26px rgba(139,92,246,.55); }
+  .mc-magiceden {
+    background: linear-gradient(135deg, #e42575, #ff6b35);
+    color: #fff;
+    box-shadow: 0 4px 18px rgba(228,37,117,.35);
+  }
+  .mc-magiceden:hover { transform: translateY(-2px); box-shadow: 0 7px 26px rgba(228,37,117,.55); }
 
   .mc-reset-btn {
     display: block; margin: 12px auto 0;
@@ -282,10 +295,16 @@
     <div class="mc-tag">✨ Enthüllt</div>
     <div class="mc-result-name" id="mcResultName"></div>
     <div class="mc-result-val"  id="mcResultVal"></div>
-    <a href="#" class="mc-opensea" id="mcOpenseaLink" target="_blank" rel="noopener noreferrer">
-      <svg width="16" height="16" viewBox="0 0 90 90" fill="currentColor"><path d="M45 0C20.1 0 0 20.1 0 45s20.1 45 45 45 45-20.1 45-45S69.9 0 45 0zM22.1 46.3l.2-.3 12.9-20.2c.2-.3.6-.2.7.1 2.1 4.8 4 10.8 3.1 14.5-.4 1.5-1.4 3.6-2.5 5.5-.2.3-.3.6-.5.9-.1.2-.3.2-.5.2H22.5c-.3 0-.5-.3-.4-.7zm56.5 7.3c0 .2-.1.3-.3.4-1.7.7-7.5 3.2-9.9 6.4-6.1 8.5-10.8 20.7-21.3 20.7H34.8c-15.6 0-28.3-12.7-28.3-28.3v-.5c0-.2.2-.4.4-.4h18.5c.3 0 .5.3.5.6-.1 1-.1 2 .1 2.9.8 3.8 4 6.5 7.9 6.7.4 0 .8 0 1.2-.1 6.5-1 9.7-7.4 11.2-13.3l.1-.3c.2-.9.4-1.7.5-2.5.3-3-.1-6.5-1.1-10.1-.1-.3.1-.7.4-.8l.2-.1c1.2-.6 2.4-1.1 3.7-1.6.4-.2.8.1.8.5v.3c0 3.1.2 6.2.8 9.2l.1.5c.6 2.5 1.7 5 3.3 7.2.3.4.5.7.8 1.1.2.3.2.7-.1.9-1.3 1.1-2.7 2-4.2 2.8-.2.1-.3.4-.1.6l.1.1c3.4 2.3 7.4 3.4 11.5 3.4H68c.6 0 1.2-.1 1.8-.2 3.5-.8 5.7-4.1 5.7-7.6v-.5c0-.3.2-.5.4-.5h2.4c.2 0 .4.2.4.4v1.3h-.1z"/></svg>
-      Auf OpenSea ansehen
-    </a>
+    <div class="mc-market-btns">
+      <a href="#" class="mc-opensea" id="mcOpenseaLink" target="_blank" rel="noopener noreferrer">
+        <svg width="16" height="16" viewBox="0 0 90 90" fill="currentColor"><path d="M45 0C20.1 0 0 20.1 0 45s20.1 45 45 45 45-20.1 45-45S69.9 0 45 0zM22.1 46.3l.2-.3 12.9-20.2c.2-.3.6-.2.7.1 2.1 4.8 4 10.8 3.1 14.5-.4 1.5-1.4 3.6-2.5 5.5-.2.3-.3.6-.5.9-.1.2-.3.2-.5.2H22.5c-.3 0-.5-.3-.4-.7zm56.5 7.3c0 .2-.1.3-.3.4-1.7.7-7.5 3.2-9.9 6.4-6.1 8.5-10.8 20.7-21.3 20.7H34.8c-15.6 0-28.3-12.7-28.3-28.3v-.5c0-.2.2-.4.4-.4h18.5c.3 0 .5.3.5.6-.1 1-.1 2 .1 2.9.8 3.8 4 6.5 7.9 6.7.4 0 .8 0 1.2-.1 6.5-1 9.7-7.4 11.2-13.3l.1-.3c.2-.9.4-1.7.5-2.5.3-3-.1-6.5-1.1-10.1-.1-.3.1-.7.4-.8l.2-.1c1.2-.6 2.4-1.1 3.7-1.6.4-.2.8.1.8.5v.3c0 3.1.2 6.2.8 9.2l.1.5c.6 2.5 1.7 5 3.3 7.2.3.4.5.7.8 1.1.2.3.2.7-.1.9-1.3 1.1-2.7 2-4.2 2.8-.2.1-.3.4-.1.6l.1.1c3.4 2.3 7.4 3.4 11.5 3.4H68c.6 0 1.2-.1 1.8-.2 3.5-.8 5.7-4.1 5.7-7.6v-.5c0-.3.2-.5.4-.5h2.4c.2 0 .4.2.4.4v1.3h-.1z"/></svg>
+        OpenSea
+      </a>
+      <a href="#" class="mc-magiceden" id="mcMagicedenLink" target="_blank" rel="noopener noreferrer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+        Magic Eden
+      </a>
+    </div>
     <button class="mc-reset-btn" onclick="mcReset()">Neue Karte ziehen</button>
   </div>
 
@@ -295,16 +314,16 @@
 
 <script>
 const MC_CARDS = [
-  { name: "Neon Tiger #001",       emoji: "🐯", gradient: "linear-gradient(135deg,#f97316,#ef4444)", opensea_url: "https://opensea.io/collection/neon-tiger",       value: "0.08 ETH" },
-  { name: "Cosmic Dragon #042",    emoji: "🐉", gradient: "linear-gradient(135deg,#8B5CF6,#1d4ed8)", opensea_url: "https://opensea.io/collection/cosmic-dragon",    value: "0.15 ETH" },
-  { name: "Pixel Fox #007",        emoji: "🦊", gradient: "linear-gradient(135deg,#f59e0b,#b45309)", opensea_url: "https://opensea.io/collection/pixel-fox",        value: "0.04 ETH" },
-  { name: "Glitch Owl #113",       emoji: "🦉", gradient: "linear-gradient(135deg,#22D3EE,#0284c7)", opensea_url: "https://opensea.io/collection/glitch-owl",       value: "0.09 ETH" },
-  { name: "Shadow Wolf #088",      emoji: "🐺", gradient: "linear-gradient(135deg,#475569,#0f172a)", opensea_url: "https://opensea.io/collection/shadow-wolf",      value: "0.12 ETH" },
-  { name: "Crystal Unicorn #003",  emoji: "🦄", gradient: "linear-gradient(135deg,#ec4899,#8B5CF6)", opensea_url: "https://opensea.io/collection/crystal-unicorn",  value: "0.22 ETH" },
-  { name: "Inferno Phoenix #019",  emoji: "🔥", gradient: "linear-gradient(135deg,#ef4444,#fbbf24)", opensea_url: "https://opensea.io/collection/inferno-phoenix",  value: "0.18 ETH" },
-  { name: "Deep Sea Kraken #055",  emoji: "🐙", gradient: "linear-gradient(135deg,#0e7490,#064e3b)", opensea_url: "https://opensea.io/collection/deep-sea-kraken",  value: "0.07 ETH" },
-  { name: "Galactic Bear #031",    emoji: "🐻", gradient: "linear-gradient(135deg,#7c3aed,#1e1b4b)", opensea_url: "https://opensea.io/collection/galactic-bear",    value: "0.06 ETH" },
-  { name: "Neon Shark #099",       emoji: "🦈", gradient: "linear-gradient(135deg,#22D3EE,#1d4ed8)", opensea_url: "https://opensea.io/collection/neon-shark",       value: "0.11 ETH" }
+  { name: "Neon Tiger #001",       emoji: "🐯", gradient: "linear-gradient(135deg,#f97316,#ef4444)", opensea_url: "https://opensea.io/collection/solana-neon-tiger",       magiceden_url: "https://magiceden.io/marketplace/neon_tiger",       value: "1.2 SOL"  },
+  { name: "Cosmic Dragon #042",    emoji: "🐉", gradient: "linear-gradient(135deg,#8B5CF6,#1d4ed8)", opensea_url: "https://opensea.io/collection/solana-cosmic-dragon",    magiceden_url: "https://magiceden.io/marketplace/cosmic_dragon",    value: "2.5 SOL"  },
+  { name: "Pixel Fox #007",        emoji: "🦊", gradient: "linear-gradient(135deg,#f59e0b,#b45309)", opensea_url: "https://opensea.io/collection/solana-pixel-fox",        magiceden_url: "https://magiceden.io/marketplace/pixel_fox",        value: "0.6 SOL"  },
+  { name: "Glitch Owl #113",       emoji: "🦉", gradient: "linear-gradient(135deg,#22D3EE,#0284c7)", opensea_url: "https://opensea.io/collection/solana-glitch-owl",       magiceden_url: "https://magiceden.io/marketplace/glitch_owl",       value: "1.4 SOL"  },
+  { name: "Shadow Wolf #088",      emoji: "🐺", gradient: "linear-gradient(135deg,#475569,#0f172a)", opensea_url: "https://opensea.io/collection/solana-shadow-wolf",      magiceden_url: "https://magiceden.io/marketplace/shadow_wolf",      value: "1.9 SOL"  },
+  { name: "Crystal Unicorn #003",  emoji: "🦄", gradient: "linear-gradient(135deg,#ec4899,#8B5CF6)", opensea_url: "https://opensea.io/collection/solana-crystal-unicorn",  magiceden_url: "https://magiceden.io/marketplace/crystal_unicorn",  value: "3.8 SOL"  },
+  { name: "Inferno Phoenix #019",  emoji: "🔥", gradient: "linear-gradient(135deg,#ef4444,#fbbf24)", opensea_url: "https://opensea.io/collection/solana-inferno-phoenix",  magiceden_url: "https://magiceden.io/marketplace/inferno_phoenix",  value: "2.9 SOL"  },
+  { name: "Deep Sea Kraken #055",  emoji: "🐙", gradient: "linear-gradient(135deg,#0e7490,#064e3b)", opensea_url: "https://opensea.io/collection/solana-deep-sea-kraken",  magiceden_url: "https://magiceden.io/marketplace/deep_sea_kraken",  value: "1.1 SOL"  },
+  { name: "Galactic Bear #031",    emoji: "🐻", gradient: "linear-gradient(135deg,#7c3aed,#1e1b4b)", opensea_url: "https://opensea.io/collection/solana-galactic-bear",    magiceden_url: "https://magiceden.io/marketplace/galactic_bear",    value: "0.9 SOL"  },
+  { name: "Neon Shark #099",       emoji: "🦈", gradient: "linear-gradient(135deg,#22D3EE,#1d4ed8)", opensea_url: "https://opensea.io/collection/solana-neon-shark",       magiceden_url: "https://magiceden.io/marketplace/neon_shark",       value: "1.7 SOL"  }
 ];
 
 let revealed = false;
@@ -328,6 +347,7 @@ function mcReveal() {
     document.getElementById('mcResultName').textContent  = card.name;
     document.getElementById('mcResultVal').textContent   = card.value;
     document.getElementById('mcOpenseaLink').href        = card.opensea_url;
+    document.getElementById('mcMagicedenLink').href      = card.magiceden_url;
     r.classList.add('mc-show');
   }, 750);
 }
