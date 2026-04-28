@@ -1473,6 +1473,26 @@ const OFFER_IMAGES = {
   18: 'photo-1511381939415-e44a7e38af47',
   19: 'photo-1554866585-cd94860890b7',
   20: 'photo-1565299624946-b28f40a0ae38',
+  31: 'photo-1555939594-58d7cb561ad1',
+  32: 'photo-1563636619-e9143da7973b',
+  33: 'photo-1618164435735-413d3b066c9d',
+  34: 'photo-1517093157656-b9eccef91cb1',
+  35: 'photo-1576867757603-05b134ebc379',
+  36: 'photo-1488477181946-6428a0291777',
+  37: 'photo-1559715745-e1b33a271f8f',
+  38: 'photo-1621506289937-a8e4df240d0b',
+  39: 'photo-1607532941433-304659e8198a',
+  40: 'photo-1571068316344-75bc76f77890',
+  41: 'photo-1563636619-e9143da7973b',
+  42: 'photo-1548940740-204726a19be3',
+  43: 'photo-1596699672067-3b0e0cf8afe3',
+  44: 'photo-1551538827-9c037cb4f32a',
+  45: 'photo-1518977676601-b53f82aba655',
+  46: 'photo-1583947581924-860bda6a26df',
+  47: 'photo-1464965911861-746a04b4bca6',
+  48: 'photo-1474979266404-7eaacbcd87c5',
+  49: 'photo-1547592166-23ac45744acd',
+  50: 'photo-1621939514649-280e2ee25f60',
 };
 
 // ─── DATE HELPERS ─────────────────────────────────────────────────────────────
@@ -1506,7 +1526,7 @@ function buildOffersForWeek(year, kw) {
   function fmt(dt) { return dt.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' }); }
   function fmtFull(dt) { return dt.toISOString().split('T')[0]; }
   const mo = d(0), di = d(1), mi = d(2), do_ = d(3), fr = d(4), sa = d(5);
-  // ── KW 17 (20.04.–25.04.2026) – manuell aktualisiert ──
+  // ── KW 17/18 (20.04.–03.05.2026) – manuell aktualisiert ──
   // Jeden Montag hier die neuen Angebote aus den Prospekten eintragen.
   return [
     { id:1,  chain:'aldi-sued',  name:'Milbona Frischmilch 3,5% 1L',              cat:'milch',     emoji:'🥛', pricew:0.99, pricea:1.39, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
@@ -1539,6 +1559,27 @@ function buildOffersForWeek(year, kw) {
     { id:28, chain:'hit',        name:'Nestlé KitKat Chunky 4er Pack',             cat:'sues',      emoji:'🍫', pricew:1.99, pricea:2.99, validFrom:fmtFull(di),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(di)} – ${fmt(sa)}`  },
     { id:29, chain:'denns',      name:'Denns Bio Erdbeeren 250g',                  cat:'bio',       emoji:'🍓', pricew:1.99, pricea:2.99, validFrom:fmtFull(mo),  validTo:fmtFull(do_), weekOnly:false, label:`${fmt(mo)} – ${fmt(do_)}` },
     { id:30, chain:'denns',      name:'Denns Bio Waschmittel Color 1,5L',          cat:'haushalt',  emoji:'🧺', pricew:4.99, pricea:7.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    // ── KW 18 Neue Angebote (28.04.–03.05.2026) ──
+    { id:31, chain:'aldi-sued',  name:'Thüringer Grillwürstchen 5er 400g',         cat:'fleisch',   emoji:'🌭', pricew:2.29, pricea:3.99, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:32, chain:'aldi-sued',  name:'Paprika-Mix 3er Netz 600g',                 cat:'sonstiges', emoji:'🫑', pricew:0.99, pricea:1.79, validFrom:fmtFull(mo),  validTo:fmtFull(mi),  weekOnly:false, label:`${fmt(mo)} – ${fmt(mi)}`  },
+    { id:33, chain:'aldi-nord',  name:'Mozzarella 125g',                           cat:'milch',     emoji:'🧀', pricew:0.55, pricea:0.89, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:34, chain:'aldi-nord',  name:'Knuspermüsli Schoko 600g',                  cat:'sonstiges', emoji:'🥣', pricew:1.99, pricea:3.29, validFrom:fmtFull(mo),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(mo)} – ${fmt(fr)}`  },
+    { id:35, chain:'lidl',       name:'Meggle Süßrahmbutter 250g',                 cat:'milch',     emoji:'🧈', pricew:1.69, pricea:2.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:36, chain:'lidl',       name:'Heinz Tomatenketchup 800ml',                cat:'sonstiges', emoji:'🍅', pricew:2.29, pricea:3.49, validFrom:fmtFull(mo),  validTo:fmtFull(do_), weekOnly:false, label:`${fmt(mo)} – ${fmt(do_)}` },
+    { id:37, chain:'rewe',       name:'Philadelphia Frischkäse Natur 175g',        cat:'milch',     emoji:'🧀', pricew:1.49, pricea:2.29, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:38, chain:'rewe',       name:'Hohes C Orange 100% 1L',                   cat:'getraenke', emoji:'🍊', pricew:1.79, pricea:2.99, validFrom:fmtFull(di),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(di)} – ${fmt(sa)}`  },
+    { id:39, chain:'edeka',      name:'Rinderhackfleisch gemischt 500g',           cat:'fleisch',   emoji:'🥩', pricew:3.99, pricea:5.99, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:40, chain:'edeka',      name:'Danone Activia Joghurt 4×125g',             cat:'milch',     emoji:'🥛', pricew:1.29, pricea:1.99, validFrom:fmtFull(mo),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(mo)} – ${fmt(fr)}`  },
+    { id:41, chain:'penny',      name:'Schlagsahne 200ml',                         cat:'milch',     emoji:'🥛', pricew:0.59, pricea:0.89, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:42, chain:'penny',      name:'Raffaello Kokoskugeln 200g',                cat:'sues',      emoji:'🍬', pricew:2.49, pricea:3.99, validFrom:fmtFull(di),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(di)} – ${fmt(sa)}`  },
+    { id:43, chain:'kaufland',   name:'Zucchini grün 500g',                        cat:'sonstiges', emoji:'🥒', pricew:0.89, pricea:1.49, validFrom:fmtFull(mo),  validTo:fmtFull(mi),  weekOnly:false, label:`${fmt(mo)} – ${fmt(mi)}`  },
+    { id:44, chain:'kaufland',   name:'Red Bull Energy Drink 250ml',               cat:'getraenke', emoji:'🥤', pricew:0.99, pricea:1.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:45, chain:'netto',      name:'Kartoffeln festkochend 2kg',                cat:'sonstiges', emoji:'🥔', pricew:1.49, pricea:2.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:46, chain:'netto',      name:'Ariel Flüssig-Waschmittel 23WL 1,43L',     cat:'haushalt',  emoji:'🧺', pricew:9.99, pricea:14.99,validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:47, chain:'lidl',       name:'Erdbeeren 500g',                            cat:'sonstiges', emoji:'🍓', pricew:1.49, pricea:2.99, validFrom:fmtFull(mo),  validTo:fmtFull(do_), weekOnly:false, label:`${fmt(mo)} – ${fmt(do_)}` },
+    { id:48, chain:'aldi-sued',  name:'Sonnenblumenöl 1L',                         cat:'sonstiges', emoji:'🫙', pricew:1.89, pricea:2.99, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:49, chain:'rewe',       name:'Knorr Bouillon Hühner 8er',                 cat:'sonstiges', emoji:'🍲', pricew:1.29, pricea:1.99, validFrom:fmtFull(mo),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(mo)} – ${fmt(fr)}`  },
+    { id:50, chain:'edeka',      name:'Pringles Original 185g',                    cat:'sues',      emoji:'🥂', pricew:1.49, pricea:2.29, validFrom:fmtFull(do_), validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(do_)} – ${fmt(sa)}` },
   ];
 }
 
