@@ -76,6 +76,8 @@
     color: var(--text);
     min-height: 100vh;
     padding-bottom: 40px;
+    /* Sanfter Übergang beim Theme-Wechsel */
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   /* ─── HEADER ─────────────────────────────────────────── */
@@ -87,40 +89,45 @@
     z-index: 100;
   }
 
+  /* Header: 3-Spalten-Grid für mittig zentriertes Logo */
   .header-top {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
-    padding: 14px 16px 10px;
+    padding: 10px 12px 8px;
     max-width: 900px;
     margin: 0 auto;
-    gap: 12px;
   }
 
-  .logo {
+  /* Logo zentriert in mittlerer Spalte */
+  .logo-center {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 1.3rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: -1px;
+    white-space: nowrap;
+    justify-content: center;
+    user-select: none;
+  }
+  .logo-center .logo-icon {
+    width: 38px; height: 38px;
+    background: var(--accent);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
     flex-shrink: 0;
   }
 
-  .logo-icon {
-    width: 32px; height: 32px;
-    background: var(--accent);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-  }
-
-  .logo span { color: var(--accent-light); }
+  /* Altes Logo-Element ausblenden (Kompatibilität) */
+  .logo { display: none; }
 
   .header-right {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    justify-content: flex-end;
   }
 
   .kw-badge {
@@ -136,11 +143,12 @@
   }
   .kw-badge:hover { border-color: var(--accent); color: var(--text); }
 
+  /* Touch-Target min. 44×44px (Apple/Google-Empfehlung) */
   .icon-btn {
     background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: 10px;
-    width: 38px; height: 38px;
+    width: 44px; height: 44px;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
     font-size: 1.1rem;
@@ -364,9 +372,16 @@
     position: relative;
   }
 
-  .offer-img img { display: none !important; }
-  .offer-img .emoji-fallback { display: none !important; }
+  /* Produktbild aus bilder/-Ordner anzeigen */
+  .offer-img img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    display: block;
+    padding: 8px;
+  }
+  .offer-img .emoji-fallback { display: none; }
 
+  /* Float-Question nur als Fallback (standardmäßig versteckt) */
   .offer-img .float-question {
     font-size: 3.5rem;
     color: #111;
@@ -374,6 +389,7 @@
     animation: float-qmark 2.4s ease-in-out infinite;
     user-select: none;
     line-height: 1;
+    display: none;
   }
 
   .offer-body { padding: 10px 12px 12px; }
@@ -1192,6 +1208,341 @@
       padding: 14px 9px;
     }
   }
+
+  /* ═══════════════════════════════════════════════════════
+     HELL/DUNKEL-MODUS – CSS-Variablen für beide Themes
+  ═══════════════════════════════════════════════════════ */
+
+  /* Hell-Modus überschreibt die Root-Variablen */
+  [data-theme="light"] {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --surface2: #f1f5f9;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --accent: #d4a700;
+    --accent-light: #d4a700;
+    --red: #dc2626;
+    --red-light: #ef4444;
+    --green-light: #d4a700;
+  }
+
+  /* Übergangs-Effekt für alle farbigen Elemente */
+  *, *::before, *::after {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
+  /* Animationen sollen nicht übergeblendet werden */
+  .spinner, .float-question, .modal-float-q {
+    transition: none !important;
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     MEHR-MENÜ (⋯ Dropdown)
+  ═══════════════════════════════════════════════════════ */
+
+  .more-menu-wrap {
+    position: relative;
+  }
+
+  .more-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    min-width: 260px;
+    z-index: 150;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    display: none;
+    overflow: hidden;
+  }
+  .more-dropdown.open { display: block; }
+
+  .more-menu-section {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .more-menu-section:last-child { border-bottom: none; }
+
+  .more-menu-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px 16px 4px;
+  }
+
+  /* Menü-Einträge: min. 44px Höhe = Touch-Target */
+  .more-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text);
+    min-height: 44px;
+    transition: background 0.15s;
+  }
+  .more-menu-item:hover { background: var(--surface2); }
+  .more-menu-item .item-icon { font-size: 1.1rem; width: 22px; text-align: center; flex-shrink: 0; }
+  .more-menu-item .item-label { flex: 1; }
+  .more-menu-item .item-badge {
+    background: var(--accent);
+    color: #1a1a1a;
+    font-size: 0.65rem;
+    font-weight: 800;
+    min-width: 18px; height: 18px;
+    border-radius: 9px;
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 0 4px;
+  }
+  .more-menu-item .item-badge.visible { display: flex; }
+
+  /* PLZ-Badge innerhalb Mehr-Menü */
+  .more-menu-item .plz-badge {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+  }
+
+  /* Theme-Toggle im Mehr-Menü */
+  .theme-toggle-row {
+    display: flex;
+    gap: 6px;
+    padding: 8px 16px 10px;
+  }
+  .theme-btn {
+    flex: 1;
+    padding: 7px 6px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface2);
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+    min-height: 36px;
+  }
+  .theme-btn:hover { border-color: var(--accent); color: var(--text); }
+  .theme-btn.active { border-color: var(--accent); background: rgba(255,214,0,0.15); color: var(--accent-light); }
+
+  /* Sprach-Auswahl im Mehr-Menü */
+  .lang-row {
+    display: flex;
+    gap: 6px;
+    padding: 8px 16px 10px;
+  }
+  .lang-btn {
+    flex: 1;
+    padding: 7px 4px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface2);
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    min-height: 36px;
+  }
+  .lang-btn:hover { border-color: var(--accent); color: var(--text); }
+  .lang-btn.active { border-color: var(--accent); background: rgba(255,214,0,0.15); color: var(--accent-light); }
+
+  /* KW-Badge im Mehr-Menü */
+  .kw-badge-menu {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 0.72rem;
+    color: var(--muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     PRODUKT-DETAIL-MODAL
+  ═══════════════════════════════════════════════════════ */
+
+  .product-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 250;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .product-modal-overlay.open { display: flex; }
+
+  .product-modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    /* Mobile: 90% der Bildschirmbreite */
+    width: 90%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalSlideIn 0.25s ease;
+  }
+  @keyframes modalSlideIn {
+    from { transform: scale(0.95) translateY(10px); opacity: 0; }
+    to   { transform: scale(1) translateY(0); opacity: 1; }
+  }
+
+  /* Schließen-Button oben rechts */
+  .product-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--text);
+    z-index: 1;
+    transition: border-color 0.2s;
+    flex-shrink: 0;
+  }
+  .product-modal-close:hover { border-color: var(--red); color: var(--red); }
+
+  /* Großes Produktbild im Modal */
+  .product-modal-img {
+    width: 100%;
+    aspect-ratio: 1;
+    background: radial-gradient(ellipse at center, #ffffff 0%, #e8ecf0 60%, #d0d8e0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius) var(--radius) 0 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .product-modal-img img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    padding: 16px;
+  }
+  .modal-float-q {
+    font-size: 5rem;
+    color: #111;
+    font-weight: 900;
+    animation: float-qmark 2.4s ease-in-out infinite;
+    user-select: none;
+    display: none;
+  }
+  /* Rabatt-Badge oben links im Modal-Bild */
+  .modal-discount-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--red);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 8px;
+  }
+
+  .product-modal-body { padding: 20px; }
+
+  /* Ketten-Kopfzeile im Modal */
+  .product-modal-chain-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .product-modal-chain-logo {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  .product-modal-chain-info { flex: 1; min-width: 0; }
+  .product-modal-chain-name {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .product-modal-valid {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .product-modal-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1.35;
+    margin-bottom: 16px;
+  }
+
+  /* Preisanzeige: groß und farbig */
+  .product-modal-prices {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .product-modal-price-new {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--accent-light);
+  }
+  .product-modal-price-old {
+    font-size: 1.1rem;
+    color: var(--muted);
+    text-decoration: line-through;
+  }
+
+  /* "In Warenkorb"-Button im Modal */
+  .product-modal-add-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: var(--accent);
+    color: #1a1a1a;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-bottom: 8px;
+  }
+  .product-modal-add-btn:hover { background: #e6c000; }
+  .product-modal-add-btn.added { background: #22c55e; color: #fff; }
+  .product-modal-add-btn.added:hover { background: #16a34a; }
+
+  /* Schließen-Button unten im Modal */
+  .product-modal-close-bottom {
+    width: 100%;
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .product-modal-close-bottom:hover { border-color: var(--accent); }
 </style>
 <script>
 async function registerPush() {
@@ -1336,31 +1687,138 @@ async function registerPush() {
   </div>
 </div>
 
+<!-- ─── PRODUKT-DETAIL-MODAL ──────────────────────────────── -->
+<!-- Klick auf Deal-Karte öffnet dieses Modal -->
+<div class="product-modal-overlay" id="productModal" onclick="handleProductModalOverlayClick(event)">
+  <div class="product-modal">
+    <!-- Schließen-Button oben rechts -->
+    <button class="product-modal-close" onclick="closeProductModal()" aria-label="Schließen">✕</button>
+
+    <!-- Großes Produktbild -->
+    <div class="product-modal-img">
+      <img id="productModalImg" src="" alt=""
+           onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='bilder/placeholder.jpg';}else{this.style.display='none';document.getElementById('productModalFallback').style.display='flex';}">
+      <span class="modal-float-q" id="productModalFallback">?</span>
+      <div class="modal-discount-badge" id="productModalDiscount"></div>
+    </div>
+
+    <!-- Modal-Body: Kette, Name, Preis, Buttons -->
+    <div class="product-modal-body">
+      <!-- Ketten-Logo + Name + Gültigkeitszeitraum -->
+      <div class="product-modal-chain-row">
+        <div class="product-modal-chain-logo" id="productModalChainLogo"></div>
+        <div class="product-modal-chain-info">
+          <div class="product-modal-chain-name" id="productModalChainName"></div>
+          <div class="product-modal-valid" id="productModalValid"></div>
+        </div>
+      </div>
+
+      <!-- Produktname -->
+      <div class="product-modal-title" id="productModalTitle"></div>
+
+      <!-- Preis: groß + farbig, Originalpreis durchgestrichen -->
+      <div class="product-modal-prices">
+        <span class="product-modal-price-new" id="productModalPriceNew"></span>
+        <span class="product-modal-price-old" id="productModalPriceOld"></span>
+      </div>
+
+      <!-- Aktions-Buttons -->
+      <button class="product-modal-add-btn" id="productModalAddBtn" onclick="addToCartFromModal()"></button>
+      <button class="product-modal-close-bottom" onclick="closeProductModal()" id="productModalCloseBtn">Schließen</button>
+    </div>
+  </div>
+</div>
+
 <!-- ─── HEADER ─────────────────────────────────────────────── -->
 <header>
   <div class="header-top">
-    <div class="logo">
-      <div style="display:flex;flex-direction:column;gap:1px;">
-        <span style="font-size:1.5rem;font-weight:900;letter-spacing:-1px;display:flex;align-items:center;gap:8px;"><div class="logo-icon">📡</div>Deal<span style="color:#FFD600">Radar</span></span>
-        <span style="font-size:0.75rem;opacity:0.8;">Alle Supermarkt-Deals auf einen Blick</span>
-      </div>
+    <!-- Linke Spalte: leer (Platzhalter für Grid-Balance) -->
+    <div></div>
+
+    <!-- Mittlere Spalte: Logo zentriert, deutlich größer (1.8rem) -->
+    <div class="logo-center">
+      <div class="logo-icon">📡</div>
+      <span>Deal<span style="color:var(--accent)">Radar</span></span>
     </div>
+
+    <!-- Rechte Spalte: nur 3 Icons – Suche, Warenkorb, Mehr -->
     <div class="header-right">
-      <div class="kw-badge" onclick="openKwModal()" id="kwBadge">KW –</div>
-      <button class="icon-btn" id="searchBtn" onclick="toggleSearch()" title="Suche">🔍</button>
-      <div class="plz-badge" id="plzBadge">📍 <span id="plzBadgeText"></span> <span class="plz-badge-x" onclick="clearPlz()">✕</span></div>
-      <button class="icon-btn" onclick="openPlzModal()" title="Mein Ort">📍</button>
-      <button class="icon-btn push-btn" onclick="registerPush()" title="Benachrichtigungen">🔔</button>
-      <button class="icon-btn" onclick="toggleShoppingList()" title="Einkaufsliste" id="shopListBtn" style="position:relative">
-        📋<span class="cart-badge" id="shopListBadge">0</span>
-      </button>
-      <button class="icon-btn" onclick="openProfileModal()" title="Mein Profil">👤</button>
-      <button class="icon-btn" onclick="toggleCart()" title="Warenkorb" id="cartBtn">
+      <!-- Suche -->
+      <button class="icon-btn" id="searchBtn" onclick="toggleSearch()" aria-label="Suche">🔍</button>
+
+      <!-- Warenkorb -->
+      <button class="icon-btn" onclick="toggleCart()" id="cartBtn" aria-label="Warenkorb">
         🛒
         <span class="cart-badge" id="cartBadge">0</span>
       </button>
-    </div>
-  </div>
+
+      <!-- Mehr-Button (⋯) öffnet Dropdown -->
+      <div class="more-menu-wrap">
+        <button class="icon-btn" id="moreBtn" onclick="toggleMoreMenu()" aria-label="Mehr">⋯</button>
+
+        <!-- Mehr-Dropdown -->
+        <div class="more-dropdown" id="moreDropdown">
+
+          <!-- Navigation: alle weiteren Menüpunkte -->
+          <div class="more-menu-section">
+            <!-- Kalenderwoche -->
+            <div class="more-menu-item" onclick="openKwModal();closeMoreMenu()">
+              <span class="item-icon">📅</span>
+              <span class="item-label" id="menuLabelKW">Kalenderwoche</span>
+              <span class="kw-badge-menu" id="kwBadge">KW –</span>
+            </div>
+            <!-- Standort / PLZ -->
+            <div class="more-menu-item" onclick="openPlzModal();closeMoreMenu()">
+              <span class="item-icon">📍</span>
+              <span class="item-label" id="menuLabelLocation">Mein Standort</span>
+              <div class="plz-badge" id="plzBadge">
+                <span id="plzBadgeText"></span>
+                <span class="plz-badge-x" onclick="clearPlz();event.stopPropagation()">✕</span>
+              </div>
+            </div>
+            <!-- Benachrichtigungen -->
+            <div class="more-menu-item" onclick="registerPush();closeMoreMenu()">
+              <span class="item-icon">🔔</span>
+              <span class="item-label push-btn" id="menuLabelNotify">Benachrichtigungen</span>
+            </div>
+            <!-- Einkaufsliste -->
+            <div class="more-menu-item" onclick="toggleShoppingList();closeMoreMenu()">
+              <span class="item-icon">📋</span>
+              <span class="item-label" id="menuLabelList">Einkaufsliste</span>
+              <span class="item-badge" id="shopListBadge">0</span>
+            </div>
+            <!-- Profil -->
+            <div class="more-menu-item" onclick="openProfileModal();closeMoreMenu()">
+              <span class="item-icon">👤</span>
+              <span class="item-label" id="menuLabelProfile">Mein Profil</span>
+            </div>
+          </div>
+
+          <!-- Hell/Dunkel-Toggle -->
+          <div class="more-menu-section">
+            <div class="more-menu-label" id="menuLabelTheme">Darstellung</div>
+            <div class="theme-toggle-row">
+              <button class="theme-btn" data-theme-btn="light" onclick="setTheme('light')">🌞 <span id="themeLabelLight">Hell</span></button>
+              <button class="theme-btn" data-theme-btn="dark"  onclick="setTheme('dark')">🌙 <span id="themeLabelDark">Dunkel</span></button>
+              <button class="theme-btn" data-theme-btn="system" onclick="setTheme('system')">🔄 <span id="themeLabelSystem">System</span></button>
+            </div>
+          </div>
+
+          <!-- Sprach-Auswahl -->
+          <div class="more-menu-section">
+            <div class="more-menu-label" id="menuLabelLang">Sprache</div>
+            <div class="lang-row">
+              <button class="lang-btn" data-lang-btn="de" onclick="setLang('de')">🇩🇪 Deutsch</button>
+              <button class="lang-btn" data-lang-btn="en" onclick="setLang('en')">🇬🇧 English</button>
+              <button class="lang-btn" data-lang-btn="tr" onclick="setLang('tr')">🇹🇷 Türkçe</button>
+            </div>
+          </div>
+        </div><!-- /.more-dropdown -->
+      </div><!-- /.more-menu-wrap -->
+    </div><!-- /.header-right -->
+  </div><!-- /.header-top -->
+
+  <!-- Suchleiste (ein-/ausklappbar) -->
   <div class="search-bar" id="searchBar">
     <div class="search-suggestions-wrap">
       <input class="search-input" id="searchInput" type="text"
@@ -1371,6 +1829,8 @@ async function registerPush() {
     </div>
     <div class="search-results-label" id="searchResultsLabel"></div>
   </div>
+
+  <!-- Tab-Navigation -->
   <div class="tabs">
     <div class="tab active" onclick="switchTab('heute')" id="tab-heute">Heute</div>
     <div class="tab" onclick="switchTab('woche')" id="tab-woche">Diese Woche</div>
@@ -1528,58 +1988,60 @@ function buildOffersForWeek(year, kw) {
   const mo = d(0), di = d(1), mi = d(2), do_ = d(3), fr = d(4), sa = d(5);
   // ── KW 17/18 (20.04.–03.05.2026) – manuell aktualisiert ──
   // Jeden Montag hier die neuen Angebote aus den Prospekten eintragen.
+  // Bilder kommen aus dem Ordner "bilder/" (kleingeschrieben).
+  // Aktuell: placeholder.jpg für alle – tausche die Dateinamen später einzeln aus.
   return [
-    { id:1,  chain:'aldi-sued',  name:'Milbona Frischmilch 3,5% 1L',              cat:'milch',     emoji:'🥛', pricew:0.99, pricea:1.39, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:2,  chain:'aldi-sued',  name:'Erdbeeren 500g KW17-Frühling',             cat:'sonstiges', emoji:'🍓', pricew:1.49, pricea:2.49, validFrom:fmtFull(mo),  validTo:fmtFull(mi),  weekOnly:false, label:`${fmt(mo)} – ${fmt(mi)}`  },
-    { id:3,  chain:'aldi-sued',  name:'Schweinekotelett Grillware 500g',          cat:'fleisch',   emoji:'🥩', pricew:2.79, pricea:4.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:4,  chain:'aldi-nord',  name:'Milbona Butter 250g',                      cat:'milch',     emoji:'🧈', pricew:1.79, pricea:2.59, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:5,  chain:'lidl',       name:'Coca-Cola / Fanta / Sprite 6×1,5L',        cat:'getraenke', emoji:'🥤', pricew:4.99, pricea:7.99, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:6,  chain:'lidl',       name:'Milbona Griechischer Joghurt 500g',         cat:'milch',     emoji:'🥛', pricew:0.89, pricea:1.35, validFrom:fmtFull(mo),  validTo:fmtFull(do_), weekOnly:false, label:`${fmt(mo)} – ${fmt(do_)}` },
-    { id:7,  chain:'lidl',       name:'Spargel weiß 500g',                         cat:'sonstiges', emoji:'🌿', pricew:2.49, pricea:3.99, validFrom:fmtFull(mo),  validTo:fmtFull(mi),  weekOnly:false, label:`${fmt(mo)} – ${fmt(mi)}`  },
-    { id:8,  chain:'rewe',       name:'Weihenstephan Frische Vollmilch 1L',        cat:'milch',     emoji:'🥛', pricew:1.19, pricea:1.69, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:9,  chain:'rewe',       name:'Langnese Magnum Classic 3er Pack',          cat:'sues',      emoji:'🍦', pricew:2.99, pricea:4.99, validFrom:fmtFull(di),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(di)} – ${fmt(sa)}`  },
-    { id:10, chain:'rewe',       name:'Barilla Pasta Spaghetti 500g',              cat:'sonstiges', emoji:'🍝', pricew:0.99, pricea:1.59, validFrom:fmtFull(mo),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(mo)} – ${fmt(fr)}`  },
-    { id:11, chain:'penny',      name:'Gut & Günstig Frische Vollmilch 3,5% 1L',  cat:'milch',     emoji:'🥛', pricew:0.85, pricea:1.19, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:12, chain:'penny',      name:'Milka Schokolade 100g versch. Sorten',      cat:'sues',      emoji:'🍫', pricew:0.79, pricea:1.29, validFrom:fmtFull(di),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(di)} – ${fmt(sa)}`  },
-    { id:13, chain:'penny',      name:'Dr. Oetker Ristorante Pizza 300–325g',      cat:'sonstiges', emoji:'🍕', pricew:1.99, pricea:3.29, validFrom:fmtFull(mo),  validTo:fmtFull(mi),  weekOnly:false, label:`${fmt(mo)} – ${fmt(mi)}`  },
-    { id:14, chain:'edeka',      name:'Gouda jung Scheiben 400g',                  cat:'milch',     emoji:'🧀', pricew:2.79, pricea:4.29, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:15, chain:'edeka',      name:'Ferrero Kinder Bueno 3er Pack',             cat:'sues',      emoji:'🍫', pricew:1.49, pricea:2.29, validFrom:fmtFull(do_), validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(do_)} – ${fmt(sa)}` },
-    { id:16, chain:'edeka',      name:'Rama Margarine 500g',                       cat:'milch',     emoji:'🧈', pricew:1.49, pricea:2.19, validFrom:fmtFull(mo),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(mo)} – ${fmt(fr)}`  },
-    { id:17, chain:'kaufland',   name:'Nutella 450g',                              cat:'sues',      emoji:'🍯', pricew:2.79, pricea:4.29, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:18, chain:'kaufland',   name:'Hähnchenbrust ohne Haut 500g',              cat:'fleisch',   emoji:'🍗', pricew:3.49, pricea:5.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:19, chain:'kaufland',   name:'Haribo Goldbären 500g',                     cat:'sues',      emoji:'🐻', pricew:1.99, pricea:2.99, validFrom:fmtFull(mi),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(mi)} – ${fmt(sa)}`  },
-    { id:20, chain:'netto',      name:'Knorr Fix Sauce Hollandaise 3er Pack',      cat:'sonstiges', emoji:'🥫', pricew:1.29, pricea:2.19, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:21, chain:'netto',      name:'Coca-Cola Zero 6×0,33L Dose',               cat:'getraenke', emoji:'🥤', pricew:3.29, pricea:4.99, validFrom:fmtFull(mo),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(mo)} – ${fmt(fr)}`  },
-    { id:22, chain:'tegut',      name:'Bio Freiland-Eier 10 Stück',                cat:'bio',       emoji:'🥚', pricew:3.29, pricea:4.99, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:23, chain:'tegut',      name:'Müller Joghurt mild 3,5% 500g',             cat:'milch',     emoji:'🥛', pricew:0.99, pricea:1.49, validFrom:fmtFull(di),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(di)} – ${fmt(sa)}`  },
-    { id:24, chain:'alnatura',   name:'Alnatura Bio Haferflocken zart 500g',       cat:'bio',       emoji:'🥣', pricew:1.39, pricea:1.99, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:25, chain:'alnatura',   name:'Alnatura Bio Dinkel-Vollkornbrot 500g',     cat:'bio',       emoji:'🍞', pricew:2.29, pricea:3.29, validFrom:fmtFull(mo),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(mo)} – ${fmt(fr)}`  },
-    { id:26, chain:'globus',     name:'Landliebe Joghurt 150g versch. Sorten',     cat:'milch',     emoji:'🥛', pricew:0.69, pricea:0.99, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:27, chain:'marktkauf',  name:'Iglo Fischstäbchen 432g (24 Stück)',        cat:'fleisch',   emoji:'🐟', pricew:3.49, pricea:5.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:28, chain:'hit',        name:'Nestlé KitKat Chunky 4er Pack',             cat:'sues',      emoji:'🍫', pricew:1.99, pricea:2.99, validFrom:fmtFull(di),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(di)} – ${fmt(sa)}`  },
-    { id:29, chain:'denns',      name:'Denns Bio Erdbeeren 250g',                  cat:'bio',       emoji:'🍓', pricew:1.99, pricea:2.99, validFrom:fmtFull(mo),  validTo:fmtFull(do_), weekOnly:false, label:`${fmt(mo)} – ${fmt(do_)}` },
-    { id:30, chain:'denns',      name:'Denns Bio Waschmittel Color 1,5L',          cat:'haushalt',  emoji:'🧺', pricew:4.99, pricea:7.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
+    { id:1,  chain:'aldi-sued',  name:'Milbona Frischmilch 3,5% 1L',              cat:'milch',     emoji:'🥛', pricew:0.99, pricea:1.39, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:2,  chain:'aldi-sued',  name:'Erdbeeren 500g KW17-Frühling',             cat:'sonstiges', emoji:'🍓', pricew:1.49, pricea:2.49, validFrom:fmtFull(mo),  validTo:fmtFull(mi),  weekOnly:false, label:`${fmt(mo)} – ${fmt(mi)}`,  image:'placeholder.jpg' },
+    { id:3,  chain:'aldi-sued',  name:'Schweinekotelett Grillware 500g',          cat:'fleisch',   emoji:'🥩', pricew:2.79, pricea:4.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:4,  chain:'aldi-nord',  name:'Milbona Butter 250g',                      cat:'milch',     emoji:'🧈', pricew:1.79, pricea:2.59, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:5,  chain:'lidl',       name:'Coca-Cola / Fanta / Sprite 6×1,5L',        cat:'getraenke', emoji:'🥤', pricew:4.99, pricea:7.99, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:6,  chain:'lidl',       name:'Milbona Griechischer Joghurt 500g',         cat:'milch',     emoji:'🥛', pricew:0.89, pricea:1.35, validFrom:fmtFull(mo),  validTo:fmtFull(do_), weekOnly:false, label:`${fmt(mo)} – ${fmt(do_)}`, image:'placeholder.jpg' },
+    { id:7,  chain:'lidl',       name:'Spargel weiß 500g',                         cat:'sonstiges', emoji:'🌿', pricew:2.49, pricea:3.99, validFrom:fmtFull(mo),  validTo:fmtFull(mi),  weekOnly:false, label:`${fmt(mo)} – ${fmt(mi)}`,  image:'placeholder.jpg' },
+    { id:8,  chain:'rewe',       name:'Weihenstephan Frische Vollmilch 1L',        cat:'milch',     emoji:'🥛', pricew:1.19, pricea:1.69, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:9,  chain:'rewe',       name:'Langnese Magnum Classic 3er Pack',          cat:'sues',      emoji:'🍦', pricew:2.99, pricea:4.99, validFrom:fmtFull(di),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(di)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:10, chain:'rewe',       name:'Barilla Pasta Spaghetti 500g',              cat:'sonstiges', emoji:'🍝', pricew:0.99, pricea:1.59, validFrom:fmtFull(mo),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(mo)} – ${fmt(fr)}`,  image:'placeholder.jpg' },
+    { id:11, chain:'penny',      name:'Gut & Günstig Frische Vollmilch 3,5% 1L',  cat:'milch',     emoji:'🥛', pricew:0.85, pricea:1.19, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:12, chain:'penny',      name:'Milka Schokolade 100g versch. Sorten',      cat:'sues',      emoji:'🍫', pricew:0.79, pricea:1.29, validFrom:fmtFull(di),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(di)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:13, chain:'penny',      name:'Dr. Oetker Ristorante Pizza 300–325g',      cat:'sonstiges', emoji:'🍕', pricew:1.99, pricea:3.29, validFrom:fmtFull(mo),  validTo:fmtFull(mi),  weekOnly:false, label:`${fmt(mo)} – ${fmt(mi)}`,  image:'placeholder.jpg' },
+    { id:14, chain:'edeka',      name:'Gouda jung Scheiben 400g',                  cat:'milch',     emoji:'🧀', pricew:2.79, pricea:4.29, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:15, chain:'edeka',      name:'Ferrero Kinder Bueno 3er Pack',             cat:'sues',      emoji:'🍫', pricew:1.49, pricea:2.29, validFrom:fmtFull(do_), validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(do_)} – ${fmt(sa)}`, image:'placeholder.jpg' },
+    { id:16, chain:'edeka',      name:'Rama Margarine 500g',                       cat:'milch',     emoji:'🧈', pricew:1.49, pricea:2.19, validFrom:fmtFull(mo),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(mo)} – ${fmt(fr)}`,  image:'placeholder.jpg' },
+    { id:17, chain:'kaufland',   name:'Nutella 450g',                              cat:'sues',      emoji:'🍯', pricew:2.79, pricea:4.29, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:18, chain:'kaufland',   name:'Hähnchenbrust ohne Haut 500g',              cat:'fleisch',   emoji:'🍗', pricew:3.49, pricea:5.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:19, chain:'kaufland',   name:'Haribo Goldbären 500g',                     cat:'sues',      emoji:'🐻', pricew:1.99, pricea:2.99, validFrom:fmtFull(mi),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(mi)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:20, chain:'netto',      name:'Knorr Fix Sauce Hollandaise 3er Pack',      cat:'sonstiges', emoji:'🥫', pricew:1.29, pricea:2.19, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:21, chain:'netto',      name:'Coca-Cola Zero 6×0,33L Dose',               cat:'getraenke', emoji:'🥤', pricew:3.29, pricea:4.99, validFrom:fmtFull(mo),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(mo)} – ${fmt(fr)}`,  image:'placeholder.jpg' },
+    { id:22, chain:'tegut',      name:'Bio Freiland-Eier 10 Stück',                cat:'bio',       emoji:'🥚', pricew:3.29, pricea:4.99, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:23, chain:'tegut',      name:'Müller Joghurt mild 3,5% 500g',             cat:'milch',     emoji:'🥛', pricew:0.99, pricea:1.49, validFrom:fmtFull(di),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(di)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:24, chain:'alnatura',   name:'Alnatura Bio Haferflocken zart 500g',       cat:'bio',       emoji:'🥣', pricew:1.39, pricea:1.99, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:25, chain:'alnatura',   name:'Alnatura Bio Dinkel-Vollkornbrot 500g',     cat:'bio',       emoji:'🍞', pricew:2.29, pricea:3.29, validFrom:fmtFull(mo),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(mo)} – ${fmt(fr)}`,  image:'placeholder.jpg' },
+    { id:26, chain:'globus',     name:'Landliebe Joghurt 150g versch. Sorten',     cat:'milch',     emoji:'🥛', pricew:0.69, pricea:0.99, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:27, chain:'marktkauf',  name:'Iglo Fischstäbchen 432g (24 Stück)',        cat:'fleisch',   emoji:'🐟', pricew:3.49, pricea:5.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:28, chain:'hit',        name:'Nestlé KitKat Chunky 4er Pack',             cat:'sues',      emoji:'🍫', pricew:1.99, pricea:2.99, validFrom:fmtFull(di),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(di)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:29, chain:'denns',      name:'Denns Bio Erdbeeren 250g',                  cat:'bio',       emoji:'🍓', pricew:1.99, pricea:2.99, validFrom:fmtFull(mo),  validTo:fmtFull(do_), weekOnly:false, label:`${fmt(mo)} – ${fmt(do_)}`, image:'placeholder.jpg' },
+    { id:30, chain:'denns',      name:'Denns Bio Waschmittel Color 1,5L',          cat:'haushalt',  emoji:'🧺', pricew:4.99, pricea:7.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
     // ── KW 18 Neue Angebote (28.04.–03.05.2026) ──
-    { id:31, chain:'aldi-sued',  name:'Thüringer Grillwürstchen 5er 400g',         cat:'fleisch',   emoji:'🌭', pricew:2.29, pricea:3.99, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:32, chain:'aldi-sued',  name:'Paprika-Mix 3er Netz 600g',                 cat:'sonstiges', emoji:'🫑', pricew:0.99, pricea:1.79, validFrom:fmtFull(mo),  validTo:fmtFull(mi),  weekOnly:false, label:`${fmt(mo)} – ${fmt(mi)}`  },
-    { id:33, chain:'aldi-nord',  name:'Mozzarella 125g',                           cat:'milch',     emoji:'🧀', pricew:0.55, pricea:0.89, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:34, chain:'aldi-nord',  name:'Knuspermüsli Schoko 600g',                  cat:'sonstiges', emoji:'🥣', pricew:1.99, pricea:3.29, validFrom:fmtFull(mo),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(mo)} – ${fmt(fr)}`  },
-    { id:35, chain:'lidl',       name:'Meggle Süßrahmbutter 250g',                 cat:'milch',     emoji:'🧈', pricew:1.69, pricea:2.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:36, chain:'lidl',       name:'Heinz Tomatenketchup 800ml',                cat:'sonstiges', emoji:'🍅', pricew:2.29, pricea:3.49, validFrom:fmtFull(mo),  validTo:fmtFull(do_), weekOnly:false, label:`${fmt(mo)} – ${fmt(do_)}` },
-    { id:37, chain:'rewe',       name:'Philadelphia Frischkäse Natur 175g',        cat:'milch',     emoji:'🧀', pricew:1.49, pricea:2.29, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:38, chain:'rewe',       name:'Hohes C Orange 100% 1L',                   cat:'getraenke', emoji:'🍊', pricew:1.79, pricea:2.99, validFrom:fmtFull(di),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(di)} – ${fmt(sa)}`  },
-    { id:39, chain:'edeka',      name:'Rinderhackfleisch gemischt 500g',           cat:'fleisch',   emoji:'🥩', pricew:3.99, pricea:5.99, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:40, chain:'edeka',      name:'Danone Activia Joghurt 4×125g',             cat:'milch',     emoji:'🥛', pricew:1.29, pricea:1.99, validFrom:fmtFull(mo),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(mo)} – ${fmt(fr)}`  },
-    { id:41, chain:'penny',      name:'Schlagsahne 200ml',                         cat:'milch',     emoji:'🥛', pricew:0.59, pricea:0.89, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:42, chain:'penny',      name:'Raffaello Kokoskugeln 200g',                cat:'sues',      emoji:'🍬', pricew:2.49, pricea:3.99, validFrom:fmtFull(di),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(di)} – ${fmt(sa)}`  },
-    { id:43, chain:'kaufland',   name:'Zucchini grün 500g',                        cat:'sonstiges', emoji:'🥒', pricew:0.89, pricea:1.49, validFrom:fmtFull(mo),  validTo:fmtFull(mi),  weekOnly:false, label:`${fmt(mo)} – ${fmt(mi)}`  },
-    { id:44, chain:'kaufland',   name:'Red Bull Energy Drink 250ml',               cat:'getraenke', emoji:'🥤', pricew:0.99, pricea:1.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:45, chain:'netto',      name:'Kartoffeln festkochend 2kg',                cat:'sonstiges', emoji:'🥔', pricew:1.49, pricea:2.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:46, chain:'netto',      name:'Ariel Flüssig-Waschmittel 23WL 1,43L',     cat:'haushalt',  emoji:'🧺', pricew:9.99, pricea:14.99,validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:47, chain:'lidl',       name:'Erdbeeren 500g',                            cat:'sonstiges', emoji:'🍓', pricew:1.49, pricea:2.99, validFrom:fmtFull(mo),  validTo:fmtFull(do_), weekOnly:false, label:`${fmt(mo)} – ${fmt(do_)}` },
-    { id:48, chain:'aldi-sued',  name:'Sonnenblumenöl 1L',                         cat:'sonstiges', emoji:'🫙', pricew:1.89, pricea:2.99, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`  },
-    { id:49, chain:'rewe',       name:'Knorr Bouillon Hühner 8er',                 cat:'sonstiges', emoji:'🍲', pricew:1.29, pricea:1.99, validFrom:fmtFull(mo),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(mo)} – ${fmt(fr)}`  },
-    { id:50, chain:'edeka',      name:'Pringles Original 185g',                    cat:'sues',      emoji:'🥂', pricew:1.49, pricea:2.29, validFrom:fmtFull(do_), validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(do_)} – ${fmt(sa)}` },
+    { id:31, chain:'aldi-sued',  name:'Thüringer Grillwürstchen 5er 400g',         cat:'fleisch',   emoji:'🌭', pricew:2.29, pricea:3.99, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:32, chain:'aldi-sued',  name:'Paprika-Mix 3er Netz 600g',                 cat:'sonstiges', emoji:'🫑', pricew:0.99, pricea:1.79, validFrom:fmtFull(mo),  validTo:fmtFull(mi),  weekOnly:false, label:`${fmt(mo)} – ${fmt(mi)}`,  image:'placeholder.jpg' },
+    { id:33, chain:'aldi-nord',  name:'Mozzarella 125g',                           cat:'milch',     emoji:'🧀', pricew:0.55, pricea:0.89, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:34, chain:'aldi-nord',  name:'Knuspermüsli Schoko 600g',                  cat:'sonstiges', emoji:'🥣', pricew:1.99, pricea:3.29, validFrom:fmtFull(mo),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(mo)} – ${fmt(fr)}`,  image:'placeholder.jpg' },
+    { id:35, chain:'lidl',       name:'Meggle Süßrahmbutter 250g',                 cat:'milch',     emoji:'🧈', pricew:1.69, pricea:2.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:36, chain:'lidl',       name:'Heinz Tomatenketchup 800ml',                cat:'sonstiges', emoji:'🍅', pricew:2.29, pricea:3.49, validFrom:fmtFull(mo),  validTo:fmtFull(do_), weekOnly:false, label:`${fmt(mo)} – ${fmt(do_)}`, image:'placeholder.jpg' },
+    { id:37, chain:'rewe',       name:'Philadelphia Frischkäse Natur 175g',        cat:'milch',     emoji:'🧀', pricew:1.49, pricea:2.29, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:38, chain:'rewe',       name:'Hohes C Orange 100% 1L',                   cat:'getraenke', emoji:'🍊', pricew:1.79, pricea:2.99, validFrom:fmtFull(di),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(di)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:39, chain:'edeka',      name:'Rinderhackfleisch gemischt 500g',           cat:'fleisch',   emoji:'🥩', pricew:3.99, pricea:5.99, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:40, chain:'edeka',      name:'Danone Activia Joghurt 4×125g',             cat:'milch',     emoji:'🥛', pricew:1.29, pricea:1.99, validFrom:fmtFull(mo),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(mo)} – ${fmt(fr)}`,  image:'placeholder.jpg' },
+    { id:41, chain:'penny',      name:'Schlagsahne 200ml',                         cat:'milch',     emoji:'🥛', pricew:0.59, pricea:0.89, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:42, chain:'penny',      name:'Raffaello Kokoskugeln 200g',                cat:'sues',      emoji:'🍬', pricew:2.49, pricea:3.99, validFrom:fmtFull(di),  validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(di)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:43, chain:'kaufland',   name:'Zucchini grün 500g',                        cat:'sonstiges', emoji:'🥒', pricew:0.89, pricea:1.49, validFrom:fmtFull(mo),  validTo:fmtFull(mi),  weekOnly:false, label:`${fmt(mo)} – ${fmt(mi)}`,  image:'placeholder.jpg' },
+    { id:44, chain:'kaufland',   name:'Red Bull Energy Drink 250ml',               cat:'getraenke', emoji:'🥤', pricew:0.99, pricea:1.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:45, chain:'netto',      name:'Kartoffeln festkochend 2kg',                cat:'sonstiges', emoji:'🥔', pricew:1.49, pricea:2.49, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:46, chain:'netto',      name:'Ariel Flüssig-Waschmittel 23WL 1,43L',     cat:'haushalt',  emoji:'🧺', pricew:9.99, pricea:14.99,validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:47, chain:'lidl',       name:'Erdbeeren 500g',                            cat:'sonstiges', emoji:'🍓', pricew:1.49, pricea:2.99, validFrom:fmtFull(mo),  validTo:fmtFull(do_), weekOnly:false, label:`${fmt(mo)} – ${fmt(do_)}`, image:'placeholder.jpg' },
+    { id:48, chain:'aldi-sued',  name:'Sonnenblumenöl 1L',                         cat:'sonstiges', emoji:'🫙', pricew:1.89, pricea:2.99, validFrom:fmtFull(mo),  validTo:fmtFull(sa),  weekOnly:true,  label:`${fmt(mo)} – ${fmt(sa)}`,  image:'placeholder.jpg' },
+    { id:49, chain:'rewe',       name:'Knorr Bouillon Hühner 8er',                 cat:'sonstiges', emoji:'🍲', pricew:1.29, pricea:1.99, validFrom:fmtFull(mo),  validTo:fmtFull(fr),  weekOnly:false, label:`${fmt(mo)} – ${fmt(fr)}`,  image:'placeholder.jpg' },
+    { id:50, chain:'edeka',      name:'Pringles Original 185g',                    cat:'sues',      emoji:'🥂', pricew:1.49, pricea:2.29, validFrom:fmtFull(do_), validTo:fmtFull(sa),  weekOnly:false, label:`${fmt(do_)} – ${fmt(sa)}`, image:'placeholder.jpg' },
   ];
 }
 
@@ -1911,10 +2373,10 @@ function addToCart(offerId) {
   if (!offer) return;
   if (state.cart[offerId]) {
     delete state.cart[offerId];
-    showToast('🗑️ Aus Warenkorb entfernt');
+    showToast(t('removedFromCart'));
   } else {
     state.cart[offerId] = { offerId, qty: 1, priceAtAdd: offer.pricew, priceNow: offer.pricew, status: 'unchanged' };
-    showToast('✅ In Warenkorb gelegt');
+    showToast(t('addedToCart'));
   }
   updateCartUI();
   render();
@@ -1950,7 +2412,7 @@ function checkPrices() {
     else { item.status = 'risen'; changes++; }
   });
   renderCartDrawer();
-  showToast(changes > 0 ? `🔔 ${changes} Preisänderung${changes > 1 ? 'en' : ''} erkannt!` : '✅ Alle Preise unverändert');
+  showToast(changes > 0 ? t('priceChanges')(changes) : t('priceUnchanged'));
 }
 
 function toggleCart() {
@@ -1979,7 +2441,7 @@ function renderCartDrawer() {
   const cartPriceCheck = document.getElementById('cartPriceCheck');
   const ids = Object.keys(state.cart);
   if (!ids.length) {
-    cartItems.innerHTML = `<div class="cart-empty"><div class="empty-icon">🛒</div><p>Dein Warenkorb ist leer.<br>Füge Angebote hinzu und prüfe die Preise live.</p></div>`;
+    cartItems.innerHTML = `<div class="cart-empty"><div class="empty-icon">🛒</div><p>${t('cartEmpty')}<br>${t('cartHint')}</p></div>`;
     cartFooter.style.display = 'none';
     cartPriceCheck.style.display = 'none';
     return;
@@ -1995,8 +2457,8 @@ function renderCartDrawer() {
     const imgUrl = getImgUrl(offer.id, 100);
     const diff = item.priceNow - item.priceAtAdd;
     let alertHtml = '';
-    if (item.status === 'dropped') alertHtml = `<div class="cart-item-alert dropped">▼ Preis gesunken: ${formatDiff(diff)} seit Hinzufügen</div>`;
-    else if (item.status === 'risen') alertHtml = `<div class="cart-item-alert risen">▲ Preis gestiegen: ${formatDiff(diff)} seit Hinzufügen</div>`;
+    if (item.status === 'dropped') alertHtml = `<div class="cart-item-alert dropped">${t('priceDropped')} ${formatDiff(diff)} ${t('sinceAdded')}</div>`;
+    else if (item.status === 'risen') alertHtml = `<div class="cart-item-alert risen">${t('priceRisen')} ${formatDiff(diff)} ${t('sinceAdded')}</div>`;
     const priceWasHtml = item.status !== 'unchanged' ? `<span class="cart-price-was">${formatPrice(item.priceAtAdd)}</span>` : '';
     html += `<div class="cart-item ${item.status !== 'unchanged' ? 'price-' + item.status : ''}">
       ${alertHtml}
@@ -2020,7 +2482,7 @@ function renderCartDrawer() {
             <span class="qty-num">${item.qty}</span>
             <button class="qty-btn" onclick="updateCartQty(${offer.id}, +1)">+</button>
           </div>
-          <button class="remove-btn" onclick="removeFromCart(${offer.id})">🗑 Entfernen</button>
+          <button class="remove-btn" onclick="removeFromCart(${offer.id})">${t('remove')}</button>
         </div>
       </div>
     </div>`;
@@ -2124,8 +2586,12 @@ function showToast(msg) {
 
 // ─── RENDER ───────────────────────────────────────────────────────────────────
 
+// DAY_NAMES und DAY_FULL werden zur Laufzeit aus den Übersetzungen geholt
 const DAY_NAMES = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 const DAY_FULL  = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+// Hilfsfunktionen: übersetzungsabhängige Tag-Namen
+function getDayNames() { return t('dayNames') || DAY_NAMES; }
+function getDayFull()  { return t('dayNamesFull') || DAY_FULL; }
 
 function render() {
   // Legal-Seiten übernehmen den gesamten mainContent
@@ -2140,10 +2606,27 @@ function render() {
   }
 
   document.getElementById('kwBadge').textContent = `KW ${state.kw}`;
-  ['heute','woche','favoriten','prospekte'].forEach(t => {
-    const el = document.getElementById('tab-'+t);
-    if (el) el.className = 'tab' + (state.tab === t ? ' active' : '');
+  // Tab-Klassen aktualisieren
+  ['heute','woche','favoriten','prospekte'].forEach(tabId => {
+    const el = document.getElementById('tab-'+tabId);
+    if (el) el.className = 'tab' + (state.tab === tabId ? ' active' : '');
   });
+  // Tab-Texte übersetzen (Badge im Favoriten-Tab erhalten)
+  const tHeu = document.getElementById('tab-heute');
+  const tWo  = document.getElementById('tab-woche');
+  const tPro = document.getElementById('tab-prospekte');
+  if (tHeu) tHeu.textContent = t('today');
+  if (tWo)  tWo.textContent  = t('thisWeek');
+  if (tPro) tPro.textContent = t('brochures');
+  // Favoriten-Tab: Text + Badge getrennt
+  const tFav = document.getElementById('tab-favoriten');
+  const favBadge = document.getElementById('favTabBadge');
+  if (tFav) { tFav.textContent = t('favorites') + ' '; if (favBadge) tFav.appendChild(favBadge); }
+  // Mehr-Menü Beschriftungen übersetzen
+  updateMenuLabels();
+  // Suche-Placeholder aktualisieren
+  const si = document.getElementById('searchInput');
+  if (si) si.placeholder = t('searchPlaceholder');
   const hide = state.tab === 'prospekte';
   const fb = document.getElementById('filterBar'); if (fb) fb.style.display = hide ? 'none' : 'block';
   const cb = document.getElementById('categoryBar'); if (cb) cb.style.display = hide ? 'none' : 'block';
@@ -2196,12 +2679,14 @@ function renderFilterBar() {
 function renderDaySelector() {
   const monday = getMondayOfWeek(state.year, state.kw);
   const todayStr = today.toISOString().split('T')[0];
+  const dn = getDayNames();
+  const df = getDayFull();
   let html = `<div class="day-selector">
     <div class="week-header">
-      <span>Tag wählen</span>
+      <span>${t('selectDay')}</span>
       <div class="week-nav">
         <button onclick="prevDay()">‹</button>
-        <span style="font-size:.8rem;color:var(--text)">${DAY_FULL[state.selectedDay]}</span>
+        <span style="font-size:.8rem;color:var(--text)">${df[state.selectedDay]}</span>
         <button onclick="nextDay()">›</button>
       </div>
     </div>
@@ -2210,7 +2695,7 @@ function renderDaySelector() {
     const dt = new Date(monday); dt.setDate(monday.getDate() + i);
     const isToday = dt.toISOString().split('T')[0] === todayStr;
     html += `<div class="day-btn${i === state.selectedDay ? ' active' : ''}${isToday ? ' today' : ''}" onclick="selectDay(${i})">
-      <div class="day-name">${DAY_NAMES[i]}</div>
+      <div class="day-name">${dn[i]}</div>
       <div class="day-num">${dt.getDate()}</div>
     </div>`;
   }
@@ -2252,11 +2737,17 @@ function renderOfferCard(offer, query = '') {
   const nameHtml = query ? highlightMatch(offer.name, query) : offer.name;
   const cmp = state.priceComparisons[offer.id];
   const cmpBadge = cmp
-    ? `<div class="price-cmp-badge ${cmp.isCheapest ? 'cheapest' : 'compare'}">${cmp.isCheapest ? '💚 Günstigster' : '⚖️ Preisvergleich'}</div>`
+    ? `<div class="price-cmp-badge ${cmp.isCheapest ? 'cheapest' : 'compare'}">${cmp.isCheapest ? t('cheapest') : t('priceCompare')}</div>`
     : '';
+  // Bild aus bilder/-Ordner; Fallback auf placeholder.jpg, dann float-question
+  const imgSrc = `bilder/${offer.image || 'placeholder.jpg'}`;
+  const safeAlt = offer.name.replace(/"/g, '&quot;');
   return `<div class="offer-card${inCart ? ' in-cart' : ''}">
     <button class="fav-btn${isFav ? ' active' : ''}" onclick="toggleFavorite(${offer.id})">${isFav ? '❤️' : '🤍'}</button>
-    <div class="offer-img">
+    <!-- Klick auf Bild öffnet Produkt-Detailansicht -->
+    <div class="offer-img" onclick="openProductModal(${offer.id})" style="cursor:pointer" title="${safeAlt}">
+      <img src="${imgSrc}" alt="${safeAlt}"
+           onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='bilder/placeholder.jpg';}else{this.style.display='none';this.nextElementSibling.style.display='flex';}">
       <span class="float-question">?</span>
     </div>
     <div class="discount-badge">−${pct}%</div>
@@ -2272,10 +2763,10 @@ function renderOfferCard(offer, query = '') {
         <span class="price-old">${formatPrice(offer.pricea)}</span>
       </div>
       <button class="add-cart-btn${inCart ? ' added' : ''}" onclick="addToCart(${offer.id})">
-        ${inCart ? '✓ Im Warenkorb' : '+ Warenkorb'}
+        ${inCart ? t('inCart') : t('addToCart')}
       </button>
       <button class="shop-list-btn${onList ? ' on-list' : ''}" onclick="toggleShoppingItem_card(${offer.id})">
-        ${onList ? '✓ Auf der Liste' : '📋 Zur Liste'}
+        ${onList ? t('onList') : t('toList')}
       </button>
     </div>
   </div>`;
@@ -2287,10 +2778,10 @@ function renderSearchView(main) {
     (state.activeChains.size === 0 || state.activeChains.has(o.chain)) &&
     o.name.toLowerCase().includes(q)
   );
-  document.getElementById('searchResultsLabel').textContent = q ? `${results.length} Treffer für „${q}"` : '';
-  if (!q) { main.innerHTML = `<div class="no-offers"><div class="icon">🔎</div><p>Tippe einen Suchbegriff ein…</p></div>`; return; }
-  if (!results.length) { main.innerHTML = `<div class="no-offers"><div class="icon">🔍</div><p>Keine Angebote für „${q}" gefunden.</p></div>`; return; }
-  main.innerHTML = `<div class="section-title">${results.length} Treffer</div>
+  document.getElementById('searchResultsLabel').textContent = q ? t('resultsFor')(results.length, q) : '';
+  if (!q) { main.innerHTML = `<div class="no-offers"><div class="icon">🔎</div><p>${t('typeToSearch')}</p></div>`; return; }
+  if (!results.length) { main.innerHTML = `<div class="no-offers"><div class="icon">🔍</div><p>${t('noResultsFor')(q)}</p></div>`; return; }
+  main.innerHTML = `<div class="section-title">${t('resultsCount')(results.length)}</div>
     <div class="offers-grid">${results.map(o => renderOfferCard(o, q)).join('')}</div>`;
 }
 
@@ -2299,10 +2790,10 @@ function renderHeuteTab(main) {
   const offers = filteredOffers(state.selectedDay);
   let html = renderDealOfWeek() + renderDaySelector();
   html += `<div style="margin-top:20px;">
-    <div class="section-title">${offers.length} Angebot${offers.length !== 1 ? 'e' : ''} • ${DAY_FULL[state.selectedDay]}</div>`;
+    <div class="section-title">${t('offerCount')(offers.length)} • ${getDayFull()[state.selectedDay]}</div>`;
   html += offers.length
     ? `<div class="offers-grid">${renderOffersWithAds(offers)}</div>`
-    : `<div class="no-offers"><div class="icon">🔍</div><p>Keine Angebote für diesen Tag gefunden.</p></div>`;
+    : `<div class="no-offers"><div class="icon">🔍</div><p>${t('noOffers')}</p></div>`;
   html += `</div>`;
   main.innerHTML = html;
 }
@@ -2317,13 +2808,13 @@ function renderWocheTab(main) {
     if (!offers.length) continue;
     any = true;
     const dt = new Date(monday); dt.setDate(monday.getDate() + i);
-    const label = `${DAY_FULL[i]}, ${dt.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' })}`;
+    const label = `${getDayFull()[i]}, ${dt.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' })}`;
     html += `<div class="week-day-section">
       <h3>${label} <span class="count-badge">${offers.length}</span></h3>
       <div class="offers-grid">${renderOffersWithAds(offers)}</div>
     </div>`;
   }
-  if (!any) html += `<div class="no-offers"><div class="icon">🔍</div><p>Keine Angebote diese Woche gefunden.</p></div>`;
+  if (!any) html += `<div class="no-offers"><div class="icon">🔍</div><p>${t('noOffersWeek')}</p></div>`;
   main.innerHTML = html + `</div>`;
 }
 
@@ -2334,7 +2825,7 @@ function renderProspekteTab(main) {
   const fmt = d => d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' });
   const plzChains = state.plzFilter ? getChainsForPlz(state.plzFilter) : null;
   const chains = plzChains ? CHAINS.filter(c => plzChains.includes(c.id)) : CHAINS;
-  let html = `<div class="section-title">Alle Prospekte • KW ${state.kw}</div>
+  let html = `<div class="section-title">${t('allBrochures')} • KW ${state.kw}</div>
     <div class="prospekt-grid" style="grid-template-columns:repeat(auto-fill,minmax(155px,1fr))">`;
   chains.forEach(c => {
     const chainOffers = state.offers.filter(o => o.chain === c.id);
@@ -2346,8 +2837,8 @@ function renderProspekteTab(main) {
         <div class="prospekt-cover-validity">${fmt(monday)} – ${fmt(sunday)}</div>
       </div>
       <div class="prospekt-cover-footer">
-        <span class="prospekt-cover-pages">${pages} S. · ${chainOffers.length} Ang.</span>
-        <span class="prospekt-cover-cta">ansehen →</span>
+        <span class="prospekt-cover-pages">${pages} ${t('pagesLabel')} · ${chainOffers.length} ${t('offersLabel')}</span>
+        <span class="prospekt-cover-cta">${t('viewBrochure')}</span>
       </div>
     </div>`;
   });
@@ -2362,10 +2853,10 @@ function renderProspektDetail(main, chainId) {
   const fmt = d => d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric' });
   const chainOffers = state.offers.filter(o => o.chain === chainId);
   const offersHtml = chainOffers.length === 0
-    ? `<div class="no-offers"><div class="icon">🛒</div><p>Für diese Woche sind noch keine Angebote hinterlegt – schau direkt im Prospekt nach!</p></div>`
+    ? `<div class="no-offers"><div class="icon">🛒</div><p>${t('noWeekOffers')}</p></div>`
     : `<div class="offers-grid">${chainOffers.map(o => renderOfferCard(o)).join('')}</div>`;
   main.innerHTML = `
-    <button class="back-btn" onclick="closeProspekt()">← Zurück zu Prospekten</button>
+    <button class="back-btn" onclick="closeProspekt()">${t('backToOffer')}</button>
     <div style="display:flex;align-items:center;gap:14px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;">
       <div style="width:52px;height:52px;border-radius:10px;background:${chain.color};display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">${chain.emoji}</div>
       <div style="flex:1;">
@@ -2382,9 +2873,9 @@ function renderProspektDetail(main, chainId) {
              text-decoration:none;transition:opacity .15s;"
       onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
       <span style="font-size:1.3rem;">📄</span>
-      Prospekt jetzt ansehen →
+      ${t('seeOffer')}
     </a>
-    <div class="section-title">Aktuelle Angebote dieser Woche</div>
+    <div class="section-title">${t('weekOffers')}</div>
     ${offersHtml}`;
 }
 
@@ -2533,13 +3024,13 @@ function closePlzModal() { document.getElementById('plzModal').classList.remove(
 
 function applyPlz() {
   const val = document.getElementById('plzInput').value.trim();
-  if (!/^\d{5}$/.test(val)) { showToast('⚠️ Bitte 5-stellige PLZ eingeben'); return; }
+  if (!/^\d{5}$/.test(val)) { showToast(t('plzError')); return; }
   state.plzFilter = val;
   document.getElementById('plzBadgeText').textContent = val;
   document.getElementById('plzBadge').classList.add('visible');
   closePlzModal();
   render();
-  showToast('📍 Nur Märkte in PLZ ' + val);
+  showToast(t('plzApplied')(val));
 }
 
 function clearPlz() {
@@ -2555,8 +3046,8 @@ document.getElementById('plzModal').addEventListener('click', e => {
 // ─── FAVORITES ────────────────────────────────────────────────────────────────
 
 function toggleFavorite(offerId) {
-  if (state.favorites.has(offerId)) { state.favorites.delete(offerId); showToast('💔 Aus Favoriten entfernt'); }
-  else { state.favorites.add(offerId); showToast('❤️ Zu Favoriten hinzugefügt'); }
+  if (state.favorites.has(offerId)) { state.favorites.delete(offerId); showToast(t('removedFromFav')); }
+  else { state.favorites.add(offerId); showToast(t('addedToFav')); }
   safeStorage.setItem('dealradar_fav', JSON.stringify([...state.favorites]));
   updateFavBadge();
   render();
@@ -2573,10 +3064,10 @@ function updateFavBadge() {
 function renderFavoriteTab(main) {
   const favOffers = state.offers.filter(o => state.favorites.has(o.id));
   if (!favOffers.length) {
-    main.innerHTML = `<div class="fav-empty"><div class="icon">🤍</div><p>Noch keine Favoriten.<br>Tippe ❤️ auf Angeboten um sie zu merken.</p></div>`;
+    main.innerHTML = `<div class="fav-empty"><div class="icon">🤍</div><p>${t('favoritesEmpty')}<br>${t('favoritesHint')}</p></div>`;
     return;
   }
-  main.innerHTML = `<div class="section-title">${favOffers.length} Favorit${favOffers.length !== 1 ? 'en' : ''}</div>
+  main.innerHTML = `<div class="section-title">${t('favCount')(favOffers.length)}</div>
     <div class="offers-grid">${favOffers.map(o => renderOfferCard(o)).join('')}</div>`;
 }
 
@@ -2589,10 +3080,10 @@ function isOnShoppingList(offerId) {
 function toggleShoppingItem_card(offerId) {
   if (isOnShoppingList(offerId)) {
     state.shoppingList = state.shoppingList.filter(i => i.offerId !== offerId);
-    showToast('🗑️ Von Einkaufsliste entfernt');
+    showToast(t('removedFromList'));
   } else {
     state.shoppingList.push({ offerId, checked: false });
-    showToast('📋 Zur Einkaufsliste hinzugefügt');
+    showToast(t('addedToList'));
   }
   safeStorage.setItem('dealradar_shop', JSON.stringify(state.shoppingList));
   updateShopListBadge();
@@ -2644,7 +3135,7 @@ function clearShoppingList() {
 function renderShoppingListDrawer() {
   const container = document.getElementById('shoplistItems');
   if (!state.shoppingList.length) {
-    container.innerHTML = `<div class="shoplist-empty"><div style="font-size:3rem">📋</div><p>Die Einkaufsliste ist leer.</p></div>`;
+    container.innerHTML = `<div class="shoplist-empty"><div style="font-size:3rem">📋</div><p>${t('shoppingListEmpty')}</p></div>`;
     return;
   }
   container.innerHTML = state.shoppingList.map((item, i) => {
@@ -2715,7 +3206,7 @@ function renderDealOfWeek() {
       <div class="deal-card-pct">−${discountPct(o)}%</div>
     </div>`;
   }).join('');
-  return `<div class="deal-week-section"><div class="deal-week-title">🔥 Deals der Woche</div><div class="deal-week-grid">${cards}</div></div>`;
+  return `<div class="deal-week-section"><div class="deal-week-title">${t('dealsOfWeek')}</div><div class="deal-week-grid">${cards}</div></div>`;
 }
 
 // ─── ADS HELPER ───────────────────────────────────────────────────────────────
@@ -2867,15 +3358,15 @@ function shareFilterView() {
     navigator.share({ title: 'Deal Radar Filter', url: window.location.href }).catch(() => {});
   } else {
     navigator.clipboard.writeText(window.location.href)
-      .then(() => showToast('🔗 Link kopiert!'))
-      .catch(() => showToast('🔗 URL in Adressleiste kopieren'));
+      .then(() => showToast(t('linkCopied')))
+      .catch(() => showToast(t('copyURL')));
   }
 }
 
 // ─── SAVED FILTERS ────────────────────────────────────────────────────────────
 
 function saveCurrentFilter() {
-  const name = prompt('Filter-Name:');
+  const name = prompt(t('filterName'));
   if (!name?.trim()) return;
   const filter = {
     id: Date.now(), name: name.trim(),
@@ -2885,7 +3376,7 @@ function saveCurrentFilter() {
   };
   state.savedFilters.push(filter);
   safeStorage.setItem('dealradar_filters', JSON.stringify(state.savedFilters));
-  showToast(`💾 "${name.trim()}" gespeichert`);
+  showToast(t('filterSavedMsg')(name.trim()));
   renderSavedFiltersBar();
 }
 
@@ -2897,7 +3388,7 @@ function loadSavedFilter(id) {
   state.priceMax = f.priceMax; state.priceMin = f.priceMin || 0;
   state.minDiscount = f.minDiscount; state.sortBy = f.sortBy;
   syncSliders(); syncURL(); render();
-  showToast(`📂 "${f.name}" geladen`);
+  showToast(t('filterLoadedMsg')(f.name));
 }
 
 function deleteSavedFilter(id, e) {
@@ -2924,7 +3415,7 @@ function renderSavedFiltersBar() {
   if (!bar || !inner) return;
   if (!state.savedFilters.length) { bar.classList.remove('visible'); return; }
   bar.classList.add('visible');
-  inner.innerHTML = '<span class="saved-filter-label">Gespeichert:</span>';
+  inner.innerHTML = `<span class="saved-filter-label">${t('savedFilters')}</span>`;
   state.savedFilters.forEach(f => {
     const chip = document.createElement('div');
     chip.className = 'saved-filter-chip';
@@ -2940,7 +3431,7 @@ function resetAllFilters() {
   state.activeChains.clear(); state.activeCategories.clear();
   state.priceMax = 20; state.priceMin = 0; state.minDiscount = 0; state.sortBy = 'default';
   syncSliders(); syncURL(); render();
-  showToast('🔄 Filter zurückgesetzt');
+  showToast(t('filterReset'));
 }
 
 function hasActiveFilters() {
@@ -3082,6 +3573,361 @@ initCookieBanner();
 document.getElementById('cartOverlay').addEventListener('click', () => {
   if (state.shoppingListOpen) closeShoppingList();
 });
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// MEHRSPRACHIGKEIT – DE / EN / TR
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const translations = {
+  de: {
+    today: 'Heute', thisWeek: 'Diese Woche', favorites: 'Favoriten', brochures: 'Prospekte',
+    searchPlaceholder: 'Produkt suchen, z.B. Butter, Milch, Pizza…',
+    cart: 'Warenkorb', shoppingList: 'Einkaufsliste',
+    addToCart: '+ Warenkorb', inCart: '✓ Im Warenkorb',
+    toList: '📋 Zur Liste', onList: '✓ Auf der Liste',
+    dealsOfWeek: '🔥 Deals der Woche',
+    light: 'Hell', dark: 'Dunkel', system: 'System',
+    theme: 'Darstellung', language: 'Sprache',
+    profile: 'Mein Profil', notifications: 'Benachrichtigungen',
+    location: 'Mein Standort', chooseWeekTitle: 'Kalenderwoche',
+    close: 'Schließen', back: '← Zurück',
+    noOffers: 'Keine Angebote für diesen Tag gefunden.',
+    noOffersWeek: 'Keine Angebote diese Woche gefunden.',
+    cartEmpty: 'Dein Warenkorb ist leer.',
+    cartHint: 'Füge Angebote hinzu und prüfe die Preise live.',
+    savings: 'Geschätzte Ersparnis',
+    checkPrices: '🔄 Preise jetzt prüfen',
+    cheapest: '💚 Günstigster', priceCompare: '⚖️ Preisvergleich',
+    allBrochures: 'Alle Prospekte', viewBrochure: 'ansehen →',
+    pagesLabel: 'S.', offersLabel: 'Ang.',
+    selectDay: 'Tag wählen',
+    favoritesEmpty: 'Noch keine Favoriten.', favoritesHint: 'Tippe ❤️ auf Angeboten um sie zu merken.',
+    backToOffer: '← Zurück zu Prospekten', seeOffer: 'Prospekt jetzt ansehen →',
+    weekOffers: 'Aktuelle Angebote dieser Woche',
+    noWeekOffers: 'Für diese Woche sind noch keine Angebote hinterlegt – schau direkt im Prospekt nach!',
+    savedFilters: 'Gespeichert:',
+    addedToCart: '✅ In Warenkorb gelegt', removedFromCart: '🗑️ Aus Warenkorb entfernt',
+    addedToFav: '❤️ Zu Favoriten hinzugefügt', removedFromFav: '💔 Aus Favoriten entfernt',
+    addedToList: '📋 Zur Einkaufsliste hinzugefügt', removedFromList: '🗑️ Von Einkaufsliste entfernt',
+    priceDropped: '▼ Preis gesunken:', priceRisen: '▲ Preis gestiegen:', sinceAdded: 'seit Hinzufügen',
+    priceUnchanged: '✅ Alle Preise unverändert',
+    remove: '🗑 Entfernen', typeToSearch: 'Tippe einen Suchbegriff ein…',
+    shoppingListEmpty: 'Die Einkaufsliste ist leer.',
+    filterReset: '🔄 Filter zurückgesetzt',
+    filterName: 'Filter-Name:', linkCopied: '🔗 Link kopiert!', copyURL: '🔗 URL in Adressleiste kopieren',
+    plzApply: 'Anwenden', plzCancel: 'Abbrechen', plzPlaceholder: 'PLZ eingeben',
+    plzError: '⚠️ Bitte 5-stellige PLZ eingeben',
+    menuKW: 'Kalenderwoche', menuLocation: 'Mein Standort', menuNotify: 'Benachrichtigungen',
+    menuList: 'Einkaufsliste', menuProfile: 'Mein Profil', menuTheme: 'Darstellung', menuLang: 'Sprache',
+    modalClose: 'Schließen',
+    dayNames: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+    dayNamesFull: ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+    favCount:     (n) => `${n} Favorit${n !== 1 ? 'en' : ''}`,
+    offerCount:   (n) => `${n} Angebot${n !== 1 ? 'e' : ''}`,
+    resultsCount: (n) => `${n} Treffer`,
+    noResultsFor: (q) => `Keine Angebote für „${q}" gefunden.`,
+    resultsFor:   (n, q) => `${n} Treffer für „${q}"`,
+    priceChanges: (n) => `🔔 ${n} Preisänderung${n > 1 ? 'en' : ''} erkannt!`,
+    filterSavedMsg:  (name) => `💾 "${name}" gespeichert`,
+    filterLoadedMsg: (name) => `📂 "${name}" geladen`,
+    plzApplied: (plz) => `📍 Nur Märkte in PLZ ${plz}`,
+  },
+  en: {
+    today: 'Today', thisWeek: 'This Week', favorites: 'Favorites', brochures: 'Brochures',
+    searchPlaceholder: 'Search products, e.g. butter, milk, pizza…',
+    cart: 'Shopping Cart', shoppingList: 'Shopping List',
+    addToCart: '+ Cart', inCart: '✓ In Cart',
+    toList: '📋 Add to List', onList: '✓ On List',
+    dealsOfWeek: '🔥 Deals of the Week',
+    light: 'Light', dark: 'Dark', system: 'System',
+    theme: 'Appearance', language: 'Language',
+    profile: 'My Profile', notifications: 'Notifications',
+    location: 'My Location', chooseWeekTitle: 'Calendar Week',
+    close: 'Close', back: '← Back',
+    noOffers: 'No offers found for this day.',
+    noOffersWeek: 'No offers found for this week.',
+    cartEmpty: 'Your cart is empty.',
+    cartHint: 'Add offers and check prices live.',
+    savings: 'Estimated Savings',
+    checkPrices: '🔄 Check Prices Now',
+    cheapest: '💚 Cheapest', priceCompare: '⚖️ Price Comparison',
+    allBrochures: 'All Brochures', viewBrochure: 'view →',
+    pagesLabel: 'pp.', offersLabel: 'off.',
+    selectDay: 'Select Day',
+    favoritesEmpty: 'No favorites yet.', favoritesHint: 'Tap ❤️ on offers to save them.',
+    backToOffer: '← Back to Brochures', seeOffer: 'View Brochure Now →',
+    weekOffers: 'Current Offers This Week',
+    noWeekOffers: 'No offers listed for this week – check the brochure directly!',
+    savedFilters: 'Saved:',
+    addedToCart: '✅ Added to Cart', removedFromCart: '🗑️ Removed from Cart',
+    addedToFav: '❤️ Added to Favorites', removedFromFav: '💔 Removed from Favorites',
+    addedToList: '📋 Added to Shopping List', removedFromList: '🗑️ Removed from Shopping List',
+    priceDropped: '▼ Price dropped:', priceRisen: '▲ Price risen:', sinceAdded: 'since adding',
+    priceUnchanged: '✅ All prices unchanged',
+    remove: '🗑 Remove', typeToSearch: 'Type a search term…',
+    shoppingListEmpty: 'The shopping list is empty.',
+    filterReset: '🔄 Filters reset',
+    filterName: 'Filter name:', linkCopied: '🔗 Link copied!', copyURL: '🔗 Copy URL from address bar',
+    plzApply: 'Apply', plzCancel: 'Cancel', plzPlaceholder: 'Enter ZIP code',
+    plzError: '⚠️ Please enter a 5-digit ZIP code',
+    menuKW: 'Calendar Week', menuLocation: 'My Location', menuNotify: 'Notifications',
+    menuList: 'Shopping List', menuProfile: 'My Profile', menuTheme: 'Appearance', menuLang: 'Language',
+    modalClose: 'Close',
+    dayNames: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    dayNamesFull: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    favCount:     (n) => `${n} Favorite${n !== 1 ? 's' : ''}`,
+    offerCount:   (n) => `${n} Offer${n !== 1 ? 's' : ''}`,
+    resultsCount: (n) => `${n} Result${n !== 1 ? 's' : ''}`,
+    noResultsFor: (q) => `No offers found for "${q}".`,
+    resultsFor:   (n, q) => `${n} results for "${q}"`,
+    priceChanges: (n) => `🔔 ${n} price change${n > 1 ? 's' : ''} detected!`,
+    filterSavedMsg:  (name) => `💾 "${name}" saved`,
+    filterLoadedMsg: (name) => `📂 "${name}" loaded`,
+    plzApplied: (plz) => `📍 Only stores in ZIP ${plz}`,
+  },
+  tr: {
+    today: 'Bugün', thisWeek: 'Bu Hafta', favorites: 'Favoriler', brochures: 'Broşürler',
+    searchPlaceholder: 'Ürün arayın, örn. tereyağı, süt, pizza…',
+    cart: 'Sepet', shoppingList: 'Alışveriş Listesi',
+    addToCart: '+ Sepete Ekle', inCart: '✓ Sepette',
+    toList: '📋 Listeye Ekle', onList: '✓ Listede',
+    dealsOfWeek: '🔥 Haftanın Fırsatları',
+    light: 'Açık', dark: 'Koyu', system: 'Sistem',
+    theme: 'Görünüm', language: 'Dil',
+    profile: 'Profilim', notifications: 'Bildirimler',
+    location: 'Konumum', chooseWeekTitle: 'Takvim Haftası',
+    close: 'Kapat', back: '← Geri',
+    noOffers: 'Bu gün için teklif bulunamadı.',
+    noOffersWeek: 'Bu hafta için teklif bulunamadı.',
+    cartEmpty: 'Sepetiniz boş.',
+    cartHint: 'Teklif ekleyin ve fiyatları canlı takip edin.',
+    savings: 'Tahmini Tasarruf',
+    checkPrices: '🔄 Fiyatları Şimdi Kontrol Et',
+    cheapest: '💚 En Ucuz', priceCompare: '⚖️ Fiyat Karşılaştırma',
+    allBrochures: 'Tüm Broşürler', viewBrochure: 'görüntüle →',
+    pagesLabel: 'sy.', offersLabel: 'tek.',
+    selectDay: 'Gün Seçin',
+    favoritesEmpty: 'Henüz favori yok.', favoritesHint: 'Kaydetmek için ❤️ düğmesine basın.',
+    backToOffer: '← Broşürlere Dön', seeOffer: 'Broşürü Şimdi Görüntüle →',
+    weekOffers: 'Bu Haftanın Güncel Teklifleri',
+    noWeekOffers: 'Bu hafta için henüz teklif girilmemiş – broşüre doğrudan bakın!',
+    savedFilters: 'Kayıtlı:',
+    addedToCart: '✅ Sepete Eklendi', removedFromCart: '🗑️ Sepetten Çıkarıldı',
+    addedToFav: '❤️ Favorilere Eklendi', removedFromFav: '💔 Favorilerden Çıkarıldı',
+    addedToList: '📋 Listeye Eklendi', removedFromList: '🗑️ Listeden Çıkarıldı',
+    priceDropped: '▼ Fiyat düştü:', priceRisen: '▲ Fiyat yükseldi:', sinceAdded: 'eklendiğinden beri',
+    priceUnchanged: '✅ Tüm fiyatlar değişmedi',
+    remove: '🗑 Kaldır', typeToSearch: 'Bir arama terimi girin…',
+    shoppingListEmpty: 'Alışveriş listesi boş.',
+    filterReset: '🔄 Filtreler sıfırlandı',
+    filterName: 'Filtre adı:', linkCopied: '🔗 Bağlantı kopyalandı!', copyURL: '🔗 Adresi kopyalayın',
+    plzApply: 'Uygula', plzCancel: 'İptal', plzPlaceholder: 'Posta kodu girin',
+    plzError: '⚠️ Lütfen 5 haneli posta kodu girin',
+    menuKW: 'Takvim Haftası', menuLocation: 'Konumum', menuNotify: 'Bildirimler',
+    menuList: 'Alışveriş Listesi', menuProfile: 'Profilim', menuTheme: 'Görünüm', menuLang: 'Dil',
+    modalClose: 'Kapat',
+    dayNames: ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'],
+    dayNamesFull: ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
+    favCount:     (n) => `${n} Favori`,
+    offerCount:   (n) => `${n} Teklif`,
+    resultsCount: (n) => `${n} Sonuç`,
+    noResultsFor: (q) => `"${q}" için teklif bulunamadı.`,
+    resultsFor:   (n, q) => `"${q}" için ${n} sonuç`,
+    priceChanges: (n) => `🔔 ${n} fiyat değişikliği algılandı!`,
+    filterSavedMsg:  (name) => `💾 "${name}" kaydedildi`,
+    filterLoadedMsg: (name) => `📂 "${name}" yüklendi`,
+    plzApplied: (plz) => `📍 Sadece ${plz} bölgesindeki mağazalar`,
+  },
+};
+
+// Aktuelle Sprache (Standard: Deutsch; aus localStorage laden)
+let currentLang = safeStorage.getItem('dealradar_lang') || 'de';
+
+// Übersetzungsfunktion: gibt String oder Funktion zurück
+function t(key) {
+  const lang = translations[currentLang] || translations.de;
+  return (lang[key] !== undefined) ? lang[key] : ((translations.de[key] !== undefined) ? translations.de[key] : key);
+}
+
+// ─── SPRACH-WECHSEL ───────────────────────────────────────────────────────────
+
+function initLang() {
+  currentLang = safeStorage.getItem('dealradar_lang') || 'de';
+  document.documentElement.lang = currentLang;
+  updateLangBtns();
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  safeStorage.setItem('dealradar_lang', lang);
+  document.documentElement.lang = lang;
+  updateLangBtns();
+  closeMoreMenu();
+  // Vollständiger Re-Render aller UI-Texte (kein Page-Reload)
+  render();
+}
+
+function updateLangBtns() {
+  document.querySelectorAll('[data-lang-btn]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.langBtn === currentLang);
+  });
+}
+
+// ─── MEHR-MENÜ LABELS AKTUALISIEREN ──────────────────────────────────────────
+
+function updateMenuLabels() {
+  const set = (id, val) => { const el = document.getElementById(id); if (el && typeof val === 'string') el.textContent = val; };
+  set('menuLabelKW',       t('menuKW'));
+  set('menuLabelLocation', t('menuLocation'));
+  set('menuLabelNotify',   t('menuNotify'));
+  set('menuLabelList',     t('menuList'));
+  set('menuLabelProfile',  t('menuProfile'));
+  set('menuLabelTheme',    t('menuTheme'));
+  set('menuLabelLang',     t('menuLang'));
+  set('themeLabelLight',   t('light'));
+  set('themeLabelDark',    t('dark'));
+  set('themeLabelSystem',  t('system'));
+  // Modal-Schließen-Button übersetzen
+  set('productModalCloseBtn', t('modalClose'));
+}
+
+// ─── THEME (HELL / DUNKEL / SYSTEM) ──────────────────────────────────────────
+
+function initTheme() {
+  const saved = safeStorage.getItem('dealradar_theme') || 'system';
+  applyTheme(saved);
+  updateThemeBtns(saved);
+}
+
+function applyTheme(theme) {
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const isDark = theme === 'dark' || (theme === 'system' && prefersDark);
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+}
+
+function setTheme(theme) {
+  safeStorage.setItem('dealradar_theme', theme);
+  applyTheme(theme);
+  updateThemeBtns(theme);
+  closeMoreMenu();
+}
+
+function updateThemeBtns(theme) {
+  document.querySelectorAll('[data-theme-btn]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.themeBtn === theme);
+  });
+}
+
+// System-Präferenz beobachten und ggf. Theme umschalten
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+  const saved = safeStorage.getItem('dealradar_theme') || 'system';
+  if (saved === 'system') applyTheme('system');
+});
+
+// ─── MEHR-MENÜ TOGGLE ────────────────────────────────────────────────────────
+
+function toggleMoreMenu() {
+  const dd = document.getElementById('moreDropdown');
+  dd.classList.toggle('open');
+}
+
+function closeMoreMenu() {
+  const dd = document.getElementById('moreDropdown');
+  if (dd) dd.classList.remove('open');
+}
+
+// Mehr-Menü schließen bei Klick außerhalb
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.more-menu-wrap');
+  const dd   = document.getElementById('moreDropdown');
+  if (dd && dd.classList.contains('open') && wrap && !wrap.contains(e.target)) {
+    dd.classList.remove('open');
+  }
+});
+
+// ─── PRODUKT-DETAIL-MODAL ────────────────────────────────────────────────────
+
+let modalOfferId = null; // Aktuell im Modal geöffnetes Produkt
+
+function openProductModal(offerId) {
+  const offer = state.offers.find(o => o.id === offerId);
+  if (!offer) return;
+  const chain = getChain(offer.chain);
+  if (!chain) return;
+
+  modalOfferId = offerId;
+  const pct    = discountPct(offer);
+  const inCart = !!state.cart[offerId];
+
+  // Produktbild setzen: bilder/<dateiname>, Fallback auf placeholder.jpg
+  const imgEl      = document.getElementById('productModalImg');
+  const fallbackEl = document.getElementById('productModalFallback');
+  const imgSrc     = `bilder/${offer.image || 'placeholder.jpg'}`;
+  imgEl.style.display    = 'block';
+  fallbackEl.style.display = 'none';
+  delete imgEl.dataset.fb; // onerror-Counter zurücksetzen
+  imgEl.src = imgSrc;
+  imgEl.alt = offer.name;
+
+  // Rabatt-Badge
+  document.getElementById('productModalDiscount').textContent = `−${pct}%`;
+
+  // Ketten-Logo und -Name
+  const logoEl = document.getElementById('productModalChainLogo');
+  logoEl.textContent        = chain.emoji;
+  logoEl.style.background   = chain.color;
+  document.getElementById('productModalChainName').textContent = chain.name;
+  document.getElementById('productModalValid').textContent     = offer.label;
+
+  // Produktname, Preise
+  document.getElementById('productModalTitle').textContent    = offer.name;
+  document.getElementById('productModalPriceNew').textContent = formatPrice(offer.pricew);
+  document.getElementById('productModalPriceOld').textContent = formatPrice(offer.pricea);
+
+  // Warenkorb-Button
+  updateProductModalCartBtn();
+
+  // Modal öffnen + ESC-Listener
+  document.getElementById('productModal').classList.add('open');
+  document.addEventListener('keydown', handleProductModalKey);
+}
+
+function updateProductModalCartBtn() {
+  const inCart = !!state.cart[modalOfferId];
+  const btn    = document.getElementById('productModalAddBtn');
+  if (!btn) return;
+  btn.textContent = inCart ? t('inCart') : t('addToCart');
+  btn.className   = 'product-modal-add-btn' + (inCart ? ' added' : '');
+}
+
+function closeProductModal() {
+  document.getElementById('productModal').classList.remove('open');
+  document.removeEventListener('keydown', handleProductModalKey);
+  modalOfferId = null;
+}
+
+// ESC-Taste schließt Modal
+function handleProductModalKey(e) {
+  if (e.key === 'Escape') closeProductModal();
+}
+
+// Klick auf dunklen Hintergrund (außerhalb des Modals) schließt
+function handleProductModalOverlayClick(e) {
+  if (e.target === document.getElementById('productModal')) closeProductModal();
+}
+
+// "In Warenkorb"-Button im Modal
+function addToCartFromModal() {
+  if (!modalOfferId) return;
+  addToCart(modalOfferId);
+  updateProductModalCartBtn();
+}
+
+// ─── INITIALISIERUNG ─────────────────────────────────────────────────────────
+
+// Theme und Sprache beim Laden anwenden
+initTheme();
+initLang();
 
 // ─── SERVICE WORKER ───────────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
