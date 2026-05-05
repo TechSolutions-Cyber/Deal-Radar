@@ -797,6 +797,115 @@
   .deal-card-pct { background: var(--red); color: #fff; font-size: .75rem;
     font-weight: 800; padding: 4px 8px; border-radius: 6px; flex-shrink: 0; }
 
+  /* ─── AKTUELLE PROSPEKTE SECTION ──────────────────────── */
+  .prospekt-section {
+    margin-top: 48px;
+    margin-bottom: 24px;
+  }
+  .prospekt-section-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .prospekt-section-subtitle {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .prospekt-section-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (min-width: 768px) {
+    .prospekt-section-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .prospekt-section-grid { grid-template-columns: repeat(6, 1fr); }
+  }
+  .prospekt-link-card {
+    display: block;
+    text-decoration: none;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .prospekt-link-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.13);
+  }
+  .prospekt-link-card-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    padding: 10px 12px 6px;
+    color: var(--text);
+  }
+  .prospekt-link-img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    position: relative;
+    border-radius: 8px;
+    margin: 0 8px;
+    width: calc(100% - 16px);
+  }
+  .prospekt-link-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 8px;
+  }
+  .prospekt-link-img-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 900;
+    text-align: center;
+    padding: 8px;
+    border-radius: 8px;
+  }
+  .prospekt-link-cta {
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--muted);
+    padding: 8px 12px 4px;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+  }
+  .prospekt-link-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 12px 10px;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .prospekt-neu-badge {
+    background: #16a34a;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  /* Dark-Mode: Karten erhalten dunklen Hintergrund */
+  [data-theme="dark"] .prospekt-link-card,
+  :root .prospekt-link-card {
+    background: var(--surface);
+  }
+
   /* ─── FAVORITES ────────────────────────────────────────── */
   .fav-btn { position: absolute; top: 8px; left: 8px;
     background: rgba(15,23,42,.7); border: none; width: 30px; height: 30px;
@@ -1215,7 +1324,7 @@
 
   /* Hell-Modus überschreibt die Root-Variablen */
   [data-theme="light"] {
-    --bg: #f8fafc;
+    --bg: #ffffff;
     --surface: #ffffff;
     --surface2: #f1f5f9;
     --text: #0f172a;
@@ -2782,7 +2891,7 @@ function renderSearchView(main) {
 function renderHeuteTab(main) {
   if (state.searchOpen) { renderSearchView(main); return; }
   const offers = filteredOffers(state.selectedDay);
-  let html = renderDealOfWeek() + renderDaySelector();
+  let html = renderDealOfWeek() + renderProspektSection() + renderDaySelector();
   html += `<div style="margin-top:20px;">
     <div class="section-title">${t('offerCount')(offers.length)} • ${getDayFull()[state.selectedDay]}</div>`;
   html += offers.length
@@ -2795,7 +2904,7 @@ function renderHeuteTab(main) {
 function renderWocheTab(main) {
   if (state.searchOpen) { renderSearchView(main); return; }
   const monday = getMondayOfWeek(state.year, state.kw);
-  let html = renderDealOfWeek() + `<div class="week-summary">`;
+  let html = renderDealOfWeek() + renderProspektSection() + `<div class="week-summary">`;
   let any = false;
   for (let i = 0; i < 6; i++) {
     const offers = filteredOffers(i);
@@ -3201,6 +3310,75 @@ function renderDealOfWeek() {
     </div>`;
   }).join('');
   return `<div class="deal-week-section"><div class="deal-week-title">${t('dealsOfWeek')}</div><div class="deal-week-grid">${cards}</div></div>`;
+}
+
+// ─── AKTUELLE PROSPEKTE SECTION ───────────────────────────────────────────────
+
+const PROSPEKT_KARTEN = [
+  {
+    name: 'Lidl',
+    img: 'bilder/prospekte/lidl.jpg',
+    url: 'https://www.lidl.de/c/online-prospekte/s10005610',
+    fallbackBg: '#FFD600',
+    fallbackColor: '#0050aa',
+  },
+  {
+    name: 'Aldi Süd',
+    img: 'bilder/prospekte/aldi.jpg',
+    url: 'https://www.aldi-sued.de/de/angebote.html',
+    fallbackBg: '#add8e6',
+    fallbackColor: '#004f9f',
+  },
+  {
+    name: 'Rewe',
+    img: 'bilder/prospekte/rewe.jpg',
+    url: 'https://www.rewe.de/angebote/',
+    fallbackBg: '#cc0000',
+    fallbackColor: '#fff',
+  },
+  {
+    name: 'Edeka',
+    img: 'bilder/prospekte/edeka.jpg',
+    url: 'https://www.edeka.de/eh/suedwest/angebote.jsp',
+    fallbackBg: '#FFD600',
+    fallbackColor: '#1a1a1a',
+  },
+  {
+    name: 'Penny',
+    img: 'bilder/prospekte/penny.jpg',
+    url: 'https://www.penny.de/angebote',
+    fallbackBg: '#cc0000',
+    fallbackColor: '#fff',
+  },
+  {
+    name: 'Kaufland',
+    img: 'bilder/prospekte/kaufland.jpg',
+    url: 'https://www.kaufland.de/angebote/aktuelle-woche.html',
+    fallbackBg: '#e30613',
+    fallbackColor: '#fff',
+  },
+];
+
+function renderProspektSection() {
+  const cards = PROSPEKT_KARTEN.map(k => {
+    const fallback = `this.parentElement.innerHTML='<div class=\\"prospekt-link-img-fallback\\" style=\\"background:${k.fallbackBg};color:${k.fallbackColor}\\">${k.name}</div>'`;
+    return `<a class="prospekt-link-card" href="${k.url}" target="_blank" rel="noopener noreferrer">
+      <div class="prospekt-link-card-title">${k.name}</div>
+      <div class="prospekt-link-img">
+        <img src="${k.img}" alt="${k.name} Prospekt" onerror="${fallback}">
+      </div>
+      <div class="prospekt-link-cta">${t('prospektCta')}</div>
+      <div class="prospekt-link-meta">
+        <span>${t('prospektValid')}</span>
+        <span class="prospekt-neu-badge">${t('prospektNew')}</span>
+      </div>
+    </a>`;
+  }).join('');
+  return `<div class="prospekt-section">
+    <div class="prospekt-section-title">${t('prospektSection')}</div>
+    <div class="prospekt-section-subtitle">${t('prospektSubtitle')}</div>
+    <div class="prospekt-section-grid">${cards}</div>
+  </div>`;
 }
 
 // ─── ADS HELPER ───────────────────────────────────────────────────────────────
@@ -3614,6 +3792,11 @@ const translations = {
     menuKW: 'Kalenderwoche', menuLocation: 'Mein Standort', menuNotify: 'Benachrichtigungen',
     menuList: 'Einkaufsliste', menuProfile: 'Mein Profil', menuTheme: 'Darstellung', menuLang: 'Sprache',
     modalClose: 'Schließen',
+    prospektSection: 'Aktuelle Prospekte',
+    prospektSubtitle: 'Klicke auf ein Prospekt, um direkt zum Markt zu gelangen',
+    prospektCta: 'Zum Prospekt →',
+    prospektValid: 'Gültig diese Woche',
+    prospektNew: 'NEU',
     dayNames: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
     dayNamesFull: ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
     favCount:     (n) => `${n} Favorit${n !== 1 ? 'en' : ''}`,
@@ -3667,6 +3850,11 @@ const translations = {
     menuKW: 'Calendar Week', menuLocation: 'My Location', menuNotify: 'Notifications',
     menuList: 'Shopping List', menuProfile: 'My Profile', menuTheme: 'Appearance', menuLang: 'Language',
     modalClose: 'Close',
+    prospektSection: 'Current Brochures',
+    prospektSubtitle: 'Click on a brochure to go directly to the store',
+    prospektCta: 'View Brochure →',
+    prospektValid: 'Valid this week',
+    prospektNew: 'NEW',
     dayNames: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     dayNamesFull: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
     favCount:     (n) => `${n} Favorite${n !== 1 ? 's' : ''}`,
@@ -3720,6 +3908,11 @@ const translations = {
     menuKW: 'Takvim Haftası', menuLocation: 'Konumum', menuNotify: 'Bildirimler',
     menuList: 'Alışveriş Listesi', menuProfile: 'Profilim', menuTheme: 'Görünüm', menuLang: 'Dil',
     modalClose: 'Kapat',
+    prospektSection: 'Güncel Broşürler',
+    prospektSubtitle: 'Markete doğrudan gitmek için bir broşüre tıklayın',
+    prospektCta: 'Broşürü Görüntüle →',
+    prospektValid: 'Bu hafta geçerli',
+    prospektNew: 'YENİ',
     dayNames: ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'],
     dayNamesFull: ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
     favCount:     (n) => `${n} Favori`,
