@@ -2899,6 +2899,7 @@ function renderHeuteTab(main) {
     : `<div class="no-offers"><div class="icon">🔍</div><p>${t('noOffers')}</p></div>`;
   html += `</div>`;
   main.innerHTML = html;
+  initProspektFallbacks();
 }
 
 function renderWocheTab(main) {
@@ -2919,6 +2920,7 @@ function renderWocheTab(main) {
   }
   if (!any) html += `<div class="no-offers"><div class="icon">🔍</div><p>${t('noOffersWeek')}</p></div>`;
   main.innerHTML = html + `</div>`;
+  initProspektFallbacks();
 }
 
 function renderProspekteTab(main) {
@@ -3361,11 +3363,10 @@ const PROSPEKT_KARTEN = [
 
 function renderProspektSection() {
   const cards = PROSPEKT_KARTEN.map(k => {
-    const fallback = `this.parentElement.innerHTML='<div class=\\"prospekt-link-img-fallback\\" style=\\"background:${k.fallbackBg};color:${k.fallbackColor}\\">${k.name}</div>'`;
     return `<a class="prospekt-link-card" href="${k.url}" target="_blank" rel="noopener noreferrer">
       <div class="prospekt-link-card-title">${k.name}</div>
       <div class="prospekt-link-img">
-        <img src="${k.img}" alt="${k.name} Prospekt" onerror="${fallback}">
+        <img src="${k.img}" alt="${k.name} Prospekt" data-fbg="${k.fallbackBg}" data-fcolor="${k.fallbackColor}" data-fname="${k.name}">
       </div>
       <div class="prospekt-link-cta">${t('prospektCta')}</div>
       <div class="prospekt-link-meta">
@@ -3379,6 +3380,22 @@ function renderProspektSection() {
     <div class="prospekt-section-subtitle">${t('prospektSubtitle')}</div>
     <div class="prospekt-section-grid">${cards}</div>
   </div>`;
+}
+
+function initProspektFallbacks() {
+  document.querySelectorAll('.prospekt-link-img img').forEach(img => {
+    img.addEventListener('error', () => {
+      const wrap = img.closest('.prospekt-link-img');
+      if (!wrap) return;
+      const fb = document.createElement('div');
+      fb.className = 'prospekt-link-img-fallback';
+      fb.style.background = img.dataset.fbg || '#ccc';
+      fb.style.color = img.dataset.fcolor || '#fff';
+      fb.textContent = img.dataset.fname || 'Prospekt';
+      wrap.innerHTML = '';
+      wrap.appendChild(fb);
+    });
+  });
 }
 
 // ─── ADS HELPER ───────────────────────────────────────────────────────────────
