@@ -44,7 +44,7 @@
 
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#FFD600">
+<meta name="theme-color" content="#DCDCDC">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -55,17 +55,17 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #0f172a;
-    --surface: #1e293b;
-    --surface2: #334155;
+    --bg: #DCDCDC;
+    --surface: #C0C0C0;
+    --surface2: #B8B8B8;
     --accent: #FFD600;
     --accent-light: #FFD600;
     --red: #ef4444;
     --red-light: #fca5a5;
     --green-light: #FFD600;
-    --text: #f1f5f9;
-    --muted: #94a3b8;
-    --border: #334155;
+    --text: #000000;
+    --muted: #555555;
+    --border: #A8A8A8;
     --radius: 12px;
     --radius-sm: 8px;
   }
@@ -908,7 +908,7 @@
 
   /* ─── FAVORITES ────────────────────────────────────────── */
   .fav-btn { position: absolute; top: 8px; left: 8px;
-    background: rgba(15,23,42,.7); border: none; width: 30px; height: 30px;
+    background: rgba(0,0,0,0.3); border: none; width: 30px; height: 30px;
     border-radius: 50%; display: flex; align-items: center; justify-content: center;
     cursor: pointer; font-size: 1rem; transition: transform .2s, background .2s; z-index: 2; }
   .fav-btn:hover { transform: scale(1.2); }
@@ -1293,7 +1293,7 @@
     transform: rotate(180deg);
     padding: 18px 11px;
     background: linear-gradient(to top, #8B5CF6, #22D3EE);
-    color: #0f172a;
+    color: #1a1a1a;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-weight: 700;
     font-size: 0.82rem;
