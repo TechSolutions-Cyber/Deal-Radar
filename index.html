@@ -4058,7 +4058,7 @@ function updateMenuLabels() {
 // ─── THEME (HELL / DUNKEL / SYSTEM) ──────────────────────────────────────────
 
 function initTheme() {
-  const saved = safeStorage.getItem('dealradar_theme') || 'system';
+  const saved = safeStorage.getItem('dealradar_theme') || 'light';
   applyTheme(saved);
   updateThemeBtns(saved);
 }
@@ -4084,7 +4084,7 @@ function updateThemeBtns(theme) {
 
 // System-Präferenz beobachten und ggf. Theme umschalten
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-  const saved = safeStorage.getItem('dealradar_theme') || 'system';
+  const saved = safeStorage.getItem('dealradar_theme') || 'light';
   if (saved === 'system') applyTheme('system');
 });
 
