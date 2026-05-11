@@ -1710,6 +1710,40 @@
     transition: border-color 0.2s;
   }
   .product-modal-close-bottom:hover { border-color: var(--accent); }
+
+#pwa-banner {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #e63946;
+  color: white;
+  padding: 14px 20px;
+  z-index: 9999;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.2);
+}
+#pwa-banner.visible { display: flex; }
+#pwa-banner p { margin: 0; font-size: 14px; flex: 1; }
+#pwa-banner button {
+  background: white;
+  color: #e63946;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+}
+#pwa-close {
+  background: transparent !important;
+  color: white !important;
+  font-size: 20px;
+  padding: 4px 8px !important;
+}
 </style>
 <script>
 async function registerPush() {
@@ -4213,6 +4247,49 @@ if ('serviceWorker' in navigator) {
 <div class="mc-side-wrap">
   <a href="/mystery.html" class="mc-side-btn">🎴 Mystery Card</a>
 </div>
+
+<div id="pwa-banner">
+  <p>📲 Deal Radar als App speichern — kostenlos, kein App Store nötig!</p>
+  <button id="pwa-install">Installieren</button>
+  <button id="pwa-close">✕</button>
+</div>
+
+<script>
+  let deferredPrompt;
+  const banner = document.getElementById('pwa-banner');
+  const installBtn = document.getElementById('pwa-install');
+  const closeBtn = document.getElementById('pwa-close');
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Nur zeigen wenn noch nicht installiert
+    if (!localStorage.getItem('pwaInstalled')) {
+      setTimeout(() => banner.classList.add('visible'), 3000);
+    }
+  });
+
+  installBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const result = await deferredPrompt.userChoice;
+    if (result.outcome === 'accepted') {
+      localStorage.setItem('pwaInstalled', 'true');
+    }
+    banner.classList.remove('visible');
+    deferredPrompt = null;
+  });
+
+  closeBtn.addEventListener('click', () => {
+    banner.classList.remove('visible');
+    localStorage.setItem('pwaInstalled', 'true');
+  });
+
+  window.addEventListener('appinstalled', () => {
+    banner.classList.remove('visible');
+    localStorage.setItem('pwaInstalled', 'true');
+  });
+</script>
 
 </body>
 </html>
