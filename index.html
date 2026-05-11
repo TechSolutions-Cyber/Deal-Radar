@@ -2545,6 +2545,12 @@ function toggleSearch() {
 
 function onSearch() {
   state.searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+  if (state.searchQuery.length >= 3) {
+    gtag('event', 'suche_genutzt', {
+      'suchbegriff': state.searchQuery,
+      'event_category': 'engagement'
+    });
+  }
   renderSuggestions();
   render();
 }
@@ -2569,6 +2575,12 @@ function addToCart(offerId) {
   } else {
     state.cart[offerId] = { offerId, qty: 1, priceAtAdd: offer.pricew, priceNow: offer.pricew, status: 'unchanged' };
     showToast(t('addedToCart'));
+    gtag('event', 'warenkorb_hinzugefuegt', {
+      'produkt_name': offer.name,
+      'produkt_preis': offer.pricew,
+      'kette_name': getChain(offer.chain)?.name || offer.chain,
+      'event_category': 'ecommerce'
+    });
   }
   updateCartUI();
   render();
@@ -2697,6 +2709,10 @@ function openProfileModal() {
       div.classList.toggle('checked');
       if (div.classList.contains('checked')) state.profileChains.add(c.id);
       else state.profileChains.delete(c.id);
+      gtag('event', 'kette_geklickt', {
+        'kette_name': c.name,
+        'event_category': 'engagement'
+      });
     };
     div.innerHTML = `<div class="chain-check-dot"></div><span class="chain-check-name">${c.name}</span>`;
     grid.appendChild(div);
@@ -4275,6 +4291,9 @@ if ('serviceWorker' in navigator) {
     const result = await deferredPrompt.userChoice;
     if (result.outcome === 'accepted') {
       localStorage.setItem('pwaInstalled', 'true');
+      gtag('event', 'pwa_installiert', {
+        'event_category': 'engagement'
+      });
     }
     banner.classList.remove('visible');
     deferredPrompt = null;
@@ -4288,6 +4307,28 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('appinstalled', () => {
     banner.classList.remove('visible');
     localStorage.setItem('pwaInstalled', 'true');
+  });
+
+  let scrollTracked50 = false;
+  let scrollTracked90 = false;
+  window.addEventListener('scroll', function() {
+    const scrollPercent = Math.round(
+      (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100
+    );
+    if (scrollPercent >= 50 && !scrollTracked50) {
+      scrollTracked50 = true;
+      gtag('event', 'scroll_tiefe', {
+        'tiefe_prozent': 50,
+        'event_category': 'engagement'
+      });
+    }
+    if (scrollPercent >= 90 && !scrollTracked90) {
+      scrollTracked90 = true;
+      gtag('event', 'scroll_tiefe', {
+        'tiefe_prozent': 90,
+        'event_category': 'engagement'
+      });
+    }
   });
 </script>
 
