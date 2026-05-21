@@ -2067,11 +2067,30 @@ async function registerPush() {
   </div>
 </div>
 
+<!-- ─── INTRO ────────────────────────────────────────────── -->
+<section id="intro" style="max-width:900px;margin:24px auto;padding:24px;background:var(--surface);border-radius:12px;line-height:1.6;">
+<h1 style="margin-bottom:16px;font-size:1.6rem;">Willkommen bei Deal Radar — deine Übersicht über die besten Supermarkt-Angebote in Deutschland</h1>
+<p style="margin-bottom:14px;">Deal Radar ist ein unabhängiges Projekt, das die wöchentlichen Angebote der größten deutschen Lebensmittelhändler übersichtlich an einer Stelle zusammenführt. Wer Familie und Beruf unter einen Hut bringt, hat selten Zeit, montags morgens fünf verschiedene Prospekte zu studieren. Genau diese Lücke schließen wir: Statt jede Kette einzeln aufzurufen, siehst du bei uns auf einen Blick, was diese Woche bei Aldi Süd, Aldi Nord, Lidl, Rewe, Penny, Edeka, Kaufland, Netto, Tegut und Alnatura im Angebot ist.</p>
+<h2 style="margin:18px 0 10px;font-size:1.2rem;">Warum lohnt sich das?</h2>
+<p style="margin-bottom:14px;">Lebensmittel sind in den letzten Jahren in Deutschland deutlich teurer geworden. Eine vierköpfige Familie gibt heute schnell 800 bis 1.000 Euro im Monat allein für den Wocheneinkauf aus. Wer die Angebote kennt und seinen Einkauf clever danach plant, spart erfahrungsgemäß zwischen 15 und 30 Prozent — das sind übers Jahr gerechnet mehrere hundert Euro, die in der Haushaltskasse bleiben. Deal Radar will dabei kein Schnäppchenjäger-Tool für Profis sein, sondern ein praktischer Begleiter für normale Haushalte: einfach, ohne Anmeldung, ohne App-Installation, ohne Newsletter-Zwang.</p>
+<h2 style="margin:18px 0 10px;font-size:1.2rem;">So funktioniert Deal Radar</h2>
+<p style="margin-bottom:14px;">Du öffnest die Seite, siehst sofort die aktuellen Angebote, filterst nach deinem Lieblings-Supermarkt oder durchsuchst gezielt nach Produkten. Mit einem Klick fügst du interessante Angebote zu deinem Warenkorb hinzu — der dient als persönliche Einkaufsliste, die du beim Einkauf einfach am Handy abhakst. Wer Deal Radar wie eine App nutzen möchte, kann die Seite über den Browser zum Startbildschirm hinzufügen.</p>
+<h2 style="margin:18px 0 10px;font-size:1.2rem;">Aktualität und Datenquellen</h2>
+<p style="margin-bottom:14px;">Die Angebote werden wöchentlich gepflegt. Aktuell arbeiten wir mit kuratierten Daten, weil die offiziellen Schnittstellen der Supermarkt-Ketten nicht öffentlich zugänglich sind. Mittelfristig planen wir eine vollautomatische Anbindung. Die Angebote spiegeln die Wochenprospekte der jeweiligen Ketten wider, die montags bundesweit starten. Regionale Abweichungen können vorkommen — im Zweifel lohnt sich immer ein kurzer Blick in den Original-Prospekt der Kette.</p>
+<h2 style="margin:18px 0 10px;font-size:1.2rem;">Für wen ist Deal Radar gedacht?</h2>
+<p>Für Familien, die ihren Wocheneinkauf planen wollen. Für Studierende und Berufseinsteiger, die jeden Euro zweimal umdrehen. Für Rentner, die Übersicht statt Werbeflut suchen. Und für alle, die sich nicht durch zehn Prospekt-Apps mit Tracking, Push-Benachrichtigungen und Anmeldepflicht kämpfen wollen.</p>
+</section>
+
 <!-- ─── MAIN CONTENT ───────────────────────────────────────── -->
 <div class="main" id="mainContent"></div>
 
 <!-- ─── FOOTER ────────────────────────────────────────────── -->
 <footer class="app-footer">
+  <nav style="margin-bottom:10px;">
+    <a href="ratgeber.html" style="color:var(--muted);margin:0 6px;">Ratgeber</a> ·
+    <a href="faq.html" style="color:var(--muted);margin:0 6px;">FAQ</a> ·
+    <a href="ueber-uns.html" style="color:var(--muted);margin:0 6px;">Über uns</a>
+  </nav>
   <a href="#" onclick="openLegalPage('impressum');return false;">Impressum</a>
   <span class="footer-sep">·</span>
   <a href="#" onclick="openLegalPage('datenschutz');return false;">Datenschutz</a>
@@ -2382,6 +2401,11 @@ async function reloadOffers() {
 (async () => {
   await reloadOffers();
   loadFiltersFromURL(); // restore filter state from URL on startup
+  if (window.location.hash === '#impressum') {
+    openLegalPage('impressum');
+  } else if (window.location.hash === '#datenschutz') {
+    openLegalPage('datenschutz');
+  }
   loadLiveDeals();     // update with live data in background after initial render
 })();
 
