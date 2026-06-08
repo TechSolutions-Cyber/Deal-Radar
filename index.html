@@ -1279,32 +1279,27 @@
     align-items: center;
     flex-wrap: wrap;
   }
-  .cookie-btn-accept {
-    background: #16a34a;
-    color: #fff;
-    border: none;
+  .cookie-btn-accept,
+  .cookie-btn-necessary {
     border-radius: var(--radius-sm);
     padding: 10px 20px;
     font-size: 0.88rem;
     font-weight: 700;
     cursor: pointer;
-    transition: background .2s;
+    transition: opacity .2s;
     font-family: inherit;
+    border: 1px solid transparent;
   }
-  .cookie-btn-accept:hover { background: #15803d; }
+  .cookie-btn-accept {
+    background: #16a34a;
+    color: #fff;
+  }
   .cookie-btn-necessary {
-    background: var(--surface2);
-    color: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 10px 16px;
-    font-size: 0.88rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: border-color .2s;
-    font-family: inherit;
+    background: #374151;
+    color: #fff;
   }
-  .cookie-btn-necessary:hover { border-color: var(--accent); color: var(--text); }
+  .cookie-btn-accept:hover,
+  .cookie-btn-necessary:hover { opacity: .85; }
 
   /* ─── LEGAL PAGES ────────────────────────────────────────── */
   .legal-page {
@@ -3140,43 +3135,39 @@ function renderImpressumPage(main) {
   main.innerHTML = `<div class="legal-page">
     <button class="back-btn" onclick="closeLegalPage()">← Zurück</button>
     <h1>Impressum</h1>
-    <p>Angaben gemäß § 5 TMG:</p>
+    <p>Angaben gemäß § 5 DDG (Digitale-Dienste-Gesetz):</p>
     <p>
       Alexander Helm<br>
-      Martin Luther Straße 84<br>
+      Martin-Luther-Straße 84<br>
       67433 Neustadt an der Weinstraße<br>
       Deutschland
     </p>
     <h2>Kontakt</h2>
     <p>E-Mail: helmtechsolutions@pm.me</p>
-    <h2>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
-    <p>
-      Alexander Helm<br>
-      Martin Luther Straße 84, 67433 Neustadt an der Weinstraße
-    </p>
-    <h2>Haftungsausschluss</h2>
+    <h2>Umsatzsteuer-Identifikationsnummer</h2>
+    <p>gemäß § 27a UStG: DE461886492</p>
+    <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+    <p>Alexander Helm, Anschrift wie oben</p>
+    <h2>Haftung für Inhalte</h2>
     <p>
       Die Inhalte dieser Website wurden mit größtmöglicher Sorgfalt erstellt.
       Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann
       jedoch keine Gewähr übernommen werden. Die angezeigten Angebote und
-      Preise basieren auf Daten externer Quellen (u.a. Marktguru) und können
-      abweichen. Verbindlich sind ausschließlich die Angaben in den
-      jeweiligen Geschäften.
+      Preise basieren auf Daten externer Quellen (u. a. Marktguru) und können
+      abweichen oder veraltet sein. Verbindlich sind ausschließlich die Angaben
+      in den jeweiligen Geschäften.
     </p>
-    <h2>Streitschlichtung</h2>
+    <h2>Haftung für Links</h2>
     <p>
-      Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:
-      <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer"
-         style="color:var(--accent);text-decoration:underline;">
-        https://ec.europa.eu/consumers/odr/
-      </a>
+      Diese Website enthält Links zu externen Websites Dritter, auf deren
+      Inhalte kein Einfluss besteht. Für diese fremden Inhalte wird keine
+      Gewähr übernommen; verantwortlich ist stets der jeweilige Anbieter
+      der verlinkten Seiten.
     </p>
+    <h2>Urheberrecht</h2>
     <p>
-      Unsere E-Mail-Adresse findest du oben im Impressum.
-    </p>
-    <p>
-      Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer
-      Verbraucherschlichtungsstelle teilzunehmen.
+      Die durch den Seitenbetreiber erstellten Inhalte und Werke unterliegen
+      dem deutschen Urheberrecht.
     </p>
   </div>`;
 }
@@ -3187,44 +3178,83 @@ function renderDatenschutzPage(main) {
     <h1>Datenschutzerklärung</h1>
     <h2>1. Verantwortlicher</h2>
     <p>
-      Alexander Helm<br>
-      Martin Luther Straße 84, 67433 Neustadt an der Weinstraße<br>
+      Alexander Helm, Martin-Luther-Straße 84, 67433 Neustadt an der Weinstraße<br>
       E-Mail: helmtechsolutions@pm.me
     </p>
-    <h2>2. Erhebung allgemeiner Daten</h2>
+    <h2>2. Hosting</h2>
     <p>
-      Beim Besuch unserer Website werden durch den Server automatisch
-      Informationen wie IP-Adresse, Browsertyp, Betriebssystem, Referrer-URL,
-      Uhrzeit und Datum erfasst. Diese Daten sind technisch notwendig und
-      werden nicht mit anderen Datenquellen zusammengeführt.
+      Diese Website wird bei der Vercel Inc., 340 S Lemon Ave #4133, Walnut,
+      CA 91789, USA, gehostet. Beim Aufruf der Seite verarbeitet der Hoster
+      technisch notwendige Daten (siehe Punkt 3) in unserem Auftrag. Dabei
+      kann es zu einer Übermittlung personenbezogener Daten in die USA kommen.
+      Grundlage der Übermittlung sind die Standardvertragsklauseln der
+      EU-Kommission. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes
+      Interesse an einer sicheren, effizienten Bereitstellung).
     </p>
-    <h2>3. Google Analytics 4</h2>
+    <h2>3. Server-Logfiles</h2>
     <p>
-      Diese Website nutzt Google Analytics 4 (Messung-ID: G-R78ZVC19ER),
-      einen Webanalysedienst der Google Ireland Limited. Google Analytics
-      verwendet Cookies, die eine Analyse der Benutzung der Website
-      ermöglichen. Die IP-Adresse wird anonymisiert. Sie können die
-      Erfassung durch Google Analytics über unser Cookie-Banner verhindern.
+      Beim Besuch der Website werden automatisch Informationen erfasst, die
+      Ihr Browser übermittelt: IP-Adresse, Browsertyp und -version,
+      Betriebssystem, Referrer-URL sowie Datum und Uhrzeit des Zugriffs.
+      Diese Daten sind technisch notwendig, dienen der Stabilität und
+      Sicherheit und werden nicht mit anderen Datenquellen zusammengeführt.
+      Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO.
     </p>
-    <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung)</p>
-    <h2>4. Google AdSense</h2>
+    <h2>4. Cookies und lokale Speicherung</h2>
     <p>
-      Diese Website verwendet Google AdSense, einen Dienst der Google
-      Ireland Limited, zur Einbindung von Werbeanzeigen. Google AdSense
-      verwendet Cookies, um personalisierte Werbung anzuzeigen. Sie können
-      personalisierte Werbung über unser Cookie-Banner deaktivieren.
+      Die Website verwendet technisch notwendige Speicherung in Ihrem Browser
+      (localStorage), u. a. für Ihre Cookie-Einwilligung, gespeicherte
+      Favoriten und die gewählte Postleitzahl. Diese ist für den Betrieb
+      erforderlich. Cookies und Speicherzugriffe, die nicht zwingend
+      erforderlich sind (Analyse, Werbung), werden erst nach Ihrer
+      Einwilligung gesetzt. Rechtsgrundlage für nicht notwendige Zugriffe:
+      § 25 Abs. 1 TDDDG i. V. m. Art. 6 Abs. 1 lit. a DSGVO. Ihre
+      Einwilligung können Sie jederzeit über „Cookie-Einstellungen" im
+      Footer widerrufen.
     </p>
-    <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung)</p>
-    <h2>5. Ihre Rechte</h2>
+    <h2>5. Google Analytics 4</h2>
     <p>
-      Sie haben das Recht auf Auskunft, Berichtigung, Löschung,
-      Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch.
-      Bei Beschwerden können Sie sich an die zuständige Datenschutzbehörde
-      wenden.
+      Nach Ihrer Einwilligung nutzt diese Website Google Analytics 4
+      (Mess-ID: G-R78ZVC19ER), einen Dienst der Google Ireland Limited,
+      Gordon House, Barrow Street, Dublin 4, Irland. Dabei werden
+      Nutzungsdaten verarbeitet; die IP-Adresse wird gekürzt. Eine
+      Übermittlung an die Google LLC in den USA ist möglich (Grundlage:
+      Standardvertragsklauseln). Rechtsgrundlage: Art. 6 Abs. 1 lit. a
+      DSGVO und § 25 Abs. 1 TDDDG. Den Widerruf nehmen Sie über das
+      Cookie-Banner vor.
     </p>
-    <h2>6. Kontakt</h2>
+    <h2>6. Google AdSense</h2>
+    <p>
+      Nach Ihrer Einwilligung bindet diese Website Google AdSense (Google
+      Ireland Limited) zur Anzeige von Werbung ein. AdSense kann Cookies
+      setzen und personalisierte Werbung ausspielen; dabei ist eine
+      Datenübermittlung in die USA möglich (Standardvertragsklauseln). Ihre
+      Werbeeinstellungen können Sie unter
+      <a href="https://adssettings.google.com" target="_blank"
+         rel="noopener noreferrer"
+         style="color:var(--accent);text-decoration:underline;">
+        adssettings.google.com</a> verwalten. Rechtsgrundlage: Art. 6
+      Abs. 1 lit. a DSGVO und § 25 Abs. 1 TDDDG.
+    </p>
+    <h2>7. Externe Angebotsdaten</h2>
+    <p>
+      Zur Anzeige von Angeboten wird Ihre eingegebene Postleitzahl an einen
+      externen Dienst (u. a. Marktguru) übermittelt, um regionale Angebote
+      abzurufen. Es werden dabei keine weiteren personenbezogenen Daten
+      übertragen.
+    </p>
+    <h2>8. Ihre Rechte</h2>
+    <p>
+      Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung
+      der Verarbeitung, Datenübertragbarkeit und Widerspruch. Eine erteilte
+      Einwilligung können Sie jederzeit mit Wirkung für die Zukunft
+      widerrufen. Zudem steht Ihnen ein Beschwerderecht bei einer
+      Aufsichtsbehörde zu, z. B. dem Landesbeauftragten für den Datenschutz
+      und die Informationsfreiheit Rheinland-Pfalz (LfDI RLP).
+    </p>
+    <h2>9. Kontakt</h2>
     <p>Bei Fragen zum Datenschutz: helmtechsolutions@pm.me</p>
-    <p>Stand: April 2026</p>
+    <p>Stand: Juni 2026</p>
   </div>`;
 }
 
