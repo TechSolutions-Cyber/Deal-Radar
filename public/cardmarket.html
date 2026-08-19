@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Helm Tech – Card Market</title>
+<style>
+  :root{
+    --bg:#f4f7fb; --bg2:#eef2f8; --panel:#ffffff; --panel2:#f7f9fc; --line:#e4e9f1;
+    --txt:#1f2a37; --muted:#6b7888; --soft:#8a97a8;
+    --accent:#2f6df6; --accent2:#1b54d6; --accentSoft:#e8f0ff;
+    --teal:#0fb5a6; --green:#19a974; --greenSoft:#e3f7ee; --red:#e5484d; --redSoft:#fdecec;
+    --amber:#f59e0b; --amberSoft:#fef3e2; --purpleSoft:#f0ecff; --purple:#7c5cff;
+    --shadow:0 1px 2px rgba(20,40,80,.04),0 6px 20px rgba(20,40,80,.06);
+    --shadow2:0 8px 30px rgba(20,40,80,.12);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt);font-size:15px;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent)}
+  .app{display:flex;min-height:100vh}
+  /* Sidebar */
+  .side{width:244px;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:20px 14px;position:sticky;top:0;height:100vh}
+  .brand{display:flex;align-items:center;gap:11px;padding:6px 8px 18px;font-weight:750;font-size:17px}
+  .brand .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--teal));display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:16px;box-shadow:0 4px 12px rgba(47,109,246,.3)}
+  .brand small{display:block;font-size:11px;color:var(--soft);font-weight:500;margin-top:1px}
+  .nav{display:flex;flex-direction:column;gap:3px;margin-top:6px}
+  .nav button{display:flex;align-items:center;gap:11px;background:transparent;border:0;color:var(--muted);padding:11px 13px;border-radius:11px;cursor:pointer;font-size:14.5px;text-align:left;width:100%;font-weight:550}
+  .nav button:hover{background:var(--bg2);color:var(--txt)}
+  .nav button.active{background:var(--accentSoft);color:var(--accent2);font-weight:650}
+  .nav .ic{width:20px;text-align:center;font-size:16px}
+  .side .foot{margin-top:auto;font-size:11.5px;color:var(--soft);padding:10px 8px;line-height:1.6}
+  .save-pill{display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:9px 11px;margin:8px 4px;font-size:12px;color:var(--muted)}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--amber);flex:0 0 auto}
+  .dot.ok{background:var(--green)}
+  /* Main */
+  .main{flex:1;min-width:0;display:flex;flex-direction:column}
+  .top{display:flex;align-items:center;justify-content:space-between;padding:18px 30px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.8);backdrop-filter:saturate(160%) blur(8px);position:sticky;top:0;z-index:5}
+  .top h1{margin:0;font-size:20px;font-weight:720}
+  .top .sub{color:var(--muted);font-size:13px;margin-top:3px}
+  .content{padding:26px 30px;max-width:1240px}
+  .btn{background:var(--accent);color:#fff;border:0;padding:10px 17px;border-radius:11px;font-weight:650;cursor:pointer;font-size:14px;box-shadow:0 2px 8px rgba(47,109,246,.25);transition:.15s}
+  .btn:hover{background:var(--accent2);box-shadow:0 4px 14px rgba(47,109,246,.32)}
+  .btn.ghost{background:var(--panel);color:var(--txt);border:1px solid var(--line);box-shadow:none}
+  .btn.ghost:hover{background:var(--bg2);border-color:#d3dbe7}
+  .btn.danger{background:var(--panel);border:1px solid #f3c5c6;color:var(--red);box-shadow:none}
+  .btn.danger:hover{background:var(--redSoft)}
+  .btn.sm{padding:7px 12px;font-size:13px;border-radius:9px}
+  /* KPI */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-bottom:24px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .kpi .ico{position:absolute;right:14px;top:14px;width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px}
+  .kpi .label{color:var(--muted);font-size:12.5px;font-weight:550}
+  .kpi .val{font-size:26px;font-weight:780;margin-top:8px;letter-spacing:-.5px}
+  .kpi .delta{font-size:12px;margin-top:5px;color:var(--soft)}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:22px;box-shadow:var(--shadow)}
+  .panel h2{margin:0 0 16px;font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+  .grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:18px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:.16s;box-shadow:var(--shadow)}
+  .card:hover{transform:translateY(-4px);box-shadow:var(--shadow2);border-color:#cdd9ee}
+  .card .ph{height:166px;background:linear-gradient(135deg,#eef2f8,#e3e9f3);display:flex;align-items:center;justify-content:center;color:#aab6c6;font-size:40px;background-size:cover;background-position:center;position:relative}
+  .card .ph .badge{position:absolute;top:10px;left:10px}
+  .card .ph .qty{position:absolute;top:10px;right:10px;background:rgba(31,42,55,.78);color:#fff;font-size:11.5px;font-weight:650;padding:3px 9px;border-radius:20px}
+  .card .body{padding:13px 15px}
+  .card .num{font-size:11.5px;color:var(--accent);font-weight:700;letter-spacing:.3px}
+  .card .name{font-weight:650;margin:5px 0;font-size:15px;line-height:1.32}
+  .card .meta{color:var(--muted);font-size:12.5px;display:flex;justify-content:space-between;align-items:center;margin-top:7px}
+  .card .price{font-weight:700;color:var(--txt)}
+  .chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11.5px;font-weight:650}
+  .chip.lager{background:var(--accentSoft);color:var(--accent2)}
+  .chip.angeboten{background:var(--amberSoft);color:#b5730a}
+  .chip.verkauft{background:var(--greenSoft);color:#0c7a52}
+  .chip.gray{background:var(--bg2);color:var(--muted)}
+  /* Forms */
+  .row{display:flex;gap:15px;flex-wrap:wrap}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:15px;flex:1;min-width:150px}
+  .field.full{flex-basis:100%}
+  label{font-size:12.5px;color:var(--muted);font-weight:550}
+  input,select,textarea{background:var(--panel);border:1px solid var(--line);color:var(--txt);padding:11px 13px;border-radius:11px;font-size:14px;font-family:inherit;width:100%;transition:.12s}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accentSoft)}
+  textarea{resize:vertical;min-height:66px}
+  .toolbar{display:flex;gap:11px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
+  .toolbar input[type=search]{max-width:320px}
+  .toolbar select{max-width:200px}
+  .sectlabel{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--soft);margin:8px 0 12px}
+  /* Modal */
+  .overlay{position:fixed;inset:0;background:rgba(28,40,64,.34);display:none;align-items:flex-start;justify-content:center;padding:38px 16px;overflow:auto;z-index:50;backdrop-filter:blur(2px)}
+  .overlay.open{display:flex}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:20px;width:100%;max-width:760px;box-shadow:var(--shadow2)}
+  .modal .mh{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .modal .mh h2{margin:0;font-size:18px;font-weight:720}
+  .modal .mb{padding:24px}
+  .modal .mf{padding:17px 24px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:11px;background:var(--panel2);border-radius:0 0 20px 20px}
+  .x{background:var(--bg2);border:0;color:var(--muted);font-size:20px;cursor:pointer;line-height:1;width:34px;height:34px;border-radius:9px}
+  .x:hover{background:#e3e9f3}
+  /* Calc output */
+  .calc-out{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .calc-out .line{display:flex;justify-content:space-between;padding:11px 14px;background:var(--panel2);border:1px solid var(--line);border-radius:11px;font-size:13.5px}
+  .calc-out .line.big{grid-column:1/-1;font-size:17px;font-weight:720;padding:15px 16px;background:linear-gradient(135deg,var(--accentSoft),#eef4ff);border-color:#d4e2ff}
+  .calc-out .line .v{font-weight:680}
+  .pos{color:var(--green)} .neg{color:var(--red)}
+  .photo-prev{width:100%;height:210px;border:2px dashed #d3dbe7;border-radius:14px;background:var(--panel2);display:flex;align-items:center;justify-content:center;color:var(--muted);background-size:cover;background-position:center;cursor:pointer;text-align:center;font-size:13.5px;transition:.14s}
+  .photo-prev:hover{border-color:var(--accent);background:var(--accentSoft);color:var(--accent2)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line)}
+  th{color:var(--soft);font-weight:650;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+  tbody tr{transition:.1s}
+  tbody tr:hover td{background:var(--panel2)}
+  .empty{text-align:center;color:var(--muted);padding:54px 20px}
+  .empty .big{font-size:46px;margin-bottom:12px}
+  .hint{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.55}
+  .infobox{background:var(--accentSoft);border:1px solid #d4e2ff;border-radius:12px;padding:12px 15px;font-size:13px;color:#27457f;line-height:1.55;margin-bottom:16px}
+  .seg{display:inline-flex;background:var(--bg2);border:1px solid var(--line);border-radius:12px;overflow:hidden;padding:3px;gap:3px}
+  .seg button{background:transparent;border:0;color:var(--muted);padding:9px 15px;cursor:pointer;font-size:13.5px;border-radius:9px;font-weight:600}
+  .seg button.active{background:var(--panel);color:var(--accent2);box-shadow:var(--shadow)}
+  .bars{display:flex;align-items:flex-end;gap:12px;height:210px;padding-top:10px}
+  .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;justify-content:flex-end;height:100%}
+  .bar-wrap{width:100%;display:flex;align-items:flex-end;justify-content:center;gap:5px;flex:1}
+  .bar{width:42%;border-radius:7px 7px 0 0;min-height:3px;transition:height .4s}
+  .bar.ek{background:linear-gradient(180deg,#6f9bff,var(--accent))} .bar.gw{background:linear-gradient(180deg,#3ad29b,var(--green))}
+  .bar-lbl{font-size:11px;color:var(--soft);font-weight:600}
+  .legend{display:flex;gap:18px;font-size:12.5px;color:var(--muted);margin-top:10px}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .legend i{width:12px;height:12px;border-radius:4px;display:inline-block}
+  details summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600;margin:4px 0 12px}
+  @media(max-width:760px){.side{position:fixed;left:-250px;z-index:60;transition:left .2s;box-shadow:var(--shadow2)}.side.show{left:0}.menu-btn{display:block!important}.content{padding:18px}}
+  .menu-btn{display:none;background:var(--bg2);border:0;color:var(--txt);font-size:20px;cursor:pointer;width:38px;height:38px;border-radius:10px}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand"><div class="logo">H</div><div>Helm Tech<small>Card Market</small></div></div>
+    <nav class="nav" id="nav">
+      <button data-view="dashboard" class="active"><span class="ic">🏠</span> Dashboard</button>
+      <button data-view="artikel"><span class="ic">📦</span> Artikel</button>
+      <button data-view="kalkulator"><span class="ic">🧮</span> Kalkulator</button>
+      <button data-view="historie"><span class="ic">📈</span> Historie &amp; Trend</button>
+      <button data-view="einstellungen"><span class="ic">⚙️</span> Einstellungen</button>
+    </nav>
+    <div class="save-pill" id="savePill"><span class="dot" id="saveDot"></span><span id="saveText">Nur im Browser</span></div>
+    <div class="foot">
+      Helm Tech Solutions<br>Neustadt/Weinstraße<br>
+      <span id="storeInfo"></span>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="top">
+      <div style="display:flex;align-items:center;gap:13px">
+        <button class="menu-btn" onclick="document.getElementById('side').classList.toggle('show')">☰</button>
+        <div>
+          <h1 id="viewTitle">Dashboard</h1>
+          <div class="sub" id="viewSub">Überblick über deinen Warenbestand</div>
+        </div>
+      </div>
+      <div id="topActions"></div>
+    </div>
+    <div class="content" id="content"></div>
+  </main>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="mh"><h2 id="modalTitle">Artikel anlegen</h2><button class="x" onclick="closeModal()">×</button></div>
+    <div class="mb" id="modalBody"></div>
+    <div class="mf" id="modalFoot"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ===== STORAGE: IndexedDB working copy + optional File System Access ===== */
+const DB_NAME="helmtech_wws2", DB_VER=1;
+let db=null, fileHandle=null, saveTimer=null;
+function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open(DB_NAME,DB_VER);
+  r.onupgradeneeded=e=>{const d=e.target.result;
+    if(!d.objectStoreNames.contains("articles"))d.createObjectStore("articles",{keyPath:"id"});
+    if(!d.objectStoreNames.contains("settings"))d.createObjectStore("settings",{keyPath:"key"});
+    if(!d.objectStoreNames.contains("handles"))d.createObjectStore("handles",{keyPath:"key"});};
+  r.onsuccess=e=>{db=e.target.result;res(db);};r.onerror=rej;});}
+function tx(s,m){return db.transaction(s,m).objectStore(s);}
+function dbAll(s){return new Promise((res,rej)=>{const o=[];const c=tx(s,"readonly").openCursor();c.onsuccess=e=>{const cur=e.target.result;if(cur){o.push(cur.value);cur.continue();}else res(o);};c.onerror=rej;});}
+function dbPut(s,v){return new Promise((res,rej)=>{const r=tx(s,"readwrite").put(v);r.onsuccess=()=>res(v);r.onerror=rej;});}
+function dbDel(s,k){return new Promise((res,rej)=>{const r=tx(s,"readwrite").delete(k);r.onsuccess=res;r.onerror=rej;});}
+function dbGet(s,k){return new Promise((res,rej)=>{const r=tx(s,"readonly").get(k);r.onsuccess=()=>res(r.result);r.onerror=rej;});}
+
+const FSA = ("showSaveFilePicker" in window);
+
+/* ===== STATE ===== */
+let ARTICLES=[];
+let SETTINGS={steuermodus:"kleinunternehmer",ustSatz:19,estRuecklage:25,
+  platformPct:10,zahlungPct:2.49,zahlungFix:0.35,versand:5.49,aufbereitung:0,
+  firma:"Helm Tech Solutions",ort:"Neustadt/Weinstraße"};
+const CATS=["Sammlerstück","Elektrokleingerät","Handy/Smartphone","Neuware","Edelmetall","Sonstiges"];
+const CATICON={"Sammlerstück":"🃏","Elektrokleingerät":"🔌","Handy/Smartphone":"📱","Neuware":"✨","Edelmetall":"🥈","Sonstiges":"📦"};
+const fmt=n=>(isFinite(n)?n:0).toLocaleString("de-DE",{minimumFractionDigits:2,maximumFractionDigits:2})+" €";
+const pct=n=>(isFinite(n)?n:0).toLocaleString("de-DE",{minimumFractionDigits:1,maximumFractionDigits:1})+" %";
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const todayISO=()=>new Date().toISOString().slice(0,10);
+
+async function loadAll(){
+  ARTICLES=await dbAll("articles");
+  const s=await dbGet("settings","main"); if(s)SETTINGS=Object.assign(SETTINGS,s.value);
+  ARTICLES.sort((a,b)=>(b.created||0)-(a.created||0));
+}
+async function persist(){ // working copy + debounced file write
+  await dbPut("settings",{key:"main",value:SETTINGS});
+  scheduleFileSave();
+}
+function nextArticleNo(){const y=new Date().getFullYear();let max=0;
+  ARTICLES.forEach(a=>{const m=(a.nummer||"").match(new RegExp("HTS-"+y+"-(\\d+)"));if(m)max=Math.max(max,+m[1]);});
+  return "HTS-"+y+"-"+String(max+1).padStart(4,"0");}
+
+/* ===== FILE SYSTEM ACCESS ===== */
+function bundle(){return {app:"helmtech_wws",version:2,exported:new Date().toISOString(),settings:SETTINGS,articles:ARTICLES};}
+async function connectFile(create){
+  if(!FSA){alert("Dein Browser unterstützt das direkte Speichern in eine Datei nicht.\nNutze bitte Chrome oder Edge – oder verwende den JSON-Export als Backup.\n(Safari speichert weiterhin im Browser.)");return;}
+  try{
+    if(create){
+      fileHandle=await window.showSaveFilePicker({suggestedName:"HelmTech_Warenwirtschaft.json",types:[{description:"WWS Daten",accept:{"application/json":[".json"]}}]});
+    }else{
+      const [h]=await window.showOpenFilePicker({types:[{description:"WWS Daten",accept:{"application/json":[".json"]}}]});
+      fileHandle=h;
+      const f=await h.getFile(); const d=JSON.parse(await f.text());
+      if(d.articles){
+        if(confirm(`${d.articles.length} Artikel aus Datei laden? Aktueller Browser-Bestand wird ersetzt.`)){
+          for(const a of ARTICLES)await dbDel("articles",a.id);
+          if(d.settings){SETTINGS=Object.assign(SETTINGS,d.settings);}
+          for(const a of d.articles){a.id=a.id||uid();await dbPut("articles",a);}
+          await loadAll();
+        }
+      }
+    }
+    await dbPut("handles",{key:"main",value:fileHandle});
+    await fileSaveNow();
+    updateSavePill(); go(CURRENT);
+    toast(create?"Datei verbunden – wird jetzt automatisch gespeichert":"Datei geladen & verbunden");
+  }catch(e){if(e.name!=="AbortError")console.error(e);}
+}
+async function restoreHandle(){
+  if(!FSA)return;
+  const rec=await dbGet("handles","main");
+  if(rec&&rec.value){
+    try{
+      const perm=await rec.value.queryPermission({mode:"readwrite"});
+      fileHandle=rec.value;
+      if(perm!=="granted"){/* needs gesture; pill shows "tippe zum Reaktivieren" */}
+    }catch(_){}
+  }
+}
+async function ensurePerm(){
+  if(!fileHandle)return false;
+  let p=await fileHandle.queryPermission({mode:"readwrite"});
+  if(p==="granted")return true;
+  p=await fileHandle.requestPermission({mode:"readwrite"});
+  return p==="granted";
+}
+function scheduleFileSave(){if(!fileHandle)return;clearTimeout(saveTimer);saveTimer=setTimeout(fileSaveNow,600);}
+async function fileSaveNow(){
+  if(!fileHandle)return;
+  try{
+    if(!(await ensurePerm())){updateSavePill();return;}
+    const w=await fileHandle.createWritable();
+    await w.write(new Blob([JSON.stringify(bundle(),null,2)],{type:"application/json"}));
+    await w.close();
+    flashSaved();
+  }catch(e){console.error("Save failed",e);}
+}
+function updateSavePill(){
+  const dot=document.getElementById("saveDot"),txt=document.getElementById("saveText");
+  if(fileHandle){dot.classList.add("ok");txt.textContent="Datei verbunden";}
+  else{dot.classList.remove("ok");txt.textContent=FSA?"Nur im Browser":"Browser-Speicher (Safari)";}
+}
+function flashSaved(){const txt=document.getElementById("saveText");txt.textContent="✓ Gespeichert";setTimeout(updateSavePill,1200);}
+document.getElementById("savePill").addEventListener("click",async()=>{
+  if(fileHandle){if(await ensurePerm()){await fileSaveNow();toast("In Datei gespeichert");}}
+  else if(FSA){if(confirm("Datendatei in deinem Ordner anlegen, damit alles automatisch gespeichert wird?"))connectFile(true);}
+});
+
+/* ===== CALC ENGINE ===== */
+function calc(o){
+  const qty=Math.max(1,+o.menge||1);
+  const ek=(+o.ankauf||0), vk=(+o.verkauf||0);
+  const mode=o.steuermodus||SETTINGS.steuermodus;
+  const ustS=(+o.ustSatz||SETTINGS.ustSatz)/100, estS=(+o.estRuecklage||SETTINGS.estRuecklage)/100;
+  const platform=vk*((+o.platformPct||0)/100);
+  const zahlung=vk*((+o.zahlungPct||0)/100)+(+o.zahlungFix||0);
+  const versand=(+o.versand||0), aufber=(+o.aufbereitung||0);
+  const gebuehren=platform+zahlung+versand+aufber;
+  let ust=0;
+  if(mode==="regel")ust=vk-vk/(1+ustS);
+  else if(mode==="differenz"){const m=vk-ek;ust=m>0?m-m/(1+ustS):0;}
+  const roh=vk-ek-gebuehren-ust;
+  const estR=roh>0?roh*estS:0;
+  const rein=roh-estR;
+  const margeVK=vk>0?rein/vk*100:0;
+  const roi=(ek+gebuehren)>0?rein/(ek+gebuehren)*100:0;
+  const f=x=>x*qty;
+  return {qty,ek,vk,mode,platform,zahlung,versand,aufber,gebuehren,ust,roh,estR,rein,margeVK,roi,
+    t:{ek:f(ek),vk:f(vk),gebuehren:f(gebuehren),ust:f(ust),roh:f(roh),estR:f(estR),rein:f(rein)}};
+}
+const modeLabel=m=>({kleinunternehmer:"§19 Kleinunternehmer (keine USt)",regel:"Regelbesteuerung 19% USt",differenz:"Differenzbesteuerung §25a"}[m]||m);
+const modeShort=m=>({kleinunternehmer:"§19",regel:"Regel 19%",differenz:"§25a"}[m]||m);
+
+/* ===== ROUTER ===== */
+const VIEWS={
+  dashboard:{title:"Dashboard",sub:"Überblick über deinen Warenbestand",render:renderDashboard},
+  artikel:{title:"Artikel",sub:"Bestand verwalten – mit Foto, Jahr & interner Nummer",render:renderArtikel},
+  kalkulator:{title:"Kalkulator",sub:"Was-wäre-wenn: Ankauf, Verkauf, Steuer, Gewinn",render:renderKalkulator},
+  historie:{title:"Historie & Trend",sub:"Ankauf- und Verkaufsverlauf, Monatstrend",render:renderHistorie},
+  einstellungen:{title:"Einstellungen",sub:"Steuermodus, Standardkosten, Speicherung & Backup",render:renderEinstellungen}
+};
+let CURRENT="dashboard";
+function go(view){CURRENT=view;
+  document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
+  document.getElementById("viewTitle").textContent=VIEWS[view].title;
+  document.getElementById("viewSub").textContent=VIEWS[view].sub;
+  document.getElementById("topActions").innerHTML="";
+  document.getElementById("side").classList.remove("show");
+  VIEWS[view].render();}
+document.getElementById("nav").addEventListener("click",e=>{const b=e.target.closest("button");if(b)go(b.dataset.view);});
+
+/* ===== DASHBOARD ===== */
+function monthKey(d){return (d||"").slice(0,7);}
+function renderDashboard(){
+  const c=document.getElementById("content");
+  const lager=ARTICLES.filter(a=>a.status!=="verkauft");
+  const verkauft=ARTICLES.filter(a=>a.status==="verkauft");
+  const lagerwert=lager.reduce((s,a)=>s+(+a.ankauf||0)*(+a.menge||1),0);
+  const potVK=lager.reduce((s,a)=>s+(+a.verkauf||0)*(+a.menge||1),0);
+  const thisM=monthKey(todayISO());
+  const vM=verkauft.filter(a=>monthKey(a.verkaufsdatum)===thisM);
+  const umsatzM=vM.reduce((s,a)=>s+(+(a.verkaufIst??a.verkauf)||0)*(+a.menge||1),0);
+  const gewinnM=vM.reduce((s,a)=>s+calc(withSettings(a)).t.rein,0);
+  document.getElementById("topActions").innerHTML='<button class="btn" onclick="openArticle()">+ Artikel anlegen</button>';
+  c.innerHTML=`
+    <div class="kpis">
+      <div class="kpi"><div class="ico" style="background:var(--accentSoft)">📦</div><div class="label">Artikel im Lager</div><div class="val">${lager.length}</div><div class="delta">${verkauft.length} verkauft insgesamt</div></div>
+      <div class="kpi"><div class="ico" style="background:var(--purpleSoft)">💰</div><div class="label">Lagerwert (Einkauf)</div><div class="val">${fmt(lagerwert)}</div><div class="delta">Verkaufspotenzial ${fmt(potVK)}</div></div>
+      <div class="kpi"><div class="ico" style="background:var(--amberSoft)">🧾</div><div class="label">Umsatz ${thisM}</div><div class="val">${fmt(umsatzM)}</div><div class="delta">${vM.length} Verkäufe diesen Monat</div></div>
+      <div class="kpi"><div class="ico" style="background:var(--greenSoft)">📈</div><div class="label">Reingewinn ${thisM}</div><div class="val ${gewinnM>=0?'pos':'neg'}">${fmt(gewinnM)}</div><div class="delta">nach Gebühren, USt &amp; ESt</div></div>
+    </div>
+    <div class="panel">
+      <h2>👋 Willkommen zurück, Alexander</h2>
+      <div class="row" style="margin-bottom:6px">
+        <button class="btn" onclick="openArticle()">+ Neuer Artikel</button>
+        <button class="btn ghost" onclick="go('kalkulator')">🧮 Kalkulator öffnen</button>
+        <button class="btn ghost" onclick="go('historie')">📈 Historie ansehen</button>
+      </div>
+      <div class="hint">Steuermodus: <b>${modeLabel(SETTINGS.steuermodus)}</b> · ESt-Rücklage ${SETTINGS.estRuecklage}% — anpassbar in den Einstellungen.</div>
+    </div>
+    <div class="panel">
+      <h2>🕒 Zuletzt hinzugefügt</h2>
+      <div id="recent"></div>
+    </div>`;
+  const recent=ARTICLES.slice(0,6);
+  document.getElementById("recent").innerHTML = recent.length? `<div class="grid-cards">${recent.map(cardHTML).join("")}</div>` :
+    `<div class="empty"><div class="big">📦</div>Noch keine Artikel.<br>Leg deinen ersten an oder lade Demo-Daten in den Einstellungen.</div>`;
+}
+
+/* ===== ARTIKEL ===== */
+let filterText="",filterStatus="",filterCat="",LAYOUT="grid";
+function renderArtikel(){
+  const c=document.getElementById("content");
+  document.getElementById("topActions").innerHTML='<button class="btn" onclick="openArticle()">+ Artikel anlegen</button>';
+  c.innerHTML=`
+    <div class="toolbar">
+      <input type="search" id="q" placeholder="🔍 Suche (Name, Nummer, Notiz)…" value="${esc(filterText)}">
+      <select id="fStatus"><option value="">Alle Status</option><option value="lager">Lager</option><option value="angeboten">Angeboten</option><option value="verkauft">Verkauft</option></select>
+      <select id="fCat"><option value="">Alle Kategorien</option>${CATS.map(x=>`<option>${x}</option>`).join("")}</select>
+      <div class="seg" style="margin-left:auto">
+        <button id="vGrid" class="active" onclick="setLayout('grid')">▦ Karten</button>
+        <button id="vList" onclick="setLayout('list')">☰ Liste</button>
+      </div>
+    </div>
+    <div id="artlist"></div>`;
+  const q=document.getElementById("q");q.oninput=()=>{filterText=q.value;drawArt();};
+  document.getElementById("fStatus").value=filterStatus;document.getElementById("fCat").value=filterCat;
+  document.getElementById("fStatus").onchange=e=>{filterStatus=e.target.value;drawArt();};
+  document.getElementById("fCat").onchange=e=>{filterCat=e.target.value;drawArt();};
+  setLayout(LAYOUT);
+}
+function setLayout(l){LAYOUT=l;const g=document.getElementById("vGrid"),li=document.getElementById("vList");if(g){g.classList.toggle("active",l==="grid");li.classList.toggle("active",l==="list");}drawArt();}
+function filtered(){const t=filterText.toLowerCase();
+  return ARTICLES.filter(a=>{
+    if(filterStatus&&(a.status||"lager")!==filterStatus)return false;
+    if(filterCat&&a.kategorie!==filterCat)return false;
+    if(t){const h=((a.name||"")+" "+(a.nummer||"")+" "+(a.notiz||"")+" "+(a.kategorie||"")).toLowerCase();if(!h.includes(t))return false;}
+    return true;});}
+function drawArt(){
+  const list=filtered();const el=document.getElementById("artlist");if(!el)return;
+  if(!list.length){el.innerHTML=`<div class="empty"><div class="big">🔎</div>Keine Artikel gefunden.</div>`;return;}
+  if(LAYOUT==="list"){
+    el.innerHTML=`<div class="panel" style="padding:8px 0"><table><thead><tr><th>Nr.</th><th>Artikel</th><th>Kat.</th><th>Jahr</th><th>Status</th><th>EK</th><th>VK</th><th>Reingewinn</th></tr></thead><tbody>
+      ${list.map(a=>{const k=calc(withSettings(a));return `<tr onclick="openArticle('${a.id}')" style="cursor:pointer">
+        <td style="color:var(--accent);font-weight:650">${a.nummer||""}</td><td><b>${esc(a.name||"–")}</b>${+a.menge>1?` <span class="chip gray">×${a.menge}</span>`:""}</td>
+        <td>${CATICON[a.kategorie]||""} ${esc(a.kategorie||"")}</td><td>${a.jahr||"–"}</td>
+        <td><span class="chip ${a.status||'lager'}">${statusLbl(a.status)}</span></td>
+        <td>${fmt(k.t.ek)}</td><td>${fmt(k.t.vk)}</td><td class="${k.t.rein>=0?'pos':'neg'}"><b>${fmt(k.t.rein)}</b></td></tr>`;}).join("")}
+    </tbody></table></div>`;return;}
+  el.innerHTML=`<div class="grid-cards">${list.map(cardHTML).join("")}</div>`;
+}
+function statusLbl(s){return {lager:"Lager",angeboten:"Angeboten",verkauft:"Verkauft"}[s||"lager"];}
+function cardHTML(a){
+  const ph=a.foto?`style="background-image:url('${a.foto}')"`:"";
+  const k=calc(withSettings(a));
+  return `<div class="card" onclick="openArticle('${a.id}')">
+    <div class="ph" ${ph}>${a.foto?"":(CATICON[a.kategorie]||"📷")}
+      <span class="badge chip ${a.status||'lager'}">${statusLbl(a.status)}</span>
+      ${+a.menge>1?`<span class="qty">×${a.menge}</span>`:""}</div>
+    <div class="body">
+      <div class="num">${a.nummer||""}</div>
+      <div class="name">${esc(a.name||"Unbenannt")}</div>
+      <div class="meta"><span>${CATICON[a.kategorie]||""} ${a.jahr||"–"}</span><span class="price">EK ${fmt(+a.ankauf||0)}</span></div>
+      <div class="meta"><span style="color:var(--soft)">Gewinn/Stück</span><span class="${k.rein>=0?'pos':'neg'}" style="font-weight:700">${fmt(k.rein)}</span></div>
+    </div></div>`;
+}
+
+/* ===== ARTICLE MODAL ===== */
+let editingId=null, photoData=null;
+function withSettings(a){return {menge:a.menge,ankauf:a.ankauf,
+  verkauf:(a.status==="verkauft"&&a.verkaufIst!=null?a.verkaufIst:a.verkauf),
+  steuermodus:SETTINGS.steuermodus,ustSatz:SETTINGS.ustSatz,estRuecklage:SETTINGS.estRuecklage,
+  platformPct:a.platformPct??SETTINGS.platformPct,zahlungPct:a.zahlungPct??SETTINGS.zahlungPct,
+  zahlungFix:a.zahlungFix??SETTINGS.zahlungFix,versand:a.versand??SETTINGS.versand,aufbereitung:a.aufbereitung??SETTINGS.aufbereitung};}
+function openArticle(id){
+  editingId=id||null;photoData=null;
+  const a=id?ARTICLES.find(x=>x.id===id):{};
+  if(id&&a)photoData=a.foto||null;
+  document.getElementById("modalTitle").textContent=id?`${a.nummer||"Artikel"}`:"Artikel anlegen";
+  const g=(k,d="")=>a&&a[k]!=null?a[k]:d;
+  document.getElementById("modalBody").innerHTML=`
+    <div class="row">
+      <div class="field" style="flex:0 0 210px">
+        <label>Foto</label>
+        <div class="photo-prev" id="photoPrev" ${photoData?`style="background-image:url('${photoData}')"`:""} onclick="document.getElementById('photoIn').click()">${photoData?"":"📷 Foto wählen oder<br>mit Kamera aufnehmen"}</div>
+        <input type="file" id="photoIn" accept="image/*" capture="environment" style="display:none">
+        ${photoData?'<button class="btn ghost sm" type="button" onclick="clearPhoto()">Foto entfernen</button>':""}
+      </div>
+      <div style="flex:1;min-width:240px">
+        <div class="row">
+          <div class="field"><label>Interne Artikelnummer</label><input id="f_nummer" value="${esc(g('nummer',nextArticleNo()))}"></div>
+          <div class="field" style="flex:0 0 110px"><label>Menge</label><input id="f_menge" type="number" min="1" value="${g('menge',1)}"></div>
+        </div>
+        <div class="field full"><label>Bezeichnung</label><input id="f_name" value="${esc(g('name'))}" placeholder="z.B. Charizard Base Set 1999"></div>
+        <div class="row">
+          <div class="field"><label>Kategorie</label><select id="f_kat">${CATS.map(x=>`<option ${g('kategorie')===x?'selected':''}>${x}</option>`).join("")}</select></div>
+          <div class="field" style="flex:0 0 100px"><label>Jahr</label><input id="f_jahr" value="${esc(g('jahr'))}" placeholder="1999"></div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field" style="flex:0 0 150px"><label>Zustand</label><select id="f_zustand">${["Neu","Wie neu","Sehr gut","Gut","Gebraucht","Defekt"].map(x=>`<option ${g('zustand')===x?'selected':''}>${x}</option>`).join("")}</select></div>
+      <div class="field"><label>Status</label><select id="f_status">
+        <option value="lager" ${g('status','lager')==='lager'?'selected':''}>Lager</option>
+        <option value="angeboten" ${g('status')==='angeboten'?'selected':''}>Angeboten</option>
+        <option value="verkauft" ${g('status')==='verkauft'?'selected':''}>Verkauft</option></select></div>
+      <div class="field"><label>Standort</label><input id="f_ort" value="${esc(g('ort'))}" placeholder="Regal A2"></div>
+      <div class="field"><label>Lieferant / Herkunft</label><input id="f_lieferant" value="${esc(g('lieferant'))}"></div>
+    </div>
+    <div class="sectlabel">🛒 Ankauf</div>
+    <div class="row">
+      <div class="field"><label>Ankaufsdatum</label><input id="f_akdatum" type="date" value="${g('ankaufsdatum',todayISO())}"></div>
+      <div class="field"><label>Ankaufspreis / Stück (€)</label><input id="f_ankauf" type="number" step="0.01" value="${g('ankauf','')}"></div>
+    </div>
+    <div class="sectlabel">💸 Verkauf</div>
+    <div class="row">
+      <div class="field"><label>Angebots-/Soll-VK / Stück (€)</label><input id="f_verkauf" type="number" step="0.01" value="${g('verkauf','')}"></div>
+      <div class="field"><label>Tatsächlicher VK / Stück (€)</label><input id="f_verkaufIst" type="number" step="0.01" value="${g('verkaufIst','')}" placeholder="bei Verkauf"></div>
+      <div class="field"><label>Verkaufsdatum</label><input id="f_vkdatum" type="date" value="${g('verkaufsdatum','')}"></div>
+    </div>
+    <details><summary>Nebenkosten für diesen Artikel anpassen (sonst Standardwerte)</summary>
+      <div class="row">
+        <div class="field"><label>Plattform %</label><input id="f_platformPct" type="number" step="0.01" value="${g('platformPct',SETTINGS.platformPct)}"></div>
+        <div class="field"><label>Zahlung %</label><input id="f_zahlungPct" type="number" step="0.01" value="${g('zahlungPct',SETTINGS.zahlungPct)}"></div>
+        <div class="field"><label>Zahlung fix €</label><input id="f_zahlungFix" type="number" step="0.01" value="${g('zahlungFix',SETTINGS.zahlungFix)}"></div>
+        <div class="field"><label>Versand €</label><input id="f_versand" type="number" step="0.01" value="${g('versand',SETTINGS.versand)}"></div>
+        <div class="field"><label>Aufbereitung €</label><input id="f_aufbereitung" type="number" step="0.01" value="${g('aufbereitung',SETTINGS.aufbereitung)}"></div>
+      </div>
+    </details>
+    <div class="field full"><label>Notizen</label><textarea id="f_notiz" placeholder="Zustand, Besonderheiten, Verhandlungsspielraum…">${esc(g('notiz'))}</textarea></div>
+    <div class="panel" style="margin:8px 0 0;background:var(--panel2);box-shadow:none"><h2 style="margin-bottom:12px">🧮 Live-Kalkulation</h2><div id="liveCalc"></div></div>
+    ${id?`<div id="lebenslauf" style="margin-top:18px"></div>`:""}`;
+  document.getElementById("modalFoot").innerHTML=`
+    ${id?'<button class="btn danger" onclick="delArticle()">Löschen</button>':''}
+    <span style="flex:1"></span>
+    <button class="btn ghost" onclick="closeModal()">Abbrechen</button>
+    <button class="btn" onclick="saveArticle()">💾 Speichern</button>`;
+  document.getElementById("photoIn").addEventListener("change",onPhoto);
+  ["f_menge","f_ankauf","f_verkauf","f_verkaufIst","f_status","f_platformPct","f_zahlungPct","f_zahlungFix","f_versand","f_aufbereitung"]
+    .forEach(idd=>{const e=document.getElementById(idd);if(e)e.addEventListener("input",liveCalc);});
+  liveCalc(); if(id)renderLebenslauf(a);
+  document.getElementById("overlay").classList.add("open");
+}
+function liveCalc(){
+  const status=val("f_status");const useIst=status==="verkauft"&&val("f_verkaufIst")!=="";
+  const k=calc({menge:val("f_menge"),ankauf:val("f_ankauf"),verkauf:useIst?val("f_verkaufIst"):val("f_verkauf"),
+    steuermodus:SETTINGS.steuermodus,ustSatz:SETTINGS.ustSatz,estRuecklage:SETTINGS.estRuecklage,
+    platformPct:val("f_platformPct"),zahlungPct:val("f_zahlungPct"),zahlungFix:val("f_zahlungFix"),
+    versand:val("f_versand"),aufbereitung:val("f_aufbereitung")});
+  document.getElementById("liveCalc").innerHTML=calcOutHTML(k);
+}
+function val(id){const e=document.getElementById(id);return e?e.value:"";}
+function onPhoto(e){const file=e.target.files[0];if(!file)return;const r=new FileReader();
+  r.onload=ev=>resizeImg(ev.target.result,1000,data=>{photoData=data;const p=document.getElementById("photoPrev");p.style.backgroundImage=`url('${data}')`;p.innerHTML="";});
+  r.readAsDataURL(file);}
+function resizeImg(src,maxW,cb){const img=new Image();img.onload=()=>{const sc=Math.min(1,maxW/img.width);
+  const cv=document.createElement("canvas");cv.width=img.width*sc;cv.height=img.height*sc;
+  cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height);cb(cv.toDataURL("image/jpeg",0.82));};img.src=src;}
+function clearPhoto(){const cur=editingId;photoData=null;closeModal();openArticle(cur);}
+async function saveArticle(){
+  const a=editingId?ARTICLES.find(x=>x.id===editingId):{id:uid(),created:Date.now()};
+  a.nummer=val("f_nummer");a.name=val("f_name");a.kategorie=val("f_kat");a.jahr=val("f_jahr");a.zustand=val("f_zustand");
+  a.status=val("f_status");a.ort=val("f_ort");a.lieferant=val("f_lieferant");a.menge=+val("f_menge")||1;
+  a.ankaufsdatum=val("f_akdatum");a.ankauf=+val("f_ankauf")||0;
+  a.verkauf=+val("f_verkauf")||0;a.verkaufIst=val("f_verkaufIst")===""?null:+val("f_verkaufIst");a.verkaufsdatum=val("f_vkdatum");
+  a.platformPct=+val("f_platformPct");a.zahlungPct=+val("f_zahlungPct");a.zahlungFix=+val("f_zahlungFix");
+  a.versand=+val("f_versand");a.aufbereitung=+val("f_aufbereitung");a.notiz=val("f_notiz");a.foto=photoData;
+  a.events=a.events||[];
+  if(!editingId)a.events.push({t:Date.now(),typ:"Angelegt",info:`EK ${fmt(a.ankauf)} · ${statusLbl(a.status)}`});
+  else a.events.push({t:Date.now(),typ:"Bearbeitet",info:`${statusLbl(a.status)}${a.status==="verkauft"&&a.verkaufIst!=null?` · VK ${fmt(a.verkaufIst)}`:""}`});
+  await dbPut("articles",a);await loadAll();await persist();closeModal();go(CURRENT);
+  toast("Artikel gespeichert");
+}
+async function delArticle(){if(!editingId)return;if(!confirm("Diesen Artikel wirklich löschen?"))return;
+  await dbDel("articles",editingId);await loadAll();await persist();closeModal();go(CURRENT);}
+function closeModal(){document.getElementById("overlay").classList.remove("open");editingId=null;photoData=null;}
+document.getElementById("overlay").addEventListener("click",e=>{if(e.target.id==="overlay")closeModal();});
+function renderLebenslauf(a){const ev=(a.events||[]).slice().reverse();
+  document.getElementById("lebenslauf").innerHTML=`<div class="sectlabel">📜 Lebenslauf dieses Stücks</div>
+  <table><tbody>${ev.length?ev.map(e=>`<tr><td style="width:160px;color:var(--soft)">${new Date(e.t).toLocaleString("de-DE")}</td><td><b>${e.typ}</b> – ${esc(e.info||"")}</td></tr>`).join(""):'<tr><td class="empty">Noch keine Ereignisse.</td></tr>'}</tbody></table>`;}
+
+/* ===== KALKULATOR ===== */
+function renderKalkulator(){
+  const c=document.getElementById("content");
+  c.innerHTML=`
+  <div class="panel">
+    <h2>⚖️ Steuermodus für diese Rechnung</h2>
+    <div class="seg" id="calcMode">
+      <button data-m="kleinunternehmer" class="${SETTINGS.steuermodus==='kleinunternehmer'?'active':''}">§19 Kleinunternehmer</button>
+      <button data-m="regel" class="${SETTINGS.steuermodus==='regel'?'active':''}">Regelbesteuerung 19%</button>
+      <button data-m="differenz" class="${SETTINGS.steuermodus==='differenz'?'active':''}">Differenz §25a</button>
+    </div>
+    <div class="hint">Mit „§19" rechnest du ohne USt. Sobald du über 25.000 € Umsatz kommst und regelbesteuert wirst, einfach umschalten – die Eingaben bleiben gleich.</div>
+  </div>
+  <div class="row" style="align-items:flex-start">
+    <div class="panel" style="flex:1;min-width:300px">
+      <h2>✏️ Eingaben</h2>
+      <div class="row">
+        <div class="field"><label>Ankaufspreis / Stück (€)</label><input id="c_ek" type="number" step="0.01" value="100"></div>
+        <div class="field"><label>Verkaufspreis / Stück (€)</label><input id="c_vk" type="number" step="0.01" value="160"></div>
+        <div class="field" style="flex:0 0 110px"><label>Stückzahl</label><input id="c_qty" type="number" min="1" value="1"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label>Plattform-Gebühr %</label><input id="c_platformPct" type="number" step="0.01" value="${SETTINGS.platformPct}"></div>
+        <div class="field"><label>Zahlung %</label><input id="c_zahlungPct" type="number" step="0.01" value="${SETTINGS.zahlungPct}"></div>
+        <div class="field"><label>Zahlung fix €</label><input id="c_zahlungFix" type="number" step="0.01" value="${SETTINGS.zahlungFix}"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label>Versand €</label><input id="c_versand" type="number" step="0.01" value="${SETTINGS.versand}"></div>
+        <div class="field"><label>Aufbereitung €</label><input id="c_aufbereitung" type="number" step="0.01" value="${SETTINGS.aufbereitung}"></div>
+        <div class="field"><label>ESt-Rücklage %</label><input id="c_est" type="number" step="1" value="${SETTINGS.estRuecklage}"></div>
+      </div>
+      <div class="hint">„Was-wäre-wenn": Werte ändern → das Ergebnis rechnet live mit.</div>
+    </div>
+    <div class="panel" style="flex:1;min-width:300px">
+      <h2>📊 Ergebnis <span id="calcModeLbl" class="chip gray"></span></h2>
+      <div id="calcResult"></div>
+    </div>
+  </div>`;
+  let cm=SETTINGS.steuermodus;
+  document.getElementById("calcMode").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+    cm=b.dataset.m;document.querySelectorAll("#calcMode button").forEach(x=>x.classList.toggle("active",x===b));run();});
+  function gv(id){return document.getElementById(id).value;}
+  function run(){const k=calc({menge:gv("c_qty"),ankauf:gv("c_ek"),verkauf:gv("c_vk"),steuermodus:cm,ustSatz:SETTINGS.ustSatz,
+    estRuecklage:gv("c_est"),platformPct:gv("c_platformPct"),zahlungPct:gv("c_zahlungPct"),zahlungFix:gv("c_zahlungFix"),
+    versand:gv("c_versand"),aufbereitung:gv("c_aufbereitung")});
+    document.getElementById("calcResult").innerHTML=calcOutHTML(k);
+    document.getElementById("calcModeLbl").textContent=modeLabel(cm);}
+  ["c_ek","c_vk","c_qty","c_platformPct","c_zahlungPct","c_zahlungFix","c_versand","c_aufbereitung","c_est"].forEach(id=>document.getElementById(id).addEventListener("input",run));
+  run();
+}
+function calcOutHTML(k){const tot=k.qty>1;
+  const line=(l,v,cls="")=>`<div class="line"><span>${l}</span><span class="v ${cls}">${v}</span></div>`;
+  return `<div class="calc-out">
+    ${line("Verkaufspreis"+(tot?` (×${k.qty})`:""),fmt(tot?k.t.vk:k.vk))}
+    ${line("Ankaufspreis"+(tot?` (×${k.qty})`:""),"−"+fmt(tot?k.t.ek:k.ek))}
+    ${line("Gebühren (Plattform/Zahlung/Versand/Aufber.)","−"+fmt(tot?k.t.gebuehren:k.gebuehren))}
+    ${line("Umsatzsteuer ("+modeShort(k.mode)+")",k.ust?("−"+fmt(tot?k.t.ust:k.ust)):"0,00 €")}
+    ${line("Rohgewinn (vor ESt)",fmt(tot?k.t.roh:k.roh),k.roh>=0?'pos':'neg')}
+    ${line("ESt-Rücklage","−"+fmt(tot?k.t.estR:k.estR))}
+    <div class="line big"><span>Reingewinn${tot?" gesamt":""}</span><span class="v ${k.rein>=0?'pos':'neg'}">${fmt(tot?k.t.rein:k.rein)}</span></div>
+    ${line("Marge auf Verkaufspreis",pct(k.margeVK),k.margeVK>=0?'pos':'neg')}
+    ${line("Rendite auf Einsatz (ROI)",pct(k.roi),k.roi>=0?'pos':'neg')}
+  </div>`;}
+
+/* ===== HISTORIE ===== */
+function renderHistorie(){
+  const c=document.getElementById("content");
+  const verkauft=ARTICLES.filter(a=>a.status==="verkauft"&&a.verkaufsdatum).sort((a,b)=>(b.verkaufsdatum||"").localeCompare(a.verkaufsdatum||""));
+  const months=[];const d=new Date();d.setDate(1);
+  for(let i=5;i>=0;i--){const m=new Date(d.getFullYear(),d.getMonth()-i,1);months.push(m.toISOString().slice(0,7));}
+  const agg=months.map(mk=>{const vs=verkauft.filter(a=>monthKey(a.verkaufsdatum)===mk);
+    const umsatz=vs.reduce((s,a)=>s+(+(a.verkaufIst??a.verkauf)||0)*(+a.menge||1),0);
+    const gewinn=vs.reduce((s,a)=>s+calc(withSettings(a)).t.rein,0);return {mk,umsatz,gewinn,n:vs.length};});
+  const maxV=Math.max(1,...agg.map(a=>Math.max(a.umsatz,a.gewinn)));
+  const totU=agg.reduce((s,a)=>s+a.umsatz,0),totG=agg.reduce((s,a)=>s+a.gewinn,0);
+  c.innerHTML=`
+    <div class="kpis">
+      <div class="kpi"><div class="ico" style="background:var(--accentSoft)">🧾</div><div class="label">Umsatz (6 Monate)</div><div class="val">${fmt(totU)}</div></div>
+      <div class="kpi"><div class="ico" style="background:var(--greenSoft)">📈</div><div class="label">Reingewinn (6 Monate)</div><div class="val ${totG>=0?'pos':'neg'}">${fmt(totG)}</div></div>
+      <div class="kpi"><div class="ico" style="background:var(--amberSoft)">✅</div><div class="label">Verkäufe gesamt</div><div class="val">${verkauft.length}</div></div>
+    </div>
+    <div class="panel">
+      <h2>📊 Monatstrend – Umsatz vs. Reingewinn</h2>
+      <div class="bars">${agg.map(a=>`<div class="bar-col"><div class="bar-wrap">
+          <div class="bar ek" style="height:${a.umsatz/maxV*100}%" title="Umsatz ${fmt(a.umsatz)}"></div>
+          <div class="bar gw" style="height:${Math.max(0,a.gewinn)/maxV*100}%" title="Gewinn ${fmt(a.gewinn)}"></div>
+        </div><div class="bar-lbl">${a.mk.slice(5)}/${a.mk.slice(2,4)}</div></div>`).join("")}</div>
+      <div class="legend"><span><i style="background:var(--accent)"></i>Umsatz</span><span><i style="background:var(--green)"></i>Reingewinn</span></div>
+    </div>
+    <div class="panel">
+      <h2>🧾 Verkaufshistorie</h2>
+      ${verkauft.length?`<table><thead><tr><th>Datum</th><th>Nr.</th><th>Artikel</th><th>EK</th><th>VK</th><th>Gebühren</th><th>USt</th><th>Reingewinn</th></tr></thead><tbody>
+        ${verkauft.map(a=>{const k=calc(withSettings(a));return `<tr onclick="openArticle('${a.id}')" style="cursor:pointer">
+          <td>${a.verkaufsdatum||""}</td><td style="color:var(--accent);font-weight:650">${a.nummer||""}</td><td><b>${esc(a.name||"")}</b>${+a.menge>1?` ×${a.menge}`:""}</td>
+          <td>${fmt(k.t.ek)}</td><td>${fmt(k.t.vk)}</td><td>${fmt(k.t.gebuehren)}</td><td>${fmt(k.t.ust)}</td>
+          <td class="${k.t.rein>=0?'pos':'neg'}"><b>${fmt(k.t.rein)}</b></td></tr>`;}).join("")}
+      </tbody></table>`:`<div class="empty"><div class="big">📈</div>Noch keine Verkäufe.<br>Setze bei einem Artikel den Status auf „Verkauft" mit Datum.</div>`}
+    </div>`;
+}
+
+/* ===== EINSTELLUNGEN ===== */
+function renderEinstellungen(){
+  const c=document.getElementById("content");
+  c.innerHTML=`
+  <div class="panel">
+    <h2>💾 Speicherung</h2>
+    <div class="infobox">${FSA?
+      `Empfohlen: Verbinde eine Datendatei in deinem <b>Helm Tech Solutions</b>-Ordner. Dann wird jede Änderung automatisch dorthin gespeichert – unabhängig vom Browser-Speicher.`
+      :`Dein Browser (vermutlich Safari) unterstützt das direkte Speichern in eine Datei nicht. Deine Daten liegen im Browser-Speicher. <b>Wichtig:</b> Mach regelmäßig ein JSON-Backup. Für automatisches Datei-Speichern nutze Chrome oder Edge.`}</div>
+    <div class="row">
+      ${FSA?`<button class="btn" onclick="connectFile(true)">📁 Neue Datendatei anlegen</button>
+              <button class="btn ghost" onclick="connectFile(false)">📂 Bestehende Datei verbinden</button>`:""}
+      <button class="btn ghost" onclick="exportData()">⤓ JSON-Backup exportieren</button>
+      <button class="btn ghost" onclick="document.getElementById('importIn').click()">⤒ Backup importieren</button>
+      <input type="file" id="importIn" accept="application/json" style="display:none">
+    </div>
+    <div class="hint" id="fileStatus"></div>
+  </div>
+  <div class="panel">
+    <h2>⚖️ Steuer &amp; Kalkulation</h2>
+    <div class="row">
+      <div class="field"><label>Steuermodus (Standard)</label><select id="s_mode">
+        <option value="kleinunternehmer" ${SETTINGS.steuermodus==='kleinunternehmer'?'selected':''}>§19 Kleinunternehmer – keine USt</option>
+        <option value="regel" ${SETTINGS.steuermodus==='regel'?'selected':''}>Regelbesteuerung – 19% USt</option>
+        <option value="differenz" ${SETTINGS.steuermodus==='differenz'?'selected':''}>Differenzbesteuerung §25a</option></select></div>
+      <div class="field"><label>USt-Satz %</label><input id="s_ust" type="number" value="${SETTINGS.ustSatz}"></div>
+      <div class="field"><label>Einkommensteuer-Rücklage %</label><input id="s_est" type="number" value="${SETTINGS.estRuecklage}"></div>
+    </div>
+    <div class="hint">§19-Grenze (Stand 2025): Vorjahr ≤ 25.000 € und laufendes Jahr ≤ 100.000 €. Bei Überschreitung wirst du regelbesteuert – dann hier umstellen. Dies ist eine Kalkulationshilfe, keine Steuerberatung.</div>
+  </div>
+  <div class="panel">
+    <h2>🧾 Standard-Nebenkosten</h2>
+    <div class="row">
+      <div class="field"><label>Plattform-Gebühr %</label><input id="s_platformPct" type="number" step="0.01" value="${SETTINGS.platformPct}"></div>
+      <div class="field"><label>Zahlung %</label><input id="s_zahlungPct" type="number" step="0.01" value="${SETTINGS.zahlungPct}"></div>
+      <div class="field"><label>Zahlung fix €</label><input id="s_zahlungFix" type="number" step="0.01" value="${SETTINGS.zahlungFix}"></div>
+      <div class="field"><label>Versand €</label><input id="s_versand" type="number" step="0.01" value="${SETTINGS.versand}"></div>
+      <div class="field"><label>Aufbereitung €</label><input id="s_aufbereitung" type="number" step="0.01" value="${SETTINGS.aufbereitung}"></div>
+    </div>
+    <button class="btn" onclick="saveSettingsForm()">Einstellungen speichern</button>
+  </div>
+  <div class="panel">
+    <h2>🏢 Firma &amp; Daten</h2>
+    <div class="row">
+      <div class="field"><label>Firmenname</label><input id="s_firma" value="${esc(SETTINGS.firma)}"></div>
+      <div class="field"><label>Ort</label><input id="s_ort" value="${esc(SETTINGS.ort)}"></div>
+    </div>
+    <div class="row">
+      <button class="btn" onclick="saveSettingsForm()">Speichern</button>
+      <button class="btn ghost" onclick="loadDemo()">Demo-Daten laden</button>
+      <button class="btn danger" onclick="wipe()">Alle Daten löschen</button>
+    </div>
+  </div>`;
+  document.getElementById("importIn").addEventListener("change",importData);
+  document.getElementById("fileStatus").textContent=fileHandle?("✓ Verbunden mit Datei: "+(fileHandle.name||"Datendatei")):"";
+}
+async function saveSettingsForm(){const g=id=>document.getElementById(id);
+  SETTINGS.steuermodus=g("s_mode").value;SETTINGS.ustSatz=+g("s_ust").value;SETTINGS.estRuecklage=+g("s_est").value;
+  SETTINGS.platformPct=+g("s_platformPct").value;SETTINGS.zahlungPct=+g("s_zahlungPct").value;SETTINGS.zahlungFix=+g("s_zahlungFix").value;
+  SETTINGS.versand=+g("s_versand").value;SETTINGS.aufbereitung=+g("s_aufbereitung").value;
+  if(g("s_firma"))SETTINGS.firma=g("s_firma").value;if(g("s_ort"))SETTINGS.ort=g("s_ort").value;
+  await persist();toast("Einstellungen gespeichert");go("einstellungen");}
+function exportData(){const blob=new Blob([JSON.stringify(bundle(),null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="HelmTech_WWS_Backup_"+todayISO()+".json";a.click();}
+function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=async ev=>{try{const d=JSON.parse(ev.target.result);if(!d.articles)throw 0;
+    if(!confirm(`${d.articles.length} Artikel importieren? Bestehende mit gleicher ID werden überschrieben.`))return;
+    if(d.settings){SETTINGS=Object.assign(SETTINGS,d.settings);}
+    for(const a of d.articles){a.id=a.id||uid();await dbPut("articles",a);}
+    await loadAll();await persist();toast("Import erfolgreich");go("einstellungen");
+  }catch(_){alert("Datei konnte nicht gelesen werden.");}};r.readAsText(f);}
+async function wipe(){if(!confirm("Wirklich ALLE Artikel und Einstellungen löschen? Vorher Backup machen!"))return;
+  for(const a of ARTICLES)await dbDel("articles",a.id);await loadAll();await persist();toast("Alle Daten gelöscht");go("einstellungen");}
+async function loadDemo(){
+  const demo=[
+    {name:"Charizard Base Set 1999 PSA 7",kategorie:"Sammlerstück",jahr:"1999",zustand:"Sehr gut",status:"verkauft",ankauf:180,verkauf:340,verkaufIst:355,ankaufsdatum:"2026-03-12",verkaufsdatum:"2026-04-02",menge:1},
+    {name:"iPhone 13 128GB (Posten)",kategorie:"Handy/Smartphone",jahr:"2021",zustand:"Wie neu",status:"angeboten",ankauf:280,verkauf:399,menge:25,ankaufsdatum:"2026-05-20"},
+    {name:"Philips Senseo HD7810",kategorie:"Elektrokleingerät",jahr:"2019",zustand:"Gut",status:"lager",ankauf:12,verkauf:34,menge:1,ankaufsdatum:"2026-05-28"},
+    {name:"Silber 1oz Maple Leaf",kategorie:"Edelmetall",jahr:"2024",zustand:"Neu",status:"verkauft",ankauf:28,verkauf:36,verkaufIst:36,menge:10,ankaufsdatum:"2026-04-15",verkaufsdatum:"2026-05-10"},
+    {name:"Retro Game Boy Color",kategorie:"Sammlerstück",jahr:"1998",zustand:"Gut",status:"lager",ankauf:35,verkauf:89,menge:1,ankaufsdatum:"2026-06-01"},
+    {name:"Bosch Akkuschrauber GSR 12V",kategorie:"Elektrokleingerät",jahr:"2022",zustand:"Wie neu",status:"angeboten",ankauf:42,verkauf:79,menge:1,ankaufsdatum:"2026-06-10"}
+  ];
+  for(const d of demo){const a=Object.assign({id:uid(),created:Date.now()-Math.random()*1e9,events:[{t:Date.now(),typ:"Angelegt",info:"Demo-Datensatz"}],nummer:nextArticleNo()},d);await dbPut("articles",a);ARTICLES.unshift(a);}
+  await loadAll();await persist();toast("Demo-Daten geladen");go("dashboard");
+}
+
+/* ===== HELPERS ===== */
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
+let toastT;function toast(msg){let t=document.getElementById("toast");
+  if(!t){t=document.createElement("div");t.id="toast";t.style.cssText="position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:var(--txt);color:#fff;padding:13px 22px;border-radius:12px;font-weight:650;z-index:99;box-shadow:var(--shadow2);transition:opacity .3s";document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity="1";clearTimeout(toastT);toastT=setTimeout(()=>t.style.opacity="0",1900);}
+
+/* ===== BOOT ===== */
+(async function(){
+  await openDB();await loadAll();await restoreHandle();
+  document.getElementById("storeInfo").textContent=`${ARTICLES.length} Artikel gespeichert`;
+  updateSavePill();go("dashboard");
+})();
+</script>
+</body>
+</html>
